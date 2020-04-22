@@ -1,0 +1,53 @@
+{
+  "name": "videre",
+  "version": "0.1.0",
+  "homepage": "https://videre.codyb.co",
+  "private": true,
+  "devDependencies": {
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
+    "react-scripts": "3.4.1",
+    "react-snap": "1.23.0",
+    "react-test-renderer": "^16.13.1",
+    "stylelint": "^13.3.2",
+    "stylelint-config-recommended": "^3.0.0",
+    "stylelint-config-styled-components": "^0.1.1",
+    "stylelint-processor-styled-components": "^1.10.0"
+  },
+  "dependencies": {
+    "lottie-web": "^5.6.8",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-helmet-async": "^1.0.5",
+    "react-router-dom": "5.1.2",
+    "react-transition-group": "^4.3.0",
+    "styled-components": "^5.1.0"
+  },
+  "scripts": {
+    "start": "set PORT=80 && react-scripts start",
+    "build": "react-scripts build",
+    "postbuild": "react-snap",
+    "deploy": "firebase deploy --only hosting",
+    "serve": "firebase serve --only hosting",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "reactSnap": {
+    "skipThirdPartyRequests": true,
+    "headless": true,
+    "crawl": true
+  },
+  "browserslist": {
+    "production": [
+      ">1%",
+      "not dead",
+      "not ie 11",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
