@@ -5,6 +5,7 @@ import { Transition, TransitionGroup, config as transitionConfig } from 'react-t
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { theme } from 'app/theme';
 import { useLocalStorage, usePrefersReducedMotion } from 'hooks';
+import Header from 'components/Header';
 import WhitneyBook from 'assets/fonts/whitney-book.woff2';
 import WhitneyMedium from 'assets/fonts/whitney-medium.woff2';
 import WhitneySemiBold from 'assets/fonts/whitney-semibold.woff2';
@@ -98,6 +99,7 @@ function AppRoutes() {
       </Helmet>
       <GlobalStyles />
       <SkipToMain href="#MainContent">Skip to main content</SkipToMain>
+      <Header location={location} />
       <TransitionGroup
         component={AppMainContent}
         tabIndex={-1}
@@ -129,18 +131,18 @@ function AppRoutes() {
 export const GlobalStyles = createGlobalStyle`
   html,
   body {
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
   	-moz-osx-font-smoothing: grayscale;
-    font-family: ${props => props.theme.fontStack};
+    -webkit-font-smoothing: antialiased;
     background: ${props => props.theme.colorBackground};
-    color: ${props => props.theme.colorText};
     border: 0;
-    margin: 0;
+    box-sizing: border-box;
+    color: ${props => props.theme.colorText};
+    font-family: ${props => props.theme.fontStack};
     font-size: 16px;
-    width: 100vw;
-    overflow-x: hidden;
     font-weight: 400;
+    margin: 0;
+    overflow-x: hidden;
+    width: 100vw;
   }
 
   *,
@@ -158,30 +160,31 @@ export const GlobalStyles = createGlobalStyle`
   #root *::before,
   #root *::after {
     @media (prefers-reduced-motion: reduce) {
-      animation-duration: 0s;
       animation-delay: 0s;
-      transition-duration: 0s;
+      animation-duration: 0s;
       transition-delay: 0s;
+      transition-duration: 0s;
     }
   }
 `;
 
 const AppMainContent = styled.main`
-  width: 100%;
-  overflow-x: hidden;
-  position: relative;
   background: ${props => props.theme.colorBackground};
-  transition: background 0.4s ease;
-  outline: none;
   display: grid;
   grid-template-columns: 100%;
+  outline: none;
+  overflow-x: hidden;
+  position: relative;
+  transition: background 0.4s ease;
+  width: 100%;
 `;
 
 const AppPage = styled.div`
-  overflow-x: hidden;
-  opacity: 0;
   grid-column: 1;
   grid-row: 1;
+  opacity: 0;
+  overflow-x: hidden;
+  padding: 8px;
   transition: opacity 0.3s ease;
 
   ${props => (props.status === 'exiting' || props.status === 'entering') && css`
@@ -189,36 +192,36 @@ const AppPage = styled.div`
   `}
 
   ${props => props.status === 'entered' && css`
-    transition-duration: 0.5s;
-    transition-delay: 0.2s;
     opacity: 1;
+    transition-delay: 0.2s;
+    transition-duration: 0.5s;
   `}
 `;
 
 const SkipToMain = styled.a`
   border: 0;
-  padding: 0;
   clip: rect(0 0 0 0);
-  position: absolute;
-  width: 1px;
+  color: ${props => props.theme.colorBackground};
   height: 1px;
   overflow: hidden;
-  color: ${props => props.theme.colorBackground};
+  padding: 0;
+  position: absolute;
+  width: 1px;
   z-index: 99;
 
   &:focus {
     background: ${props => props.theme.colorPrimary};
+    clip-path: ${props => props.theme.clipPath(8)};
+    clip: auto;
+    font-weight: 500;
+    height: auto;
+    left: 16px;
+    line-height: 1;
     padding: 8px 16px;
     position: fixed;
-    top: 16px;
-    left: 16px;
-    clip: auto;
-    width: auto;
-    height: auto;
     text-decoration: none;
-    font-weight: 500;
-    line-height: 1;
-    clip-path: ${props => props.theme.clipPath(8)};
+    top: 16px;
+    width: auto;
   }
 `;
 
