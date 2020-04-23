@@ -11,12 +11,19 @@ export default function Home() {
   useScrollRestore();
 
   const handleSubmit = useCallback(async event => {
+    if (!name.value || !decklist.value) return;
+    console.log(name.value);
+    console.log(decklist.value);
+    console.log(platform.value);
     event.preventDefault();
 
     try {
       const response = await fetch(`/functions/leagues/${platform.value}`, {
         method: 'POST',
         mode: 'cors',
+        headers: {
+          'content-type': 'application/json',
+        },
         body: JSON.stringify({
           name: name.value,
           decklist: decklist.value,
@@ -59,7 +66,7 @@ export default function Home() {
             <FormRow>
               <div>
                 <Label>Discord Username</Label>
-                <Input {...name} />
+                <Input {...name} required />
               </div>
               <div>
                 <Label>Magic Client</Label>
@@ -74,7 +81,7 @@ export default function Home() {
             <FormRow>
               <div>
                 <Label>Decklist</Label>
-                <TextArea {...decklist} placeholder="4 Snapcaster Mage" />
+                <TextArea {...decklist} placeholder="4 Snapcaster Mage" required />
               </div>
             </FormRow>
             <FormRow cta>
