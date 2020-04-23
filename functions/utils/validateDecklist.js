@@ -1,8 +1,8 @@
 async function validateDecklist({ mainboard: main, sideboard: side = '' }) {
   if (!main) throw new Error('Invalid deck. Mainboard is a required field.');
 
-  const mainboard = main.split('\n');
-  const sideboard = side.split('\n');
+  const mainboard = main.split('\n').map(card => card);
+  const sideboard = side.split('\n').map(card => card);
 
   return { mainboard, sideboard };
 }
