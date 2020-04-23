@@ -13,5 +13,10 @@ Path | Method | Parameters | Description
 
 Path | Method | Parameters | Description
 --- | --- | --- | ---
-   /leagues/:platform | POST | `name` `author` `decklist` | Submits decklist object: { mainboard, sideboard } and joins active league, returning an object.
-   /leagues/:league/:platform | POST | `score` | Records match score in active league, returning an object.
+   /leagues | GET | *none* | Fetches all leagues, returning an object.
+   /leagues/:id | GET | *none* | Fetches a single league by id, returning an object/
+   /leagues/:id | POST | `name` `limit` `platform` | Fetches and updates a league by id, returning an object.
+   /leagues/create/:id | POST | `name` `limit` `platform` | Generates and adds a league to the registry.
+   /leagues/join/:id | POST | `name` `author` `platform` `decklist` | Registers a user and a decklist object: { mainboard, sideboard } to an active league, returning an object.
+   /leagues/fire/:id | GET | *none* | Forcibly fires a league by id, returning a pairings object.
+   /leagues/results/:id | POST | `result` | Records player scores object: { player1Wins, player2Wins, draws } on an active league.
