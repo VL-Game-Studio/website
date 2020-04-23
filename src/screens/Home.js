@@ -1,18 +1,31 @@
-import React, { useCallback, Fragment } from 'react';
+import React, { useState, useCallback, Fragment } from 'react';
 import styled, { css } from 'styled-components/macro';
 import { Helmet } from 'react-helmet-async';
 import Anchor from 'components/Anchor';
 import Form from 'components/Form';
 import Input from 'components/Input';
 import Button from 'components/Button';
-import { useFormInput, useScrollRestore } from 'hooks';
+import { useFormInput, useLocalStorage, useScrollRestore } from 'hooks';
 import clients from 'data/clients';
+import icon from 'assets/icon.png';
 
 export default function Home() {
   const name = useFormInput('');
   const platform = useFormInput('');
   const decklist = useFormInput('');
+  const [league, setLeague] = useLocalStorage('');
+  const [joining, setJoining] = useState(!!league);
   useScrollRestore();
+
+  const joinLeague = () => {
+    setLeague('test');
+    setJoining(true);
+  };
+
+  const leaveLeague = () => {
+    setLeague(null);
+    setJoining(false);
+  };
 
   const handleSubmit = useCallback(async event => {
     if (!name.value || !decklist.value) return;
@@ -42,7 +55,7 @@ export default function Home() {
       console.error(error);
       return alert(error);
     }
-  }, [name.value, platform.value, decklist.value]);
+  }, [platform.value, name.value, decklist.value]);
 
   return (
     <Fragment>
@@ -54,42 +67,67 @@ export default function Home() {
         }]}
       />
       <Wrapper>
-        <Form onSubmit={handleSubmit}>
-          <FormHeader>
-            <h1>Decklist Form</h1>
-            <Anchor as="button">Clear</Anchor>
-          </FormHeader>
-          <FormRow>
+        {!joining &&
+          <Fragment>
+            <Header>
+              <h1>Leagues</h1>
+              <p>Last updated on {new Date(null).toLocaleDateString('default', { year: 'numeric', day: 'numeric', month: 'long' })}.</p>
+            </Header>
+            <Leagues>
+              <League>
+                <LeagueInfo>
+                  <img src={icon} width="50px" alt="Videre Logo" />
+                  <Column>
+                    <h3>MTGO League</h3>
+                    <p>3 players</p>
+                  </Column>
+                </LeagueInfo>
+                <Column>
+                  <Button shiny style={{ marginBottom: 0 }} label="Join League" onClick={joinLeague} />
+                  <Button secondary label="Cancel League" />
+                </Column>
+              </League>
+            </Leagues>
+          </Fragment>
+        }
+        {joining &&
+          <Form onSubmit={handleSubmit}>
+            <FormHeader>
+              <h1>Decklist Form</h1>
+              <Anchor as="button" onClick={leaveLeague}>Cancel</Anchor>
+            </FormHeader>
+            <FormRow>
+              <Input
+                {...name}
+                label="Discord Username"
+                inline
+                required
+              />
+              <Input
+                {...platform}
+                label="Magic Client"
+                list="game-clients"
+                placeholder="MTGO, Untap, xMage, Cockatrice, etc."
+                inline
+              >
+                <datalist id="game-clients">
+                  {clients.map(client => <option key={client} value={client}>{client}</option>)}
+                </datalist>
+              </Input>
+            </FormRow>
             <Input
-              {...name}
-              label="Discord Username"
+              {...decklist}
+              label="Deck List"
+              placeholder="4 Snapcaster Mage"
+              textarea
               inline
               required
             />
-            <Input
-              {...platform}
-              label="Magic Client"
-              list="game-clients"
-              placeholder="MTGO, Untap, xMage, Cockatrice, etc."
-              inline
-            >
-              <datalist id="game-clients">
-                {clients.map(client => <option key={client} value={client}>{client}</option>)}
-              </datalist>
-            </Input>
-          </FormRow>
-          <Input
-            {...decklist}
-            label="Deck List"
-            placeholder="4 Snapcaster Mage"
-            textarea
-            inline
-            required
-          />
-          <FormRow cta>
-            <Button label="Submit" />
-          </FormRow>
-        </Form>
+            <FormRow cta>
+              <Button label="Submit" />
+            </FormRow>
+          </Form>
+        }
       </Wrapper>
     </Fragment>
   );
@@ -98,10 +136,76 @@ export default function Home() {
 const Wrapper = styled.div`
   align-items: center;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   margin-bottom: 70px;
   min-height: calc(100vh - 140px);
   width: 100%;
+`;
+
+const Header = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  h1 {
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+    margin: 0;
+    padding: 0;
+    text-transform: uppercase;
+  }
+
+  p {
+    margin-bottom: 42px;
+  }
+`;
+
+const Leagues = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+const League = styled.div`
+  align-items: center;
+  background-color: rgb(47, 49, 54);
+  background-repeat: no-repeat;
+  background-size: auto 100%;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+  width: 660px;
+`;
+
+const LeagueInfo = styled.div`
+  display: grid;
+  grid-gap: 16px;
+  grid-template-columns: 50px 1fr;
+
+  h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    padding: 0;
+  }
+
+  p {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+  }
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 const FormHeader = styled.header`
