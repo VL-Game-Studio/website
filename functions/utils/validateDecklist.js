@@ -17,6 +17,7 @@ async function validateDecklist({ mainboard: main, sideboard: side = '' }) {
 
     const { data } = response.json();
     const sets = data.map(({ set }) => set);
+    formatSets(set => set.toLowerCase());
     if (!formatSets.some(sets)) throw new Error('Deck is not pre-WAR legal.');
   });
 
