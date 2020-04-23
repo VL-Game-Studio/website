@@ -7,6 +7,7 @@ Path | Method | Parameters | Description
    /decklists | GET |*none* | Fetches all decklists, returning an object.
    /decklists/:id | GET | *none* | Fetches a single decklist by id, returning an object.
    /decklists/:id | POST | `name` `author` `platform (optional)` `deck` | Validates deck object: { mainboard, sideboard } and adds to registry or throws error on infractions, returning an object.
+   /decklists/create | POST | `name` `author` `platform (optional)` `deck` | Validates deck object: { mainboard, sideboard } and creates decklist object and adds to registry, returning an object.
    /decklists/:id | DELETE | *none* | Fetches and deletes a decklist by id, returning an object.
 
 ## Leagues Methods

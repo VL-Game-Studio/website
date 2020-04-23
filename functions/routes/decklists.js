@@ -44,6 +44,20 @@ router.post('/:id', async (req, res) => {
   }
 });
 
+router.post('/create', async (req, res) => {
+  const { name, author, platform, deck } = req.body;
+
+  try {
+    const { mainboard, sideboard } = await validateDecklist(deck);
+    const decklist = await decklists.create({ author, platform, mainboard, sideboard });
+
+    return res.status(201).json(decklist);
+  } catch (error) {
+    console.error(`POST /decklists/create ({ name: ${name}, author: ${author}, platform: ${platform}, deck: ${deck} }) >> ${error.stack}`);
+    return res.status(500).json({ error: 'An error occured while creating decklist.' });
+  }
+});
+
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
