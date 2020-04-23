@@ -10,9 +10,10 @@ import clients from 'data/clients';
 import icon from 'assets/icon.png';
 
 export default function Home() {
-  const name = useFormInput('');
+  const author = useFormInput('');
   const platform = useFormInput('');
-  const decklist = useFormInput('');
+  const mainboard = useFormInput('');
+  const sideboard = useFormInput('');
   const [overlayVisible, setOverlayVisible] = useState();
   useScrollRestore();
 
@@ -25,10 +26,6 @@ export default function Home() {
   };
 
   const handleSubmit = useCallback(async event => {
-    if (!name.value || !decklist.value) return;
-    console.log(name.value);
-    console.log(decklist.value);
-    console.log(platform.value);
     event.preventDefault();
 
     try {
@@ -39,8 +36,11 @@ export default function Home() {
           'content-type': 'application/json',
         },
         body: JSON.stringify({
-          name: name.value,
-          decklist: decklist.value,
+          author: author.value,
+          decklist: {
+            mainboard: mainboard.value,
+            sideboard: sideboard.value
+          }
         }),
       });
 
@@ -52,7 +52,7 @@ export default function Home() {
       console.error(error);
       return alert(error);
     }
-  }, [platform.value, name.value, decklist.value]);
+  }, [platform.value, author.value, mainboard.value, sideboard.value]);
 
   return (
     <Fragment>
@@ -94,7 +94,7 @@ export default function Home() {
         <Form onSubmit={handleSubmit}>
           <FormRow>
             <Input
-              {...name}
+              {...author}
               label="Discord Username"
               inline
               required
@@ -112,12 +112,19 @@ export default function Home() {
             </Input>
           </FormRow>
           <Input
-            {...decklist}
-            label="Deck List"
+            {...mainboard}
+            label="Mainboard"
             placeholder="4 Snapcaster Mage"
             textarea
             inline
             required
+          />
+          <Input
+            {...sideboard}
+            label="Sideboard"
+            placeholder="4 Leyline of the Void"
+            textarea
+            inline
           />
         </Form>
       </Overlay>

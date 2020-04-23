@@ -1,11 +1,17 @@
-async function validateDecklist(decklist) {
-  /* https://scryfall.com/docs/api
+async function validateDecklist({ mainboard: main, sideboard: side = '' }) {
+  if (!main) throw new Error('Invalid deck. Mainboard is a required field.');
 
-    GET https://api.scryfall.com/cards/named?fuzzy=aust+com
+  const mainboard = main.split('\n');
+  const sideboard = side.split('\n');
 
-    Get array of sets per card, checks each card for pre-WAR but also modern-legal
-  */
-  return true;
+  return { mainboard, sideboard };
 }
 
 module.exports = validateDecklist;
+
+/* https://scryfall.com/docs/api
+
+  GET https://api.scryfall.com/cards/named?fuzzy=aust+com
+
+  Get array of sets per card, checks each card for pre-WAR but also modern-legal
+*/

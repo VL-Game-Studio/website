@@ -11,7 +11,7 @@ admin.initializeApp();
 app.use(helmet());
 app.use(express.json());
 //app.use(cors({ origin: 'https://videre.live' }));
-app.use(routes);
+app.use('/functions', routes);
 
 function enroll(name, decklist, platform) {
   /*

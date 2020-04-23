@@ -5,15 +5,23 @@ const router = new Router();
 
 router.post('/:platform', async (req, res) => {
   const { platform } = req.params;
-  const { name, decklist } = req.body;
+  const { name, author, decklist } = req.body;
 
   try {
-    await validateDecklist(decklist);
-    await admin.database().ref('/decklists').push({ name, platform, decklist });
+    const { mainboard, sideboard } = await validateDecklist(decklist);
+    const deck = {
+      name,
+      author,
+      platform,
+      mainboard,
+      sideboard,
+    };
 
-    return res.status(201).json({ message: 'Decklist submitted successfully' });
+    await admin.database().ref('/decklists').push(deck);
+
+    return res.status(201).json(deck);
   } catch (error) {
-    console.error(`POST /leagues/${platform} ({ name: ${name}, decklist: ${decklist} }) >> ${error.stack}`);
+    console.error(`POST /leagues/${platform} ({ name: ${name}, author: ${author}, platform: ${platform}, decklist: ${decklist} }) >> ${error.stack}`);
     return res.status(500).json({ error: 'Decklist rejected' });
   }
 });
@@ -23,12 +31,18 @@ router.post('/:league/:platform', async (req, res) => {
   const { score } = req.body;
 
   try {
-    await admin.database().ref(`/results/${league}`).push({ score, platform });
+    const result = {
+      league,
+      platform,
+      score,
+    };
 
-    return res.status(201).json({ message: 'Score submitted successfully' });
+    await admin.database().ref(`/results/${league}`).push(result);
+
+    return res.status(201).json(result);
   } catch (error) {
     console.error(`POST /leagues/${league}/${platform} ({ score: ${score} }) >> ${error.stack}`);
-    return res.status(500).json({ error: 'Score rejected' });
+    return res.status(500).json({ error: 'An error occured while processing your match result.' });
   }
 });
 

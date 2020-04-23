@@ -30,11 +30,19 @@ router.get('/:id', async (req, res) => {
 
 router.post('/:id', async (req, res) => {
   const { id } = req.params;
-  const { decklist } = req.body;
+  const { name, author, platform, decklist } = req.body;
 
   try {
-    await validateDecklist(decklist);
-    await admin.database().ref(`/decklists/${id}`).update({ decklist });
+    const { mainboard, sideboard } = await validateDecklist(decklist);
+    const deck = {
+      name,
+      author,
+      platform,
+      mainboard,
+      sideboard,
+    };
+
+    await admin.database().ref(`/decklists/${id}`).update(deck);
 
     return res.status(201).json(decklist);
   } catch (error) {
