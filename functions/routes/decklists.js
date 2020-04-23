@@ -31,11 +31,11 @@ router.get('/:id', async (req, res) => {
 
 router.post('/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, author, platform, deck } = req.body;
+  const { name, author, platform, mainboard, sideboard } = req.body;
 
   try {
-    const { mainboard, sideboard } = await validateDecklist(deck);
-    const decklist = await decklists.update({ id, author, platform, mainboard, sideboard });
+    const deck = await validateDecklist(mainboard, sideboard);
+    const decklist = await decklists.update({ id, author, platform, ...deck });
 
     return res.status(201).json(decklist);
   } catch (error) {
@@ -45,11 +45,11 @@ router.post('/:id', async (req, res) => {
 });
 
 router.post('/create', async (req, res) => {
-  const { name, author, platform, deck } = req.body;
+  const { name, author, platform, mainboard, sideboard } = req.body;
 
   try {
-    const { mainboard, sideboard } = await validateDecklist(deck);
-    const decklist = await decklists.create({ author, platform, mainboard, sideboard });
+    const deck = await validateDecklist(mainboard, sideboard);
+    const decklist = await decklists.create({ author, platform, ...deck });
 
     return res.status(201).json(decklist);
   } catch (error) {

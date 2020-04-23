@@ -37,10 +37,9 @@ export default function Home() {
         },
         body: JSON.stringify({
           author: author.value,
-          deck: {
-            mainboard: mainboard.value,
-            sideboard: sideboard.value
-          }
+          platform: platform.value,
+          mainboard: mainboard.value,
+          sideboard: sideboard.value
         }),
       });
 

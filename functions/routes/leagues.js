@@ -58,11 +58,11 @@ router.post('/create', async (req, res) => {
 
 router.post('/join/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, author, platform, deck } = req.body;
+  const { name, author, platform, mainboard, sideboard } = req.body;
 
   try {
-    const { mainboard, sideboard } = await validateDecklist(deck);
-    const league = await leagues.join({ id, author, platform, mainboard, sideboard });
+    const deck = await validateDecklist(mainboard, sideboard);
+    const league = await leagues.join({ id, author, platform, ...deck });
 
     return res.status(201).json(league);
   } catch (error) {
