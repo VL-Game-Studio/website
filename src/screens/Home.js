@@ -172,13 +172,14 @@ const League = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 16px;
-  width: 660px;
+  max-width: 660px;
 `;
 
 const LeagueInfo = styled.div`
   display: grid;
   grid-gap: 16px;
   grid-template-columns: 50px 1fr;
+  margin-right: 8px;
 
   h3 {
     font-size: 20px;

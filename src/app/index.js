@@ -90,7 +90,7 @@ function AppRoutes() {
   return (
     <Fragment>
       <Helmet>
-        <link rel="canonical" href={`https://videre.codyb.co${pathname}`} />
+        <link rel="canonical" href={`https://videre.live${pathname}`} />
         <link rel="preload" href={WhitneyBook} as="font" crossorigin="" />
         <link rel="preload" href={WhitneyMedium} as="font" crossorigin="" />
         <link rel="preload" href={WhitneySemiBold} as="font" crossorigin="" />

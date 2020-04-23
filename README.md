@@ -1,6 +1,6 @@
 # Videre Website
 
-[![Site preview](/public/social-image.png)](https://videre.codyb.co)
+[![Site preview](/public/social-image.png)](https://videre.live)
 
 ## Install & run
 

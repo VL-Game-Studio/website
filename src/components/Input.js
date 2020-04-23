@@ -64,6 +64,7 @@ const Label = styled.label`
 `;
 
 const TextAreaElem = styled(TextArea)`
+  max-height: 40vh;
   min-height: 120px;
   resize: vertical;
   ${inputStyles}

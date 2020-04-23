@@ -1,7 +1,7 @@
 {
   "name": "videre",
   "version": "0.1.0",
-  "homepage": "https://videre.codyb.co",
+  "homepage": "https://videre.live",
   "private": true,
   "devDependencies": {
     "enzyme": "^3.11.0",
