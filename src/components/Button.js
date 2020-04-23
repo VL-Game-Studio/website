@@ -60,6 +60,19 @@ const ButtonWrapper = styled.button`
       border-color: rgb(246, 246, 247);
     }
   `}
+
+  ${props => props.outline && css`
+    background: transparent;
+    border: none;
+    text-decoration: none;
+
+    :hover:not(:disabled),
+    :focus:not(:disabled) {
+      background: transparent;
+      border-color: rgb(246, 246, 247);
+      text-decoration: underline;
+    }
+  `}
 `;
 
 const Shine = keyframes`

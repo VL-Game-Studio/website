@@ -1,11 +1,11 @@
 import React, { useState, useCallback, Fragment } from 'react';
-import styled, { css } from 'styled-components/macro';
+import styled from 'styled-components/macro';
 import { Helmet } from 'react-helmet-async';
-import Anchor from 'components/Anchor';
 import Form from 'components/Form';
 import Input from 'components/Input';
 import Button from 'components/Button';
-import { useFormInput, useLocalStorage, useScrollRestore } from 'hooks';
+import Overlay from 'screens/Overlay';
+import { useFormInput, useScrollRestore } from 'hooks';
 import clients from 'data/clients';
 import icon from 'assets/icon.png';
 
@@ -13,18 +13,15 @@ export default function Home() {
   const name = useFormInput('');
   const platform = useFormInput('');
   const decklist = useFormInput('');
-  const [league, setLeague] = useLocalStorage('');
-  const [joining, setJoining] = useState(!!league);
+  const [overlayVisible, setOverlayVisible] = useState();
   useScrollRestore();
 
   const joinLeague = () => {
-    setLeague('test');
-    setJoining(true);
+    setOverlayVisible(true);
   };
 
   const leaveLeague = () => {
-    setLeague(null);
-    setJoining(false);
+    setOverlayVisible(false);
   };
 
   const handleSubmit = useCallback(async event => {
@@ -67,68 +64,63 @@ export default function Home() {
         }]}
       />
       <Wrapper>
-        {!joining &&
-          <Fragment>
-            <Header>
-              <h1>Leagues</h1>
-              <p>Last updated on {new Date(null).toLocaleDateString('default', { year: 'numeric', day: 'numeric', month: 'long' })}.</p>
-            </Header>
-            <Leagues>
-              <League>
-                <LeagueInfo>
-                  <img src={icon} width="50px" alt="Videre Logo" />
-                  <Column>
-                    <h3>MTGO League</h3>
-                    <p>3 players</p>
-                  </Column>
-                </LeagueInfo>
-                <Column>
-                  <Button shiny style={{ marginBottom: 0 }} label="Join League" onClick={joinLeague} />
-                  <Button secondary label="Cancel League" />
-                </Column>
-              </League>
-            </Leagues>
-          </Fragment>
-        }
-        {joining &&
-          <Form onSubmit={handleSubmit}>
-            <FormHeader>
-              <h1>Decklist Form</h1>
-              <Anchor as="button" onClick={leaveLeague}>Cancel</Anchor>
-            </FormHeader>
-            <FormRow>
-              <Input
-                {...name}
-                label="Discord Username"
-                inline
-                required
-              />
-              <Input
-                {...platform}
-                label="Magic Client"
-                list="game-clients"
-                placeholder="MTGO, Untap, xMage, Cockatrice, etc."
-                inline
-              >
-                <datalist id="game-clients">
-                  {clients.map(client => <option key={client} value={client}>{client}</option>)}
-                </datalist>
-              </Input>
-            </FormRow>
+        <Header>
+          <h1>Leagues</h1>
+          <p>Last updated on {new Date(null).toLocaleDateString('default', { year: 'numeric', day: 'numeric', month: 'long' })}.</p>
+        </Header>
+        <Leagues>
+          <League>
+            <LeagueInfo>
+              <img src={icon} width="50px" alt="Videre Logo" />
+              <Column>
+                <h3>MTGO League</h3>
+                <p>3 players</p>
+              </Column>
+            </LeagueInfo>
+            <Column>
+              <Button shiny style={{ marginBottom: 0 }} label="Join League" onClick={joinLeague} />
+              <Button secondary label="Cancel League" />
+            </Column>
+          </League>
+        </Leagues>
+      </Wrapper>
+      <Overlay
+        visible={overlayVisible}
+        title="Join League"
+        description="Please enter the following details to complete your league entry."
+        onSubmit={handleSubmit}
+        onCancel={leaveLeague}
+      >
+        <Form onSubmit={handleSubmit}>
+          <FormRow>
             <Input
-              {...decklist}
-              label="Deck List"
-              placeholder="4 Snapcaster Mage"
-              textarea
+              {...name}
+              label="Discord Username"
               inline
               required
             />
-            <FormRow cta>
-              <Button label="Submit" />
-            </FormRow>
-          </Form>
-        }
-      </Wrapper>
+            <Input
+              {...platform}
+              label="Magic Client"
+              list="game-clients"
+              placeholder="MTGO, Untap, xMage, Cockatrice, etc."
+              inline
+            >
+              <datalist id="game-clients">
+                {clients.map(client => <option key={client} value={client}>{client}</option>)}
+              </datalist>
+            </Input>
+          </FormRow>
+          <Input
+            {...decklist}
+            label="Deck List"
+            placeholder="4 Snapcaster Mage"
+            textarea
+            inline
+            required
+          />
+        </Form>
+      </Overlay>
     </Fragment>
   );
 }
@@ -208,18 +200,7 @@ const Column = styled.div`
   flex-direction: column;
 `;
 
-const FormHeader = styled.header`
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-  margin: 0 8px 8px;
-`;
-
 const FormRow = styled.div`
   display: flex;
   flex-wrap: wrap;
-
-  ${props => props.cta && css`
-    justify-content: flex-end;
-  `}
 `;
