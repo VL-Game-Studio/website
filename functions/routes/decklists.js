@@ -1,16 +1,16 @@
 const { Router } = require('express');
-const admin = require('firebase-admin');
+const { decklists } = require('../persistence');
 const { validateDecklist } = require('../utils');
 
 const router = new Router();
 
 router.get('/', async (req, res) => {
   try {
-    const decklists = await admin.database().ref('/decklists').once('value', data => data.val());
+    const allDecklists = await decklists.fetchAll();
 
     return res.status(200).json(decklists);
   } catch (error) {
-    console.erorr(`GET /decklists >> ${error.stack}`);
+    console.error(`GET /decklists >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while fetching deckists.` });
   }
 });
@@ -19,7 +19,7 @@ router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const decklist = await admin.database().ref(`decklists/${id}`).once('value', data => data.val());
+    const decklist = await decklists.fetch(id);
     if (!decklist) return res.status(404).json({ message: `Decklist: ${id} was not found.` });
 
     return res.status(200).json(decklist);
@@ -31,23 +31,15 @@ router.get('/:id', async (req, res) => {
 
 router.post('/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, author, platform, decklist } = req.body;
+  const { name, author, platform, deck } = req.body;
 
   try {
-    const { mainboard, sideboard } = await validateDecklist(decklist);
-    const deck = {
-      name,
-      author,
-      platform,
-      mainboard,
-      sideboard,
-    };
-
-    await admin.database().ref(`/decklists/${id}`).update(deck);
+    const { mainboard, sideboard } = await validateDecklist(deck);
+    const decklist = await decklists.update({ id, author, platform, mainboard, sideboard });
 
     return res.status(201).json(decklist);
   } catch (error) {
-    console.error(`POST /decklists/${id} ({ decklist: decklist }) >> ${error.stack}`);
+    console.error(`POST /decklists/${id} ({ name: ${name}, author: ${author}, platform: ${platform}, deck: ${deck} }) >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while updating decklist: ${id}.` });
   }
 });
@@ -56,10 +48,7 @@ router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const ref = await admin.database().ref(`/decklists/${id}`);
-
-    const decklist = ref.once('value', data => data.val());
-    ref.remove();
+    const decklist = await decklists.remove(id);
 
     return res.status(200).json(decklist);
   } catch (error) {

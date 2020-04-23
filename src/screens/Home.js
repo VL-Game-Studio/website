@@ -37,7 +37,7 @@ export default function Home() {
         },
         body: JSON.stringify({
           author: author.value,
-          decklist: {
+          deck: {
             mainboard: mainboard.value,
             sideboard: sideboard.value
           }

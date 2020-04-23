@@ -1,14 +1,14 @@
 const { Router } = require('express');
-const admin = require('firebase-admin');
+const { leagues } = require('../persistence');
 const { validateDecklist } = require('../utils');
 
 const router = new Router();
 
 router.get('/', async (req, res) => {
   try {
-    const leagues = await admin.database().ref('/leagues').once('value', snap => snap.val());
+    const allLeagues = await leagues.fetchAll();
 
-    return res.status(200).json(leagues);
+    return res.status(200).json(allLeagues);
   } catch (error) {
     console.error(`GET /leagues >> ${error.stack}`);
     return res.status(500).json({ error: 'An error occured while fetching leagues.' });
@@ -19,7 +19,8 @@ router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const league = await admin.database().ref(`/leagues/${id}`).once('value', snap => snap.val());
+    const league = await leagues.fetch(id);
+    if (!league) return res.status(404).json({ message: `League: ${id} was not found.` });
 
     return res.status(200).json(league);
   } catch (error) {
@@ -33,14 +34,7 @@ router.post('/:id', async (req, res) => {
   const { name, limit, platform } = req.body;
 
   try {
-    const league = {
-      id,
-      name,
-      limit,
-      platform,
-    };
-
-    await admin.database().ref(`/leagues/${id}`).update(league);
+    const league = await leagues.update({ id, name, limit, platform });
 
     return res.status(200).json(league);
   } catch (error) {
@@ -53,13 +47,7 @@ router.post('/create', async (req, res) => {
   const { name, limit, platform } = req.body;
 
   try {
-    const league = {
-      name,
-      limit,
-      platform,
-    };
-
-    await admin.database().ref('/leagues').push(league);
+    const league = await leagues.create({ name, limit, platform });
 
     return res.status(201).json(league);
   } catch (error) {
@@ -70,23 +58,15 @@ router.post('/create', async (req, res) => {
 
 router.post('/join/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, author, platform, decklist } = req.body;
+  const { name, author, platform, deck } = req.body;
 
   try {
-    const { mainboard, sideboard } = await validateDecklist(decklist);
-    const deck = {
-      name,
-      author,
-      platform,
-      mainboard,
-      sideboard,
-    };
+    const { mainboard, sideboard } = await validateDecklist(deck);
+    const league = await leagues.join({ id, author, platform, mainboard, sideboard });
 
-    await admin.database().ref('/decklists').push(deck);
-
-    return res.status(201).json(deck);
+    return res.status(201).json(league);
   } catch (error) {
-    console.error(`POST /leagues/join/:id ({ name: ${name}, author: ${author}, platform: ${platform}, decklist: ${decklist} }) >> ${error.stack}`);
+    console.error(`POST /leagues/join/:id ({ name: ${name}, author: ${author}, platform: ${platform}, deck: ${deck} }) >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while joining league: ${id}.` });
   }
 });
@@ -95,8 +75,9 @@ router.get('/fire/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    //TODO: toggle league status and generate swiss pairings.
-    return.res.status(200);
+    const league = await leagues.fire(id);
+
+    return res.status(200).json(league);
   } catch (error) {
     console.error(`GET /fire/${id} >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while firing league: ${id}.` });
@@ -108,11 +89,9 @@ router.post('/results/:id', async (req, res) => {
   const { result } = req.body;
 
   try {
-    const { player1Wins, player2Wins, draws } = result;
+    const league = await leagues.report({ id, ...result });
 
-    await admin.database().ref(`/results/${league}`).push({ player1Wins, player2Wins, draws });
-
-    return res.status(201).json(result);
+    return res.status(201).json(league);
   } catch (error) {
     console.error(`POST /leagues/results/${league} ({ result: ${result} }) >> ${error.stack}`);
     return res.status(500).json({ error: 'An error occured while processing your match result.' });
