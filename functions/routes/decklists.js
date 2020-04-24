@@ -62,7 +62,7 @@ router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const decklist = await decklists.remove(id);
+    const decklist = await decklists.delete(id);
 
     return res.status(200).json(decklist);
   } catch (error) {

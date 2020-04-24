@@ -76,14 +76,13 @@ const leagues = {
     return league;
   },
   async delete(id) {
-    const key = await admin.database()
-      .ref(`/leagues/${id}`)
-      .remove()
-      .then(({ key }) => key);
-
     const league = await admin.database()
       .ref(`/leagues/${key}`)
       .once('value', snap => snap.val());
+
+    await admin.database()
+      .ref(`/leagues/${id}`)
+      .remove();
 
     return league;
   },

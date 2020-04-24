@@ -40,14 +40,13 @@ const decklists = {
     return decklist;
   },
   async delete(id) {
-    const key = await admin.database()
-      .ref(`/decklists/${id}`)
-      .remove()
-      .then(({ key }) => key);
-
     const decklist = await admin.database()
-      .ref(`/decklists/${key}`)
+      .ref(`/decklists/${id}`)
       .once('value', snap => snap.val());
+
+    await admin.database()
+      .ref(`/decklists/${id}`)
+      .remove();
 
     return decklist;
   },
