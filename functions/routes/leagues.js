@@ -29,6 +29,19 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+router.post('/', async (req, res) => {
+  const { name, limit, platform } = req.body;
+
+  try {
+    const league = await leagues.create({ name, limit, platform });
+
+    return res.status(201).json(league);
+  } catch (error) {
+    console.error(`POST /leagues/create ({ name: ${name}, limit: ${limit}, platform: ${platform} }) >> ${error.stack}`);
+    return res.status(500).json({ error: `An error occured while creating league: ${id}.` });
+  }
+});
+
 router.post('/:id', async (req, res) => {
   const { id } = req.params;
   const { name, limit, platform } = req.body;
@@ -43,30 +56,17 @@ router.post('/:id', async (req, res) => {
   }
 });
 
-router.post('/create', async (req, res) => {
-  const { name, limit, platform } = req.body;
-
-  try {
-    const league = await leagues.create({ name, limit, platform });
-
-    return res.status(201).json(league);
-  } catch (error) {
-    console.error(`POST /leagues/create ({ name: ${name}, limit: ${limit}, platform: ${platform} }) >> ${error.stack}`);
-    return res.status(500).json({ error: `An error occured while creating league: ${id}.` });
-  }
-});
-
 router.post('/join/:id', async (req, res) => {
   const { id } = req.params;
   const { name, author, platform, mainboard, sideboard } = req.body;
 
   try {
-    const deck = await validateDecklist(mainboard, sideboard);
+    const deck = validateDecklist(mainboard, sideboard);
     const league = await leagues.join({ id, author, platform, ...deck });
 
     return res.status(201).json(league);
   } catch (error) {
-    console.error(`POST /leagues/join/:id ({ name: ${name}, author: ${author}, platform: ${platform}, deck: ${deck} }) >> ${error.stack}`);
+    console.error(`POST /leagues/join/:id ({ name: ${name}, author: ${author}, platform: ${platform}, mainboard: ${mainboard}, sideboard: ${sideboard} }) >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while joining league: ${id}.` });
   }
 });

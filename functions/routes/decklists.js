@@ -29,32 +29,32 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+router.post('/', async (req, res) => {
+  const { name, author, platform, mainboard, sideboard } = req.body;
+
+  try {
+    const deck = validateDecklist(mainboard, sideboard);
+    const decklist = await decklists.create({ author, platform, ...deck });
+
+    return res.status(201).json(decklist);
+  } catch (error) {
+    console.error(`POST /decklists ({ name: ${name}, author: ${author}, platform: ${platform}, mainboard: ${mainboard}, sideboad: ${sideboard} }) >> ${error.stack}`);
+    return res.status(500).json({ error: 'An error occured while creating decklist.' });
+  }
+});
+
 router.post('/:id', async (req, res) => {
   const { id } = req.params;
   const { name, author, platform, mainboard, sideboard } = req.body;
 
   try {
-    const deck = await validateDecklist(mainboard, sideboard);
+    const deck = validateDecklist(mainboard, sideboard);
     const decklist = await decklists.update({ id, author, platform, ...deck });
 
     return res.status(201).json(decklist);
   } catch (error) {
-    console.error(`POST /decklists/${id} ({ name: ${name}, author: ${author}, platform: ${platform}, deck: ${deck} }) >> ${error.stack}`);
+    console.error(`POST /decklists/${id} ({ name: ${name}, author: ${author}, platform: ${platform}, mainboard: ${mainboard}, sideboard: ${sideboard} }) >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while updating decklist: ${id}.` });
-  }
-});
-
-router.post('/create', async (req, res) => {
-  const { name, author, platform, mainboard, sideboard } = req.body;
-
-  try {
-    const deck = await validateDecklist(mainboard, sideboard);
-    const decklist = await decklists.create({ author, platform, ...deck });
-
-    return res.status(201).json(decklist);
-  } catch (error) {
-    console.error(`POST /decklists/create ({ name: ${name}, author: ${author}, platform: ${platform}, deck: ${deck} }) >> ${error.stack}`);
-    return res.status(500).json({ error: 'An error occured while creating decklist.' });
   }
 });
 

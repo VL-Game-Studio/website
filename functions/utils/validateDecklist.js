@@ -1,15 +1,14 @@
-const fetch = require('node-fetch');
-const formatSets = require('../data/formatSets');
+//const fetch = require('node-fetch');
+//const formatSets = require('../data/formatSets');
 
-async function validateDecklist({ mainboard: main, sideboard: side = '' }) {
-  if (!main) throw new Error('Invalid deck. Mainboard is a required field.');
+function validateDecklist(main, side) {
+  const mainboard = main.includes('\n') ? main.split('\n') : main;
+  const sideboard = side.includes('\n') ? side.split('\n') : side;
 
-  const mainboard = main.split('\n').map(card => card);
-  const sideboard = side.split('\n').map(card => card);
-
-  [mainboard, sideboard].forEach(async (str) => {
-    const card = str.split(/ (.*)/);
-    const response = await fetch(`https://api.scryfall.com/cards/search?q=${card.replace(' ', '+')}+unique%3Aprints`, {
+/*
+  [mainboard, sideboard].map(async str => {
+    const card = str.split(/ (.*)/)[1];
+    const response = await fetch(`https://api.scryfall.com/cards/search?q=${card.includes(' ') ? card.replace(' ', '+') : card}+unique%3Aprints`, {
       method: 'GET',
     });
 
@@ -19,7 +18,10 @@ async function validateDecklist({ mainboard: main, sideboard: side = '' }) {
     const sets = data.map(({ set }) => set);
     formatSets(set => set.toLowerCase());
     if (!formatSets.some(sets)) throw new Error('Deck is not pre-WAR legal.');
+
+    return str;
   });
+*/
 
   return { mainboard, sideboard };
 }
