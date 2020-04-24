@@ -6,12 +6,11 @@ import Input from 'components/Input';
 import Button from 'components/Button';
 import Overlay from 'screens/Overlay';
 import { useFormInput, useScrollRestore } from 'hooks';
-import clients from 'data/clients';
 import icon from 'assets/icon.png';
 
 export default function Home() {
-  const author = useFormInput('');
-  const platform = useFormInput('');
+  const name = useFormInput('');
+  const username = useFormInput('');
   const mainboard = useFormInput('');
   const sideboard = useFormInput('');
   const [overlayVisible, setOverlayVisible] = useState();
@@ -36,8 +35,8 @@ export default function Home() {
           'content-type': 'application/json',
         },
         body: JSON.stringify({
-          author: author.value,
-          platform: platform.value,
+          name: name.value,
+          username: username.value,
           mainboard: mainboard.value,
           sideboard: sideboard.value
         }),
@@ -51,7 +50,7 @@ export default function Home() {
       console.error(error);
       return alert(error);
     }
-  }, [platform.value, author.value, mainboard.value, sideboard.value]);
+  }, [name.value, username.value, mainboard.value, sideboard.value]);
 
   return (
     <Fragment>
@@ -93,22 +92,17 @@ export default function Home() {
         <Form onSubmit={handleSubmit}>
           <FormRow>
             <Input
-              {...author}
+              {...name}
               label="Discord Username"
               inline
               required
             />
             <Input
-              {...platform}
-              label="Magic Client"
-              list="game-clients"
-              placeholder="MTGO, Untap, xMage, Cockatrice, etc."
+              {...username}
+              label="Game Client Username"
               inline
-            >
-              <datalist id="game-clients">
-                {clients.map(client => <option key={client} value={client}>{client}</option>)}
-              </datalist>
-            </Input>
+              required
+            />
           </FormRow>
           <Input
             {...mainboard}

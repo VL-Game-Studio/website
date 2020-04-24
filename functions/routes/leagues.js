@@ -58,15 +58,15 @@ router.post('/:id', async (req, res) => {
 
 router.post('/join/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, author, platform, mainboard, sideboard } = req.body;
+  const { name, username, mainboard, sideboard } = req.body;
 
   try {
     const deck = validateDecklist(mainboard, sideboard);
-    const league = await leagues.join({ id, author, platform, ...deck });
+    const league = await leagues.join({ id, name, username, ...deck });
 
     return res.status(201).json(league);
   } catch (error) {
-    console.error(`POST /leagues/join/:id ({ name: ${name}, author: ${author}, platform: ${platform}, mainboard: ${mainboard}, sideboard: ${sideboard} }) >> ${error.stack}`);
+    console.error(`POST /leagues/join/:id ({ name: ${name}, username: ${username}, mainboard: ${mainboard}, sideboard: ${sideboard} }) >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while joining league: ${id}.` });
   }
 });

@@ -4,14 +4,18 @@ const leagues = {
   async fetchAll() {
     const allLeagues = await admin.database()
       .ref('/leagues')
-      .once('value', snap => snap.val());
+      .once('value', snap => {
+        return { key: snap.key, ...snap.val() };
+      });
 
     return allLeagues;
   },
   async fetch(id) {
     const league = await admin.database()
       .ref(`/leagues/${id}`)
-      .once('value', snap => snap.val());
+      .once('value', snap => {
+        return { key: snap.key, ...snap.val() };
+      });
 
     return league;
   },
@@ -23,7 +27,9 @@ const leagues = {
 
     const league = await admin.database()
       .ref(`/leagues/${key}`)
-      .once('value', snap => snap.val());
+      .once('value', snap => {
+        return { key: snap.key, ...snap.val() };
+      });
 
     return league;
   },
@@ -35,7 +41,9 @@ const leagues = {
 
     const league = await admin.database()
       .ref(`/leagues/${key}`)
-      .once('value', snap => snap.val());
+      .once('value', snap => {
+        return { key: snap.key, ...snap.val() };
+      });
 
     return league;
   },
@@ -47,7 +55,9 @@ const leagues = {
 
     const league = await admin.database()
       .ref(`/leagues/${key}`)
-      .once('value', snap => snap.val());
+      .once('value', snap => {
+        return { key: snap.key, ...snap.val() };
+      });
 
     return leauge;
   },
@@ -59,7 +69,9 @@ const leagues = {
 
     const league = await admin.database()
       .ref(`/leagues/${key}`)
-      .once('value', snap => snap.val());
+      .once('value', snap => {
+        return { key: snap.key, ...snap.val() };
+      });
 
     return league;
   },
@@ -71,14 +83,18 @@ const leagues = {
 
     const league = await admin.database()
       .ref(`/leagues/${key}`)
-      .once('value', snap => snap.val());
+      .once('value', snap => {
+        return { key: snap.key, ...snap.val() };
+      });
 
     return league;
   },
   async delete(id) {
     const league = await admin.database()
       .ref(`/leagues/${key}`)
-      .once('value', snap => snap.val());
+      .once('value', snap => {
+        return { key: snap.key, ...snap.val() };
+      });
 
     await admin.database()
       .ref(`/leagues/${id}`)
