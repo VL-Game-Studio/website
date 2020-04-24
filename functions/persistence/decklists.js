@@ -1,21 +1,5 @@
 const admin = require('firebase-admin');
 
-async function getDeckById(id) {
-  const deck = await admin.database()
-    .ref(`/decklists/${id}`)
-    .once('value', snap => {
-      return { key: snap.key, ...snap.val() };
-    }).then(({ mainboard, sideboard, ...rest }) => {
-      return {
-        mainboard: Object.values(mainboard),
-        sideboard: Object.values(sideboard),
-        ...rest
-      };
-    });
-
-  return deck;
-}
-
 const decklists = {
   async fetchAll() {
     const allDecklists = await admin.database()
@@ -25,7 +9,9 @@ const decklists = {
     return allDecklists;
   },
   async fetch(id) {
-    const decklist = await getDeckById(id);
+    const decklist = await admin.database()
+      .ref(`/decklists/${id}`)
+      .once('value', snap => snap.val());
 
     return decklist;
   },
@@ -35,7 +21,9 @@ const decklists = {
       .update(rest)
       .then(({ key }) => key);
 
-    const decklist = await getDeckById(key);
+    const decklist = await admin.database()
+      .ref(`/decklists/${key}`)
+      .once('value', snap => snap.val());
 
     return decklist;
   },
@@ -45,12 +33,16 @@ const decklists = {
       .push(props)
       .then(({ key }) => key);
 
-    const decklist = await getDeckById(key);
+    const decklist = await admin.database()
+      .ref(`/decklists/${key}`)
+      .once('value', snap => snap.val());
 
     return decklist;
   },
   async delete(id) {
-    const decklist = await getDeckById(key);
+    const decklist = await admin.database()
+      .ref(`/decklists/${id}`)
+      .once('value', snap => snap.val());
 
     await admin.database()
       .ref(`/decklists/${id}`)
