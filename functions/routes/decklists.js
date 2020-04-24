@@ -34,9 +34,9 @@ router.post('/', async (req, res) => {
 
   try {
     const deck = validateDecklist(mainboard, sideboard);
-    await decklists.create({ author, platform, ...deck });
+    const decklist = await decklists.create({ author, platform, ...deck });
 
-    return res.status(201).json({ message: 'Deck was successfully created.' });
+    return res.status(201).json(decklist);
   } catch (error) {
     console.error(`POST /decklists ({ name: ${name}, author: ${author}, platform: ${platform}, mainboard: ${mainboard}, sideboad: ${sideboard} }) >> ${error.stack}`);
     return res.status(500).json({ error: 'An error occured while creating decklist.' });
@@ -49,9 +49,9 @@ router.post('/:id', async (req, res) => {
 
   try {
     const deck = validateDecklist(mainboard, sideboard);
-    await decklists.update({ id, author, platform, ...deck });
+    const decklist = await decklists.update({ id, author, platform, ...deck });
 
-    return res.status(201).json({ message: `Deck: ${id} was successfully updated.` });
+    return res.status(201).json(decklist);
   } catch (error) {
     console.error(`POST /decklists/${id} ({ name: ${name}, author: ${author}, platform: ${platform}, mainboard: ${mainboard}, sideboard: ${sideboard} }) >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while updating decklist: ${id}.` });
@@ -62,9 +62,9 @@ router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    await decklists.remove(id);
+    const decklist = await decklists.remove(id);
 
-    return res.status(200).json({ message: `Deck: ${id} was successfully deleted.` });
+    return res.status(200).json(decklist);
   } catch (error) {
     console.error(`DELETE /decklists/${id} >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while deleting decklist: ${id}.` });
