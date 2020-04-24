@@ -4,9 +4,9 @@
 
 Path | Method | Parameters | Description
 --- | --- | --- | ---
-   /decklists | GET |*none* | Fetches all decklists, returning an object.
+   /decklists/ | GET |*none* | Fetches all decklists, returning an object.
    /decklists/:id | GET | *none* | Fetches a single decklist by id, returning an object.
-   /decklists | POST | `name` `author` `platform (optional)` `mainboard` `sideboard` | Validates mainboard and sideboard and creates decklist object and adds to registry, returning an object.
+   /decklists/ | POST | `name` `author` `platform (optional)` `mainboard` `sideboard` | Validates mainboard and sideboard and creates decklist object and adds to registry, returning an object.
    /decklists/:id | POST | `name` `author` `platform (optional)` `mainboard` `sideboard` | Validates mainboard and sideboard and adds to registry or throws error on infractions, returning an object.
    /decklists/:id | DELETE | *none* | Fetches and deletes a decklist by id, returning an object.
 
@@ -14,9 +14,9 @@ Path | Method | Parameters | Description
 
 Path | Method | Parameters | Description
 --- | --- | --- | ---
-   /leagues | GET | *none* | Fetches all leagues, returning an object.
+   /leagues/ | GET | *none* | Fetches all leagues, returning an object.
    /leagues/:id | GET | *none* | Fetches a single league by id, returning an object.
-   /leagues | POST | `name` `limit` `platform` | Generates and adds a league to the registry.
+   /leagues/ | POST | `name` `limit` `platform` | Generates and adds a league to the registry.
    /leagues/:id | POST | `name` `limit` `platform` | Fetches and updates a league by id, returning an object.
    /leagues/join/:id | POST | `name` `author` `platform` `mainboard` `sideboard` | Registers a user and a deck from mainboard and sideboard to an active league, returning an object.
    /leagues/fire/:id | GET | *none* | Forcibly fires a league by id, returning a pairings object.

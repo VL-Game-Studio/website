@@ -13,16 +13,16 @@ app.use(express.json());
 //app.use(cors({ origin: 'https://videre.live' }));
 app.use('/functions', routes);
 
-function enroll(name, decklist, platform) {
-  /*
-    Adds player and deck to league, fires if quota is met.
-  */
-}
+/*
+  function enroll(name, decklist, platform) {
+    //Adds player and deck to league, fires if quota is met.
+  }
 
-exports.enroll = functions.database.ref('/decklists/{decklistID}').onCreate(snapshot => {
-  const { name, decklist, platform } = snapshot.val();
+  exports.enroll = functions.database.ref('/decklists/{decklistID}').onCreate(snapshot => {
+    const { name, decklist, platform } = snapshot.val();
 
-  return enroll(name, decklist, platform);
-});
+    return enroll(name, decklist, platform);
+  });
+*/
 
 exports.app = functions.https.onRequest(app);

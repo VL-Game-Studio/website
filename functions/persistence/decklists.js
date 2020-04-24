@@ -16,26 +16,38 @@ const decklists = {
     return decklist;
   },
   async update({ id, ...rest }) {
-    const decklist = await admin.database()
+    const key = await admin.database()
       .ref(`/decklists/${id}`)
       .update(rest)
-      .then(snap => snap.val());
+      .then(({ key }) => key);
 
-    return deckist;
+    const decklist = await admin.database()
+      .ref(`/decklists/${key}`)
+      .once('value', snap => snap.val());
+
+    return decklist;
   },
   async create(props) {
-    const decklist = await admin.database()
+    const key = await admin.database()
       .ref('/decklists')
       .push(props)
-      .then(snap => snap.val());
+      .then(({ key }) => key);
 
-    return deckist;
+    const decklist = await admin.database()
+      .ref(`/decklists/${key}`)
+      .once('value', snap => snap.val());
+
+    return decklist;
   },
   async delete(id) {
-    const decklist = await admin.database()
+    const key = await admin.database()
       .ref(`/decklists/${id}`)
       .remove()
-      .then(snap => snap.val());
+      .then(({ key }) => key);
+
+    const decklist = await admin.database()
+      .ref(`/decklists/${key}`)
+      .once('value', snap => snap.val());
 
     return decklist;
   },

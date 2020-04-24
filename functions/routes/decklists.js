@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
   try {
     const allDecklists = await decklists.fetchAll();
 
-    return res.status(200).json(decklists);
+    return res.status(200).json(allDecklists);
   } catch (error) {
     console.error(`GET /decklists >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while fetching deckists.` });

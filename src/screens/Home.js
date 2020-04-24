@@ -29,7 +29,7 @@ export default function Home() {
     event.preventDefault();
 
     try {
-      const response = await fetch(`/functions/leagues/${platform.value}`, {
+      const response = await fetch(`/functions/leagues/`, {
         method: 'POST',
         mode: 'cors',
         headers: {
