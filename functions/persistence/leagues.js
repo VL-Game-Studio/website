@@ -42,10 +42,10 @@ const leagues = {
 
     return league;
   },
-  async join({ id, author, ...rest }) {
+  async join({ id, author, deckID, ...rest }) {
     await admin.database()
       .ref(`/leagues/${id}/players/${author}`)
-      .set({ author, ...rest });
+      .set({ author, deckID, ...rest });
 
     const league = await admin.database()
       .ref(`/leagues/${id}`)

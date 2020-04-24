@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { leagues } = require('../persistence');
+const { leagues, decklists } = require('../persistence');
 const { validateDecklist } = require('../utils');
 
 const router = new Router();
@@ -62,7 +62,8 @@ router.post('/join/:id', async (req, res) => {
 
   try {
     const deck = validateDecklist(mainboard, sideboard);
-    const league = await leagues.join({ id, name, username, ...deck });
+    const { id: deckID } = await decklists.create({ author: name, ...deck });
+    const league = await leagues.join({ id, name, username, deckID });
 
     return res.status(201).json(league);
   } catch (error) {

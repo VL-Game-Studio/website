@@ -4,7 +4,7 @@ const decklists = {
   async fetchAll() {
     const allDecklists = await admin.database()
       .ref('/decklists')
-      .once('value', snap => Object.values(snap.val()));
+      .once('value', snap => snap.val());
 
     return allDecklists;
   },
