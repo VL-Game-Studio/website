@@ -1,34 +1,94 @@
-import React, { useState, useCallback, Fragment } from 'react';
+import React, { useState, useEffect, useCallback, Fragment } from 'react';
 import styled from 'styled-components/macro';
 import { Helmet } from 'react-helmet-async';
+import Anchor from 'components/Anchor';
 import Form from 'components/Form';
 import Input from 'components/Input';
 import Button from 'components/Button';
 import Overlay from 'screens/Overlay';
-import { useFormInput, useScrollRestore } from 'hooks';
+import { useFormInput, useLocalStorage, useScrollRestore } from 'hooks';
+import clients from 'data/clients';
 import icon from 'assets/icon.png';
 
 export default function Home() {
+  const leagueName = useFormInput('');
+  const leagueLimit = useFormInput('');
+  const leaguePlatform = useFormInput('');
   const name = useFormInput('');
   const username = useFormInput('');
   const mainboard = useFormInput('');
   const sideboard = useFormInput('');
-  const [overlayVisible, setOverlayVisible] = useState();
+  const [leagues, setLeagues] = useState();
+  const [league, setLeague] = useLocalStorage();
+  const [joinOverlay, setJoinOverlay] = useState();
+  const [createOverlay, setCreateOverlay] = useState();
   useScrollRestore();
 
-  const joinLeague = () => {
-    setOverlayVisible(true);
-  };
+  useEffect(() => {
+    const getLeagues = async () => {
+      try {
+        const response = await fetch('/functions/leagues', {
+          method: 'GET',
+          mode: 'cors',
+        });
 
-  const leaveLeague = () => {
-    setOverlayVisible(false);
-  };
+        const data = await response.json();
+        if (response.status !== 200) throw new Error(data.error);
 
-  const handleSubmit = useCallback(async event => {
+        return setLeagues(data);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
+    getLeagues();
+  }, []);
+
+  const createLeague = () => setCreateOverlay(true);
+  const cancelCreateLeague = () => setCreateOverlay(false);
+
+  const handleCreateLeague = useCallback(async event => {
     event.preventDefault();
 
     try {
       const response = await fetch(`/functions/leagues/`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: leagueName.value,
+          limit: leagueLimit.value,
+          platform: leaguePlatform.value
+        }),
+      });
+
+      const data = response.json();
+      if (response.status !== 201) throw new Error(data.error);
+
+      return setCreateOverlay(false);
+    } catch (error) {
+      console.error(error);
+      return alert(error);
+    }
+  }, [leagueName.value, leagueLimit.value, leaguePlatform.value]);
+
+  const joinLeague = (league) => {
+    setLeague(league);
+    return setJoinOverlay(true);
+  };
+
+  const leaveLeague = () => {
+    setLeague(null);
+    return setJoinOverlay(false);
+  };
+
+  const handleJoinLeague = useCallback(async event => {
+    event.preventDefault();
+
+    try {
+      const response = await fetch(`/functions/leagues/join/${league}`, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -45,12 +105,12 @@ export default function Home() {
       const data = response.json();
       if (response.status !== 201) throw new Error(data.error);
 
-      return data.message;
+      return setJoinOverlay(false);
     } catch (error) {
       console.error(error);
       return alert(error);
     }
-  }, [name.value, username.value, mainboard.value, sideboard.value]);
+  }, [league, name.value, username.value, mainboard.value, sideboard.value]);
 
   return (
     <Fragment>
@@ -67,29 +127,68 @@ export default function Home() {
           <p>Last updated on {new Date(null).toLocaleDateString('default', { year: 'numeric', day: 'numeric', month: 'long' })}.</p>
         </Header>
         <Leagues>
-          <League>
-            <LeagueInfo>
-              <img src={icon} width="50px" alt="Videre Logo" />
+          {leagues && leagues.map(({ id, name, limit, players = [] }) => (
+            <League>
+              <LeagueInfo>
+                <img src={icon} width="50px" alt="Videre Logo" />
+                <Column>
+                  <h3>{name}</h3>
+                  <p>{players.length}/{limit} players</p>
+                </Column>
+              </LeagueInfo>
               <Column>
-                <h3>MTGO League</h3>
-                <p>3 players</p>
+                <Button shiny style={{ marginBottom: 0 }} label="Join League" onClick={() => joinLeague(id)} />
+                <Button secondary label="Cancel League" />
               </Column>
-            </LeagueInfo>
-            <Column>
-              <Button shiny style={{ marginBottom: 0 }} label="Join League" onClick={joinLeague} />
-              <Button secondary label="Cancel League" />
-            </Column>
-          </League>
+            </League>
+          ))}
+          <LeagueButton onClick={createLeague}>Create League</LeagueButton>
         </Leagues>
       </Wrapper>
       <Overlay
-        visible={overlayVisible}
+        visible={createOverlay}
+        title="Create League"
+        description="Finish creating your league by filling out the following fields."
+        onSubmit={handleCreateLeague}
+        onCancel={cancelCreateLeague}
+      >
+        <Form onSubmit={handleCreateLeague}>
+          <FormRow>
+            <Input
+              {...leagueName}
+              label="League Name"
+              inline
+              required
+            />
+            <Input
+              {...leagueLimit}
+              label="Player Quota"
+              inline
+              required
+            />
+          </FormRow>
+          <Input
+            {...leaguePlatform}
+            label="Platform"
+            list="game-clients"
+            placeholder="MTGO, Untap, xMage, Cockatrice, etc."
+            inline
+            required
+          >
+            <datalist id="game-clients">
+              {clients.map(client => <option key={client} value={client}>{client}</option>)}
+            </datalist>
+          </Input>
+        </Form>
+      </Overlay>
+      <Overlay
+        visible={joinOverlay}
         title="Join League"
         description="Please enter the following details to complete your league entry."
-        onSubmit={handleSubmit}
+        onSubmit={handleJoinLeague}
         onCancel={leaveLeague}
       >
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleJoinLeague}>
           <FormRow>
             <Input
               {...name}
@@ -194,6 +293,12 @@ const LeagueInfo = styled.div`
     margin: 0;
     padding: 0;
   }
+`;
+
+const LeagueButton = styled(Anchor).attrs(() => ({
+  as: 'button'
+}))`
+  margin: 42px 0 0 0;
 `;
 
 const Column = styled.div`

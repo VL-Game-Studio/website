@@ -24,7 +24,7 @@ const HeaderWrapper = styled.nav`
   max-width: 1440px;
   padding: 0px 8px 8px;
 
-  h1, ${Anchor} {
+  h1 {
     color: ${props => props.theme.colorText};
     font-family: ${props => props.theme.fontStack};
     font-size: 16px;

@@ -1,6 +1,5 @@
 import React from 'react';
 import styled, { css } from 'styled-components/macro';
-import Anchor from 'components/Anchor';
 
 function Form (props) {
   const { header, children, ...rest } = props;
@@ -22,7 +21,7 @@ const FormWrapper = styled.div`
   max-width: 800px;
   width: 100%;
 
-  h1, ${Anchor} {
+  h1 {
     color: ${props => props.theme.colorText};
     font-family: ${props => props.theme.fontStack};
     font-size: 16px;
