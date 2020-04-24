@@ -16,12 +16,11 @@ const leagues = {
     return league;
   },
   async update({ id, ...rest }) {
-    const league = await admin.database()
+    await admin.database()
       .ref(`/leagues/${id}`)
-      .update(rest)
-      .then(snap => snap.val());
+      .update(rest);
 
-    return league;
+    return true;
   },
   async create(props) {
     const league = await admin.database()
@@ -32,36 +31,33 @@ const leagues = {
     return league;
   },
   async join({ id, author, ...rest }) {
-    const league = await admin.database()
+    await admin.database()
       .ref(`/leagues/${id}/players/${author}`)
-      .set({ author, ...rest })
-      .then(snap => snap.val());
+      .set({ author, ...rest });
 
-    return league;
+    return true;
   },
   async report({ id, ...rest }) {
-    const league = await admin.database()
+    await admin.database()
       .ref(`/leagues/${id}/results`)
-      .push(rest)
-      .then(snap => snap.val());
+      .push(rest);
 
-    return league;
+    return true;
   },
   async fire(id) {
-    const league = await admin.database()
+    await admin.database()
       .ref(`/leagues/${id}`)
-      .set({ fired: true })
-      .then(snap => snap.val());
+      .set({ fired: true });
 
-    return league;
+    return true;
   },
   async delete(id) {
-    const league = await admin.database()
+    await admin.database()
       .ref(`/leagues/${id}`)
       .remove()
       .then(snap => snap.val());
 
-    return league;
+    return null;
   },
 };
 

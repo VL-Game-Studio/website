@@ -16,28 +16,25 @@ const decklists = {
     return decklist;
   },
   async update({ id, ...rest }) {
-    const decklist = await admin.database()
+    await admin.database()
       .ref(`/decklists/${id}`)
-      .update(rest)
-      .then(snap => snap.val());
+      .update(rest);
 
-    return decklist;
+    return true;
   },
   async create(props) {
-    const decklist = await admin.database()
+    await admin.database()
       .ref('/decklists')
-      .push(props)
-      .then(snap => snap.val());
+      .push(props);
 
-    return decklist;
+    return true;
   },
   async delete(id) {
-    const decklist = await admin.database()
+    await admin.database()
       .ref(`/decklists/${id}`)
-      .remove()
-      .then(snap => snap.val());
+      .remove();
 
-    return decklist;
+    return null;
   },
 };
 
