@@ -16,25 +16,28 @@ const decklists = {
     return decklist;
   },
   async update({ id, ...rest }) {
-    const key = await admin.database()
+    await admin.database()
       .ref(`/decklists/${id}`)
-      .update(rest)
-      .then(({ key }) => key);
+      .update(rest);
 
     const decklist = await admin.database()
-      .ref(`/decklists/${key}`)
+      .ref(`/decklists/${id}`)
       .once('value', snap => snap.val());
 
     return decklist;
   },
   async create(props) {
-    const key = await admin.database()
+    const id = await admin.database()
       .ref('/decklists')
       .push(props)
       .then(({ key }) => key);
 
+    await admin.database()
+      .ref(`/decklists/${id}`)
+      .set({ id });
+
     const decklist = await admin.database()
-      .ref(`/decklists/${key}`)
+      .ref(`/decklists/${id}`)
       .once('value', snap => snap.val());
 
     return decklist;
