@@ -35,9 +35,10 @@ export default function Home() {
         const data = await response.json();
         if (response.status !== 200) throw new Error(data.error);
 
-        return setLeagues(data);
+        return setLeagues(Object.values(data));
       } catch (error) {
         console.error(error.message);
+        return alert(error.message);
       }
     };
 
@@ -51,7 +52,7 @@ export default function Home() {
     event.preventDefault();
 
     try {
-      const response = await fetch(`/functions/leagues/`, {
+      const response = await fetch(`/functions/leagues`, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -69,8 +70,8 @@ export default function Home() {
 
       return setCreateOverlay(false);
     } catch (error) {
-      console.error(error);
-      return alert(error);
+      console.error(error.message);
+      return alert(error.message);
     }
   }, [leagueName.value, leagueLimit.value, leaguePlatform.value]);
 
@@ -88,7 +89,7 @@ export default function Home() {
     event.preventDefault();
 
     try {
-      const response = await fetch(`/functions/leagues/join/${league}`, {
+      const response = await fetch(`/functions/leagues/join/${league.id}`, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -127,7 +128,7 @@ export default function Home() {
           <p>Last updated on {new Date(null).toLocaleDateString('default', { year: 'numeric', day: 'numeric', month: 'long' })}.</p>
         </Header>
         <Leagues>
-          {leagues && leagues.map(({ id, name, limit, players = [] }) => (
+          {leagues && leagues.map(({ id, name, limit, players = [], platform }) => (
             <League>
               <LeagueInfo>
                 <img src={icon} width="50px" alt="Videre Logo" />
@@ -137,7 +138,7 @@ export default function Home() {
                 </Column>
               </LeagueInfo>
               <Column>
-                <Button shiny style={{ marginBottom: 0 }} label="Join League" onClick={() => joinLeague(id)} />
+                <Button shiny style={{ marginBottom: 0 }} label="Join League" onClick={() => joinLeague({ id, name, limit, players, platform })} />
                 <Button secondary label="Cancel League" />
               </Column>
             </League>
@@ -183,7 +184,7 @@ export default function Home() {
       </Overlay>
       <Overlay
         visible={joinOverlay}
-        title="Join League"
+        title={`Join League: ${league ? league.name : null}`}
         description="Please enter the following details to complete your league entry."
         onSubmit={handleJoinLeague}
         onCancel={leaveLeague}
@@ -198,7 +199,7 @@ export default function Home() {
             />
             <Input
               {...username}
-              label="Game Client Username"
+              label={`${league ? league.platform : 'Game Platform'} Username`}
               inline
               required
             />

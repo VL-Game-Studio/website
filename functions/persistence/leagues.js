@@ -26,15 +26,15 @@ const leagues = {
 
     return league;
   },
-  async create(props) {
+  async create({ name, limit, platform }) {
     const id = await admin.database()
       .ref('/leagues')
-      .push(props)
+      .push({ name, limit, platform })
       .then(({ key }) => key);
 
     await admin.database()
       .ref(`/leagues/${id}`)
-      .set({ id });
+      .update({ id });
 
     const league = await admin.database()
       .ref(`/leagues/${id}`)
@@ -42,10 +42,10 @@ const leagues = {
 
     return league;
   },
-  async join({ id, author, deckID, ...rest }) {
+  async join({ id, name, deckID, ...rest }) {
     await admin.database()
-      .ref(`/leagues/${id}/players/${author}`)
-      .set({ author, deckID, ...rest });
+      .ref(`/leagues/${id}/players/${name.replace(/[^a-zA-Z ]/g, '')}`)
+      .set({ name, deckID, ...rest });
 
     const league = await admin.database()
       .ref(`/leagues/${id}`)
@@ -67,7 +67,7 @@ const leagues = {
   async fire(id) {
     await admin.database()
       .ref(`/leagues/${id}`)
-      .set({ fired: true });
+      .update({ fired: true });
 
     const league = await admin.database()
       .ref(`/leagues/${id}`)

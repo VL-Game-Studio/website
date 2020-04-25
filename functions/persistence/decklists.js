@@ -34,7 +34,7 @@ const decklists = {
 
     await admin.database()
       .ref(`/decklists/${id}`)
-      .set({ id });
+      .update({ id });
 
     const decklist = await admin.database()
       .ref(`/decklists/${id}`)
