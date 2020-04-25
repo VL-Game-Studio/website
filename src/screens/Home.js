@@ -26,6 +26,8 @@ export default function Home() {
 
   useInterval(async () => {
     const getLeagues = async () => {
+      if (joinOverlay || createOverlay) return;
+
       try {
         const response = await fetch('/functions/leagues', {
           method: 'GET',
@@ -271,8 +273,14 @@ const League = styled.div`
   border-radius: 4px;
   display: flex;
   justify-content: space-between;
-  padding: 16px;
+  margin-bottom: 32px;
   max-width: 660px;
+  padding: 16px;
+  width: 100%;
+
+  :last-of-type {
+    margin-bottom: 0;
+  }
 `;
 
 const LeagueInfo = styled.div`
