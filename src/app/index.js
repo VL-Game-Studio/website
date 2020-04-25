@@ -11,6 +11,7 @@ import WhitneyMedium from 'assets/fonts/whitney-medium.woff2';
 import WhitneySemiBold from 'assets/fonts/whitney-semibold.woff2';
 import WhitneyBold from 'assets/fonts/whitney-bold.woff2';
 import { initialState, reducer } from 'app/reducer';
+import { rgba } from 'utils/style';
 import { reflow } from 'utils/transition';
 
 const Home = lazy(() => import('screens/Home'));
@@ -153,7 +154,7 @@ export const GlobalStyles = createGlobalStyle`
 
   ::selection {
     background: ${props => props.theme.colorAccent};
-    color: rgb(0, 0, 0, 0.9);
+    color: ${props => rgba(props.theme.colorText, 0.9)}
   }
 
   #root *,

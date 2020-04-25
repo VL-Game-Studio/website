@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, Fragment } from 'react';
+import React, { useState, useCallback, Fragment } from 'react';
 import styled from 'styled-components/macro';
 import { Helmet } from 'react-helmet-async';
 import Anchor from 'components/Anchor';
@@ -6,9 +6,8 @@ import Form from 'components/Form';
 import Input from 'components/Input';
 import Button from 'components/Button';
 import Overlay from 'screens/Overlay';
-import { useFormInput, useLocalStorage, useScrollRestore } from 'hooks';
+import { useFormInput, useLocalStorage, useScrollRestore, useInterval } from 'hooks';
 import clients from 'data/clients';
-import prerender from 'utils/prerender';
 import icon from 'assets/icon.png';
 
 export default function Home() {
@@ -25,7 +24,7 @@ export default function Home() {
   const [createOverlay, setCreateOverlay] = useState();
   useScrollRestore();
 
-  useEffect(() => {
+  useInterval(async () => {
     const getLeagues = async () => {
       try {
         const response = await fetch('/functions/leagues', {
@@ -43,8 +42,8 @@ export default function Home() {
       }
     };
 
-    if (!prerender) getLeagues();
-  }, []);
+    getLeagues();
+  }, 5000, leagues);
 
   const createLeague = () => setCreateOverlay(true);
   const cancelCreateLeague = () => setCreateOverlay(false);

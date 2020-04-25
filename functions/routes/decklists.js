@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
 
   try {
     const deck = validateDecklist(mainboard, sideboard);
-    const decklist = await decklists.create({ author, platform, ...deck });
+    const decklist = await decklists.create({ author, ...deck });
 
     return res.status(201).json(decklist);
   } catch (error) {
@@ -45,15 +45,15 @@ router.post('/', async (req, res) => {
 
 router.post('/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, author, platform, mainboard, sideboard } = req.body;
+  const { name, author, mainboard, sideboard } = req.body;
 
   try {
     const deck = validateDecklist(mainboard, sideboard);
-    const decklist = await decklists.update({ id, author, platform, ...deck });
+    const decklist = await decklists.update({ id, author, ...deck });
 
     return res.status(201).json(decklist);
   } catch (error) {
-    console.error(`POST /decklists/${id} ({ name: ${name}, author: ${author}, platform: ${platform}, mainboard: ${mainboard}, sideboard: ${sideboard} }) >> ${error.stack}`);
+    console.error(`POST /decklists/${id} ({ name: ${name}, author: ${author}, mainboard: ${mainboard}, sideboard: ${sideboard} }) >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while updating decklist: ${id}.` });
   }
 });
