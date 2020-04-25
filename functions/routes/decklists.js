@@ -30,7 +30,7 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const { name, author, platform, mainboard, sideboard } = req.body;
+  const { author, mainboard, sideboard } = req.body;
 
   try {
     const deck = validateDecklist(mainboard, sideboard);
@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
 
     return res.status(201).json(decklist);
   } catch (error) {
-    console.error(`POST /decklists ({ name: ${name}, author: ${author}, platform: ${platform}, mainboard: ${mainboard}, sideboad: ${sideboard} }) >> ${error.stack}`);
+    console.error(`POST /decklists ({ author: ${author}, mainboard: ${mainboard}, sideboad: ${sideboard} }) >> ${error.stack}`);
     return res.status(500).json({ error: 'An error occured while creating decklist.' });
   }
 });

@@ -8,6 +8,7 @@ import Button from 'components/Button';
 import Overlay from 'screens/Overlay';
 import { useFormInput, useLocalStorage, useScrollRestore } from 'hooks';
 import clients from 'data/clients';
+import prerender from 'utils/prerender';
 import icon from 'assets/icon.png';
 
 export default function Home() {
@@ -38,11 +39,11 @@ export default function Home() {
         return setLeagues(Object.values(data));
       } catch (error) {
         console.error(error.message);
-        return alert(error.message);
+        return alert('An error occured while creating your league.');
       }
     };
 
-    getLeagues();
+    if (!prerender) getLeagues();
   }, []);
 
   const createLeague = () => setCreateOverlay(true);
@@ -71,7 +72,7 @@ export default function Home() {
       return setCreateOverlay(false);
     } catch (error) {
       console.error(error.message);
-      return alert(error.message);
+      return alert('An error occured while signing up for that league.');
     }
   }, [leagueName.value, leagueLimit.value, leaguePlatform.value]);
 
@@ -129,7 +130,7 @@ export default function Home() {
         </Header>
         <Leagues>
           {leagues && leagues.map(({ id, name, limit, players = [], platform }) => (
-            <League>
+            <League key={id}>
               <LeagueInfo>
                 <img src={icon} width="50px" alt="Videre Logo" />
                 <Column>
