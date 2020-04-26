@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 
 const Anchor = styled.a.attrs(({ target }) => ({
   rel: target === '_blank' ? 'noreferrer nofollower' : null
@@ -24,6 +24,10 @@ const Anchor = styled.a.attrs(({ target }) => ({
   &:focus {
     text-decoration: underline;
   }
+
+  ${props => props.accent && css`
+    color: ${props => props.theme.colorAccent};
+  `}
 `;
 
 export default Anchor;

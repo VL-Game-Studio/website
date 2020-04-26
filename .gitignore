@@ -58,5 +58,5 @@ typings/
 .env
 
 build/
-config.json
+build-storybook/
 .firebase

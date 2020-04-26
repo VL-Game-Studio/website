@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "project-videre"
+  },
+  "targets": {
+    "project-videre": {
+      "hosting": {
+        "website": [
+          "project-videre"
+        ],
+        "storybook": [
+          "videre-storybook"
+        ]
+      }
+    }
   }
 }
