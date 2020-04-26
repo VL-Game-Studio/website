@@ -44,14 +44,14 @@ const leagues = {
   },
   async join({ id, name, username, deckID }) {
     await admin.database()
-      .ref(`/leagues/${id}/players/${name.replace(/[^a-zA-Z ]/g, '')}`)
-      .set({ name, username, deckID });
+      .ref(`/leagues/${id}/players`)
+      .push({ name, username, deckID });
 
     const league = await admin.database()
       .ref(`/leagues/${id}`)
       .once('value', snap => snap.val());
 
-    return leauge;
+    return league;
   },
   async report({ id, ...rest }) {
     await admin.database()
