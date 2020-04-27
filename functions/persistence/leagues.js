@@ -4,14 +4,16 @@ const leagues = {
   async fetchAll() {
     const allLeagues = await admin.database()
       .ref('/leagues')
-      .once('value', snap => snap.val());
+      .once('value')
+      .then(snap => snap.val());
 
     return allLeagues;
   },
   async fetch(id) {
     const league = await admin.database()
       .ref(`/leagues/${id}`)
-      .once('value', snap => snap.val());
+      .once('value')
+      .then(snap => snap.val());
 
     return league;
   },
@@ -22,7 +24,8 @@ const leagues = {
 
     const league = await admin.database()
       .ref(`/leagues/${id}`)
-      .once('value', snap => snap.val());
+      .once('value')
+      .then(snap => snap.val());
 
     return league;
   },
@@ -38,7 +41,8 @@ const leagues = {
 
     const league = await admin.database()
       .ref(`/leagues/${id}`)
-      .once('value', snap => snap.val());
+      .once('value')
+      .then(snap => snap.val());
 
     return league;
   },
@@ -49,7 +53,8 @@ const leagues = {
 
     const league = await admin.database()
       .ref(`/leagues/${id}`)
-      .once('value', snap => snap.val());
+      .once('value')
+      .then(snap => snap.val());
 
     return league;
   },
@@ -60,7 +65,8 @@ const leagues = {
 
     const league = await admin.database()
       .ref(`/leagues/${id}`)
-      .once('value', snap => snap.val());
+      .once('value')
+      .then(snap => snap.val());
 
     return league;
   },
@@ -71,14 +77,16 @@ const leagues = {
 
     const league = await admin.database()
       .ref(`/leagues/${id}`)
-      .once('value', snap => snap.val());
+      .once('value')
+      .then(snap => snap.val());
 
     return league;
   },
   async delete(id) {
     const league = await admin.database()
       .ref(`/leagues/${id}`)
-      .once('value', snap => snap.val());
+      .once('value')
+      .then(snap => snap.val());
 
     await admin.database()
       .ref(`/leagues/${id}`)

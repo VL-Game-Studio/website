@@ -4,14 +4,16 @@ const decklists = {
   async fetchAll() {
     const allDecklists = await admin.database()
       .ref('/decklists')
-      .once('value', snap => snap.val());
+      .once('value')
+      .then(snap => snap.val());
 
     return allDecklists;
   },
   async fetch(id) {
     const decklist = await admin.database()
       .ref(`/decklists/${id}`)
-      .once('value', snap => snap.val());
+      .once('value')
+      .then(snap => snap.val());
 
     return decklist;
   },
@@ -22,7 +24,8 @@ const decklists = {
 
     const decklist = await admin.database()
       .ref(`/decklists/${id}`)
-      .once('value', snap => snap.val());
+      .once('value')
+      .then(snap => snap.val());
 
     return decklist;
   },
@@ -38,14 +41,16 @@ const decklists = {
 
     const decklist = await admin.database()
       .ref(`/decklists/${id}`)
-      .once('value', snap => snap.val());
+      .once('value')
+      .then(snap => snap.val());
 
     return decklist;
   },
   async delete(id) {
     const decklist = await admin.database()
       .ref(`/decklists/${id}`)
-      .once('value', snap => snap.val());
+      .once('value')
+      .then(snap => snap.val());
 
     await admin.database()
       .ref(`/decklists/${id}`)
