@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
 
     return res.status(201).json(decklist);
   } catch (error) {
-    console.error(`POST /decklists ({ author: ${author}, mainboard: ${mainboard}, sideboad: ${sideboard} }) >> ${error.stack}`);
+    console.error(`POST /decklists ({ author: ${author}, mainboard: ${mainboard}, sideboard: ${sideboard} }) >> ${error.stack}`);
     return res.status(500).json({ error: 'An error occured while creating decklist.' });
   }
 });
