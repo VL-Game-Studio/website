@@ -18,6 +18,6 @@ Path | Method | Parameters | Description
    /leagues/:id | GET | *none* | Fetches a single league by id, returning an object.
    /leagues/ | POST | `name` `limit` `platform` | Generates and adds a league to the registry.
    /leagues/:id | POST | `name` `limit` `platform` | Fetches and updates a league by id, returning an object.
-   /leagues/join/:id | POST | `name` `username` `mainboard` `sideboard` | Registers a user and a deck from mainboard and sideboard to an active league, returning an object.
+   /leagues/join/:id | POST | `name` `username` `deckID` or `mainboard` and `sideboard` | Registers a user and a deck from deckID or mainboard and sideboard to an active league, returning an object.
    /leagues/fire/:id | GET | *none* | Forcibly fires a league by id, returning a pairings object.
    /leagues/results/:id | POST | `result` | Records player scores object: { player1Wins, player2Wins, draws } on an active league.

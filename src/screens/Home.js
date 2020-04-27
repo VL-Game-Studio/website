@@ -37,7 +37,7 @@ export default function Home() {
         const data = await response.json();
         if (response.status !== 200) throw new Error(data.error);
 
-        return setLeagues(Object.values(data));
+        return setLeagues(data);
       } catch (error) {
         console.error(error.message);
         return alert('An error occured while creating your league.');
@@ -130,13 +130,13 @@ export default function Home() {
           <p>Last updated on {new Date(null).toLocaleDateString('default', { year: 'numeric', day: 'numeric', month: 'long' })}.</p>
         </Header>
         <Leagues>
-          {leagues && leagues.map(({ id, name, limit, players = {}, platform }) => (
+          {leagues && leagues.map(({ id, name, limit, players = [], platform }) => (
             <League key={id}>
               <LeagueInfo>
                 <img src={icon} width="50px" alt="Videre Logo" />
                 <Column>
                   <h3>{name}</h3>
-                  <p>{Object.values(players).length}/{limit} players</p>
+                  <p>{players.length}/{limit} players</p>
                 </Column>
               </LeagueInfo>
               <Column>
