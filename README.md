@@ -1,23 +1,13 @@
-# Videre Website
+# Videre.live
 
 [![Site preview](/public/social-image.png)](https://videre.live)
 
-## Install & run
+# Issues / bugs
 
-Make sure you have nodejs and yarn installed. Install dependencies with:
+Make sure you check to see if your issue is related to other issues before creating any, or if it is on [the list of things we fixed but haven't released yet](https://github.com/VidereMTG/videre.live/wiki/features-and-fixes-not-released-yet).
 
-```bash
-yarn
-```
+Be sure to tag your issue [here](https://github.com/VidereMTG/videre.live/issues) using the **bug** tag!
 
-Once it's done start up a local server with:
+# Designers and Developers
 
-```bash
-yarn start
-```
-
-To run tests:
-
-```bash
-yarn test
-```
+If you  are interested in designing or developing videre.live with us, you can reach to us through the [Official VidereMTG Discord](https://discord.gg/mjtTnr8) which we check regularly.

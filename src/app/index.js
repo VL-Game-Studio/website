@@ -5,7 +5,6 @@ import { Transition, TransitionGroup, config as transitionConfig } from 'react-t
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { theme } from 'app/theme';
 import { useLocalStorage, usePrefersReducedMotion } from 'hooks';
-import Header from 'components/Header';
 import WhitneyBook from 'assets/fonts/whitney-book.woff2';
 import WhitneyMedium from 'assets/fonts/whitney-medium.woff2';
 import WhitneySemiBold from 'assets/fonts/whitney-semibold.woff2';
@@ -100,7 +99,6 @@ function AppRoutes() {
       </Helmet>
       <GlobalStyles />
       <SkipToMain href="#MainContent">Skip to main content</SkipToMain>
-      <Header location={location} />
       <TransitionGroup
         component={AppMainContent}
         tabIndex={-1}

@@ -29,28 +29,28 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const { name, username, platform, roles, decks } = req.body;
+  const { name, platforms, roles, decks } = req.body;
 
   try {
-    const user = await users.create({ name, username, platform, roles, decks });
+    const user = await users.create({ name, platforms, roles, decks });
 
     return res.status(201).json(user);
   } catch (error) {
-    console.error(`POST /users ({ name: ${name}, username: ${username}, platform: ${platform}, decks: ${decks} }) >> ${error.stack}`);
+    console.error(`POST /users ({ name: ${name}, platforms: ${platforms}, decks: ${decks} }) >> ${error.stack}`);
     return res.status(500).json({ error: 'An error occured while creating user.' });
   }
 });
 
 router.post('/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, username, platform, decks } = req.body;
+  const { name, platforms, roles, decks } = req.body;
 
   try {
-    const user = await users.update({ id, name, username, platform, roles, decks });
+    const user = await users.update({ id, name, platforms, roles, decks });
 
     return res.status(201).json(user);
   } catch (error) {
-    console.error(`POST /users/${id} ({ name: ${name}, username: ${username}, platform: ${platform}, decks: ${decks} }) >> ${error.stack}`);
+    console.error(`POST /users/${id} ({ name: ${name}, platforms: ${platforms}, decks: ${decks} }) >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while updating user: ${id}.` });
   }
 });

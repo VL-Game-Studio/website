@@ -17,10 +17,10 @@ const users = {
 
     return user;
   },
-  async update({ id, ...rest }) {
+  async update({ id, name, roles, platforms, decks }) {
     await admin.database()
       .ref(`/users/${id}`)
-      .update(rest);
+      .update({ name, roles, platforms, decks });
 
     const user = await admin.database()
       .ref(`/users/${id}`)
@@ -48,12 +48,12 @@ const users = {
   },
   async delete(id) {
     const user = await admin.database()
-      .ref(`/decklists/${id}`)
+      .ref(`/users/${id}`)
       .once('value')
       .then(snap => snap.val());
 
     await admin.database()
-      .ref(`/decklists/${id}`)
+      .ref(`/users/${id}`)
       .remove();
 
     return user;

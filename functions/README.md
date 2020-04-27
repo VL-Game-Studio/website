@@ -28,6 +28,6 @@ Path | Method | Parameters | Description
  --- | --- | --- | ---
    /users/ | GET | *none* | Fetches all users, returning an object.
    /users/:id | GET | *none* | Fetches a single user by id, returning an object.
-   /users/ | POST | `name` `username` `platform` `roles` `decks` | Creates user and binds decks, returning an object.
-   /users/:id | POST | `name` `username` `platform` `roles` `decks` | Updates user and binds decks by id, returning an object.
+   /users/ | POST | `name` `platforms` `roles` `decks` | Creates user and binds decks, returning an object.
+   /users/:id | POST | `name` `platforms` `roles` `decks` | Updates user and binds decks by id, returning an object.
    /users/:id | DELETE | *none* | Fetches and deletes a user by id, returning an object.
