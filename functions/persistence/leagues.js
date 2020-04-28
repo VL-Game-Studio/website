@@ -17,6 +17,22 @@ const leagues = {
 
     return league;
   },
+  async fetchPlayers(id) {
+    const player = await admin.database()
+      .ref(`/leagues/${id}/players`)
+      .once('value')
+      .then(snap => snap.val());
+
+    return player;
+  },
+  async fetchPlayer(id, playerID) {
+    const player = await admin.database()
+      .ref(`/leagues/${id}/players/${playerID}`)
+      .once('value')
+      .then(snap => snap.val());
+
+    return player;
+  },
   async update({ id, ...rest }) {
     await admin.database()
       .ref(`/leagues/${id}`)

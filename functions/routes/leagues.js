@@ -29,6 +29,36 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+router.get('/:id/players', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const players = await leagues.fetchPlayers(id);
+
+    return res.status(200).json(players);
+  } catch (error) {
+    console.error(`GET /leagues/${id}/players >> ${error.stack}`);
+    return res.status(500).json({ error: `An error occured while fetching players from league: ${id}.` });
+  }
+});
+
+router.get('/:id/players/:playerID', async (req, res) => {
+  const { id, playerID } = req.params;
+  console.log(req.params);
+  console.log(playerID);
+
+  try {
+    const player = await leagues.fetchPlayer(id, playerID);
+    console.log(player);
+    if (!player) return res.status(404).json({ message: `Player: ${playerID} was not found.` });
+
+    return res.status(200).json(player);
+  } catch (error) {
+    console.error(`GET /leagues/${id}/players/${playerID} >> ${error.stack}`);
+    return res.status(500).json({ error: `An error occured while fetching player: ${playerID}.` });
+  }
+});
+
 router.post('/', async (req, res) => {
   const { name, limit, platform } = req.body;
 
