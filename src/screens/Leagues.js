@@ -125,7 +125,7 @@ export default function Leagues() {
           <h1>Leagues</h1>
           <p>Last updated on {new Date(null).toLocaleDateString('default', { year: 'numeric', day: 'numeric', month: 'long' })}.</p>
         </Header>
-        <Leagues>
+        <LeagueList>
           {leagues && Object.values(leagues).map(({ id, name, limit, players = [], platform }) => (
             <League key={id}>
               <LeagueInfo>
@@ -142,7 +142,7 @@ export default function Leagues() {
             </League>
           ))}
           <LeagueButton onClick={createLeague}>Create League</LeagueButton>
-        </Leagues>
+        </LeagueList>
       </Wrapper>
       <Overlay
         visible={createOverlay}
@@ -254,7 +254,7 @@ const Header = styled.div`
   }
 `;
 
-const Leagues = styled.div`
+const LeagueList = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;

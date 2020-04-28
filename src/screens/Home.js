@@ -1,6 +1,8 @@
-import React, {Fragment } from 'react';
+import React, { Fragment, Suspense } from 'react';
 import { Helmet } from 'react-helmet-async';
+import Timeline from 'components/Timeline';
 import { useScrollRestore } from 'hooks';
+import prerender from 'utils/prerender';
 
 export default function Home() {
   useScrollRestore();
@@ -14,6 +16,11 @@ export default function Home() {
           content: "pre-WAR Modern",
         }]}
       />
+      {!prerender &&
+        <Suspense fallback={null}>
+          <Timeline />
+        </Suspense>
+      }
     </Fragment>
   );
 }
