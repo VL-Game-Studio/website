@@ -33,6 +33,18 @@ const leagues = {
 
     return player;
   },
+  async removePlayer(id, playerID) {
+    const player = await admin.database()
+      .ref(`/leagues/${id}/players/${playerID}`)
+      .once('value')
+      .then(snap => snap.val());
+
+    await admin.database()
+      .ref(`/leagues/${id}/players/${playerID}`)
+      .remove();
+
+    return player;
+  },
   async update({ id, ...rest }) {
     await admin.database()
       .ref(`/leagues/${id}`)

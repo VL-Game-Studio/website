@@ -44,18 +44,29 @@ router.get('/:id/players', async (req, res) => {
 
 router.get('/:id/players/:playerID', async (req, res) => {
   const { id, playerID } = req.params;
-  console.log(req.params);
-  console.log(playerID);
 
   try {
     const player = await leagues.fetchPlayer(id, playerID);
-    console.log(player);
     if (!player) return res.status(404).json({ message: `Player: ${playerID} was not found.` });
 
     return res.status(200).json(player);
   } catch (error) {
     console.error(`GET /leagues/${id}/players/${playerID} >> ${error.stack}`);
-    return res.status(500).json({ error: `An error occured while fetching player: ${playerID}.` });
+    return res.status(500).json({ error: `An error occured while fetching player: ${playerID} from league: ${id}.` });
+  }
+});
+
+router.delete('/:id/players/:playerID', async (req, res) => {
+  const { id, playerID } = req.params;
+
+  try {
+    const player = await leagues.fetchPlayer(id, playerID);
+    if (!player) return res.status(404).json({ message: `Player: ${playerID} was not found.` });
+
+    return res.status(200).json(player);
+  } catch (error) {
+    console.error(`DELETE /leagues/${id}/players/${playerID} >> ${error.stack}`);
+    return res.status(500).json({ error: `An error occured while deleting player: ${playerID} from league: ${id}.` });
   }
 });
 
