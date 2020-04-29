@@ -52,26 +52,13 @@ const base = {
   maxWidthLaptop: 1000,
 };
 
-const dark = {
-  id: 'dark',
+export const theme = {
   ...spacing,
   ...base,
   ...media,
-  colorBackground: 'rgba(54, 57, 63, 1)',
-  colorTitle: base.colorWhite,
-  colorText: base.colorWhite,
-  colorAccent: 'rgba(114, 137, 218, 1)',
-};
-
-const light = {
-  id: 'light',
-  ...spacing,
-  ...base,
-  ...media,
-  colorBackground: 'rgba(255, 255, 255, 1)',
+  colorBackground: 'rgba(47, 44, 55, 1)',
+  colorBackgroundLight: 'rgba(242, 242, 242, 1)',
   colorTitle: base.colorBlack,
   colorText: rgba(base.colorBlack, 0.8),
   colorAccent: 'rgba(114, 137, 218, 1)',
 };
-
-export const theme = { dark, light };

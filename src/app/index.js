@@ -4,7 +4,7 @@ import { BrowserRouter, Switch, Route, useLocation } from 'react-router-dom';
 import { Transition, TransitionGroup, config as transitionConfig } from 'react-transition-group';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { theme } from 'app/theme';
-import { useLocalStorage, usePrefersReducedMotion } from 'hooks';
+import { usePrefersReducedMotion } from 'hooks';
 import WhitneyBook from 'assets/fonts/whitney-book.woff2';
 import WhitneyMedium from 'assets/fonts/whitney-medium.woff2';
 import WhitneySemiBold from 'assets/fonts/whitney-semibold.woff2';
@@ -49,10 +49,8 @@ export const fontStyles = `
 `;
 
 function App() {
-  const [storedTheme] = useLocalStorage('theme', 'dark');
   const [state, dispatch] = useReducer(reducer, initialState);
   const prefersReducedMotion = usePrefersReducedMotion();
-  const { currentTheme } = state;
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -66,13 +64,9 @@ function App() {
     window.history.scrollRestoration = 'manual';
   }, []);
 
-  useEffect(() => {
-    dispatch({ type: 'setTheme', value: theme[storedTheme] });
-  }, [storedTheme]);
-
   return (
     <HelmetProvider>
-      <ThemeProvider theme={currentTheme}>
+      <ThemeProvider theme={theme}>
         <AppContext.Provider value={{ ...state, dispatch }}>
           <BrowserRouter>
             <AppRoutes />
