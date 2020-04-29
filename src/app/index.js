@@ -159,6 +159,11 @@ export const GlobalStyles = createGlobalStyle`
       transition-duration: 0s;
     }
   }
+
+  h1, h2, h3, h4, p, label {
+    margin: 0;
+    padding: 0;
+  }
 `;
 
 const AppMainContent = styled.main`
@@ -177,7 +182,6 @@ const AppPage = styled.div`
   grid-row: 1;
   opacity: 0;
   overflow-x: hidden;
-  padding: 8px;
   transition: opacity 0.3s ease;
 
   ${props => (props.status === 'exiting' || props.status === 'entering') && css`

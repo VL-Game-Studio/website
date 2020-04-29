@@ -23,7 +23,7 @@ const ButtonWrapper = styled.button`
   background: ${props => props.theme.colorAccent} none repeat scroll 0% 0%;
   border-radius: 3px;
   border: 1px solid rgb(114, 137, 218);
-  color: ${props => props.theme.colorText};
+  color: ${props => props.theme.colorWhite};
   cursor: pointer;
   font-family: ${props => props.theme.fontStack};
   font-size: 14px;
