@@ -17,7 +17,6 @@ export default function Community(props) {
       ref={sectionRef}
       id={id}
       aria-labelledby={labelId}
-      tabIndex={-1}
       {...rest}
     >
       <Transition

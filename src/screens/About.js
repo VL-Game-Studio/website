@@ -14,7 +14,6 @@ export default function About(props) {
       ref={sectionRef}
       id={id}
       aria-labelledby={labelId}
-      tabIndex={-1}
       {...rest}
     >
       <Transition

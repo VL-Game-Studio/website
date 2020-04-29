@@ -3,6 +3,7 @@ import styled from 'styled-components/macro';
 import Anchor from 'components/Anchor';
 import { Link } from 'components/Link';
 import Icon from 'components/Icon';
+import { rgba } from 'utils/style';
 import logo from 'assets/logo.png';
 
 const IconLink = ({ href, icon, label }) => (
@@ -34,7 +35,7 @@ function Footer() {
 
 const FooterWrapper = styled.footer`
   background: ${props => props.theme.colorBackgroundLight};
-  border-top: 1px solid rgba(11, 37, 75, 0.1);
+  border-top: 1px solid ${props => rgba(props.theme.colorBlack, 0.1)};
   display: grid;
   grid-gap: 48px;
   grid-template-columns: 1fr 1fr;
@@ -46,7 +47,7 @@ const FooterWrapper = styled.footer`
   }
 
   a, svg {
-    color: rgba(11, 37, 75, 0.7);
+    color: ${props => props.theme.colorText};
     text-decoration: none!important;
   }
 
@@ -59,7 +60,7 @@ const FooterWrapper = styled.footer`
 const Logo = styled(Link)`
   align-items: center;
   display: grid;
-  font-weight: 600;
+  font-weight: 500;
   grid-gap: 8px;
   grid-template-columns: 32px 1fr;
   justify-content: center;
