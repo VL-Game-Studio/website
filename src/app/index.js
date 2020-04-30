@@ -3,6 +3,7 @@ import styled, { createGlobalStyle, ThemeProvider, css } from 'styled-components
 import { BrowserRouter, Switch, Route, useLocation } from 'react-router-dom';
 import { Transition, TransitionGroup, config as transitionConfig } from 'react-transition-group';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
+import Header from 'components/Header';
 import { theme } from 'app/theme';
 import { usePrefersReducedMotion } from 'hooks';
 import WhitneyBook from 'assets/fonts/whitney-book.woff2';
@@ -93,6 +94,7 @@ function AppRoutes() {
       </Helmet>
       <GlobalStyles />
       <SkipToMain href="#MainContent">Skip to main content</SkipToMain>
+      <Header location={location} />
       <TransitionGroup
         component={AppMainContent}
         tabIndex={-1}

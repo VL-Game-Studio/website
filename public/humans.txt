@@ -21,9 +21,11 @@ TECHNOLOGY
 React
 Styled Components
 Storybook
-Discord
 Firebase
-
+Tween
+ThreeJS
+DiscordJS
+NodeJS
 _______________________________________________________________________________
 
 FONTS

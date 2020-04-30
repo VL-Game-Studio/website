@@ -9,7 +9,7 @@ import events from 'data/events';
 
 export default function Events(props) {
   const { id, sectionRef, visible = true, ...rest } = props;
-  const labelId = `${id}-label`
+  const labelId = `${id}-label`;
 
   return (
     <EventsWrapper

@@ -1,4 +1,4 @@
-# Videre.live
+# 🌐 [Videre.live](https://videre.live)
 
 [![Site preview](/public/social-image.png)](https://videre.live)
 
@@ -11,3 +11,27 @@ Be sure to tag your issue [here](https://github.com/VidereMTG/videre.live/issues
 # Designers and Developers
 
 If you  are interested in designing or developing videre.live with us, you can reach to us through the [Official VidereMTG Discord](https://discord.gg/mjtTnr8) which we check regularly.
+
+## Scripts
+
+```bash
+yarn
+```
+
+Once it's done start up a local server with:
+
+```bash
+yarn start
+```
+
+To view the components and style guide:
+
+```bash
+yarn storybook
+```
+
+To run tests:
+
+```bash
+yarn test
+```
