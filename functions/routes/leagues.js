@@ -133,12 +133,14 @@ router.get('/fire/:id', async (req, res) => {
 
 router.post('/results/:id', async (req, res) => {
   const { id } = req.params;
-  const { result } = req.body;
+  const { result, reportingPlayer } = req.body;
 
   try {
-    const league = await leagues.report({ id, ...result });
+    if (!result.includes('-')) return res.status(400).json({ error: 'Invalid result format. Expected WINS-TIES-LOSSES.' });
+    const results = await leagues.report({ id, result, reportingPlayer });
+    if (!results) return res.status(403).json({ error: `Reporting player is not playing in event: ${id}.` });
 
-    return res.status(201).json(league);
+    return res.status(201).json(results);
   } catch (error) {
     console.error(`POST /leagues/results/${league} ({ result: ${result} }) >> ${error.stack}`);
     return res.status(500).json({ error: 'An error occured while processing your match result.' });
