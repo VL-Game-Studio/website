@@ -74,12 +74,13 @@ const EventsContent = styled.div`
   display: grid;
   grid-gap: 142px;
   grid-template-columns: 280px 652px;
-  margin: 91px 118px;
+  padding: 90px 120px;
 
   @media (max-width: ${props => props.theme.laptop}px) {
     grid-gap: 0;
     grid-row-gap: 32px;
     grid-template-columns: 1fr;
+    padding: 30px 40px;
   }
 `;
 
@@ -91,6 +92,10 @@ const Column = styled.div`
 const EventsList = styled(Column)`
   background: ${props => props.theme.colorBackgroundLight};
   padding: 40px 60px;
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    padding: 12px 24px;
+  }
 `;
 
 const Event = styled.div`

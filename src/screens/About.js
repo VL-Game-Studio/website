@@ -56,12 +56,13 @@ const AboutContent = styled.div`
   display: grid;
   grid-gap: 142px;
   grid-template-columns: 446px 446px;
-  margin: 155px 120px;
+  padding: 155px 120px;
 
   @media (max-width: ${props => props.theme.tablet}px) {
-    grid-template-columns: 1fr;
     grid-gap: 0;
     grid-row-gap: 30px;
+    grid-template-columns: 1fr;
+    padding: 50px 40px;
   }
 `;
 

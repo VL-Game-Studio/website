@@ -57,14 +57,19 @@ const IntroWrapper = styled.section`
 const IntroContent = styled.div`
   text-align: center;
   z-index: 2;
+  padding: 0 40px;
 `;
 
 const IntroTitle = styled(Title)`
   color: ${props => props.theme.colorWhite};
   font-size: 58px;
   letter-spacing: 7px;
-  line-height: 64px;
+  line-height: 1.1;
   max-width: 500px;
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    font-size: 48px;
+  }
 `;
 
 const AnimScrollIndicator = keyframes`

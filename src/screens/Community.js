@@ -51,8 +51,12 @@ const CommunityWrapper = styled.section`
 const CommunityContent = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 155px 120px;
   max-width: 446px;
+  padding: 160px 120px;
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    padding: 50px 40px;
+  }
 `;
 
 const IconButton = styled(Button)`

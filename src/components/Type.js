@@ -13,6 +13,10 @@ export const Title = styled.h1`
   color: ${props => props.theme.colorTitle};
   font-size: 32px;
   font-weight: 500;
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    font-size: 24px;
+  }
 `;
 
 export const Paragraph = styled.p`
