@@ -32,7 +32,7 @@ function Intro(props) {
               </Suspense>
             }
             <IntroContent status={status}>
-              <IntroTitle id={titleId} aria-label=""></IntroTitle>
+              <IntroTitle id={titleId} aria-label="2019 was a bad year for Magic">2019 was a bad year for Magic</IntroTitle>
             </IntroContent>
             <MemoizedScrollIndicator
               isHidden={scrollIndicatorHidden}
@@ -54,11 +54,18 @@ const IntroWrapper = styled.section`
   width: 100%;
 `;
 
-const IntroTitle = styled(Title)`
-  color: ${props => props.theme.colorWhite};
+const IntroContent = styled.div`
+  text-align: center;
+  z-index: 2;
 `;
 
-const IntroContent = styled.div``;
+const IntroTitle = styled(Title)`
+  color: ${props => props.theme.colorWhite};
+  font-size: 58px;
+  letter-spacing: 7px;
+  line-height: 64px;
+  max-width: 500px;
+`;
 
 const AnimScrollIndicator = keyframes`
   0% {

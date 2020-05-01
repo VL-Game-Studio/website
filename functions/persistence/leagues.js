@@ -86,17 +86,32 @@ const leagues = {
 
     return league;
   },
-  async report({ id, ...rest }) {
-    await admin.database()
-      .ref(`/leagues/${id}/results`)
-      .push(rest);
+  async report({ id, result, reportingPlayer }) {
+    const [player, draws, opponent] = result.split('-');
 
-    const league = await admin.database()
-      .ref(`/leagues/${id}`)
+    const { player1, player2 } = await admin.database()
+      .ref(`/leagues/${id}/pairings`)
       .once('value')
       .then(snap => snap.val());
 
-    return league;
+    if (![player1, player2].includes(reportingPlayer)) return false;
+
+    const activePlayer = reportingPlayer === player1;
+    const key = await admin.database()
+      .ref(`/leagues/${id}/results`)
+      .push({
+        player1: activePlayer ? player : opponent,
+        draws,
+        player2: activePlayer ? opponent : player,
+      })
+      .then(({ key }) => key);
+
+    const results = await admin.database()
+      .ref(`/leagues/${id}/results/${key}`)
+      .once('value')
+      .then(snap => snap.val());
+
+    return results;
   },
   async fire(id) {
     await admin.database()

@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, memo } from 'react';
 import styled, { useTheme } from 'styled-components/macro';
 import { PerspectiveCamera, Scene, Color, Fog, AmbientLight, WebGLRenderer } from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Transition } from 'react-transition-group';
+import Timeline3D from './Timeline3D';
 import { usePrefersReducedMotion } from 'hooks';
 import { reflow, isVisible } from 'utils/transition';
 
@@ -14,6 +16,8 @@ function TimelineScene(props) {
   const camera = useRef();
   const scene = useRef();
   const light = useRef();
+  const controls = useRef();
+  const timeline = useRef();
   const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
@@ -23,6 +27,12 @@ function TimelineScene(props) {
     scene.current.background = new Color(colorBackground);
 
     scene.current.fog = new Fog(colorBackground, 400, 827);
+
+    timeline.current = new Timeline3D();
+    timeline.current.build(scene.current);
+
+    scene.current.add(timeline.current.Components);
+    timeline.current.Components.position.y = 0;
 
     light.current = new AmbientLight(colorWhite);
     light.current.position.set(0, 1, 0).normalize();
@@ -43,6 +53,20 @@ function TimelineScene(props) {
     canvasRef.current.appendChild(renderer.current.domElement);
 
     renderer.current.sortObjects = false;
+
+    controls.current = new OrbitControls(camera.current, renderer.current.domElement);
+
+    return function cleanUp() {
+      scene.current.remove(timeline.current);
+      scene.current.remove(light.current);
+      timeline.current.dispose();
+      renderer.current.dispose();
+      scene.current.dispose();
+      camera.current = null;
+      light.current = null;
+      timeline.current = null;
+      renderer.current.domElement = null;
+    };
   }, [colorBackground, colorWhite]);
 
   useEffect(() => {
@@ -72,6 +96,7 @@ function TimelineScene(props) {
 
     const animate = () => {
       animation = requestAnimationFrame(animate);
+      controls.current.update();
       renderer.current.render(scene.current, camera.current);
     };
 
@@ -96,16 +121,16 @@ function TimelineScene(props) {
 }
 
 const TimelineSceneCanvas = styled.canvas`
-  position: absolute;
-  width: 100vw;
-  top: 0;
-  right: 0;
   bottom: 0;
   left: 0;
   opacity: ${props => isVisible(props.status) ? 1 : 0};
-  transition-property: opacity;
+  position: absolute;
+  right: 0;
+  top: 0;
   transition-duration: 3s;
+  transition-property: opacity;
   transition-timing-function: ${props => props.theme.curveFastoutSlowin};
+  width: 100vw;
 `;
 
 export default memo(TimelineScene);
