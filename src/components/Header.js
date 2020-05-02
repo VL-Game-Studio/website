@@ -35,7 +35,6 @@ const HeaderWrapper = styled.header`
   flex-direction: row;
   justify-content: space-between;
   left: 40px;
-  mix-blend-mode: difference;
   position: fixed;
   right: 40px;
   top: 40px;
@@ -43,7 +42,7 @@ const HeaderWrapper = styled.header`
 `;
 
 const HeaderLogo = styled(Link)`
-  color: ${props => props.theme.colorWhite}!important;
+  color: ${props => props.theme.colorAccent}!important;
   display: flex;
   padding: 10px;
   position: relative;
@@ -58,7 +57,7 @@ const HeaderToggle = styled.button`
   position: relative;
 
   ::before, ::after {
-    background: ${props => props.theme.colorWhite};
+    background: ${props => props.theme.colorAccent};
     content: '';
     display: block;
     height: 2px;

@@ -1,21 +1,22 @@
-import React, { Fragment, Suspense, memo } from 'react';
+import React, { Fragment, memo } from 'react';
 import styled, { keyframes, css } from 'styled-components/macro';
 import { Transition } from 'react-transition-group';
-import Timeline from 'components/Timeline';
-import { Title } from 'components/Type';
+import Icon from 'components/Icon';
+import { Paragraph } from 'components/Type';
+import { Link } from 'components/Link';
 import { rgba } from 'utils/style';
 import { reflow } from 'utils/transition';
 import prerender from 'utils/prerender';
 
 function Intro(props) {
   const { id, sectionRef, scrollIndicatorHidden, ...rest } = props;
-  const titleId = `${id}-title`;
+  const logoId = `${id}-logo`;
 
   return (
     <IntroWrapper
       ref={sectionRef}
       id={id}
-      aria-labelledby={titleId}
+      aria-labelledby={logoId}
       {...rest}
     >
       <Transition
@@ -26,13 +27,14 @@ function Intro(props) {
       >
         {status => (
           <Fragment>
-            {!prerender &&
-              <Suspense fallback={null}>
-                <Timeline />
-              </Suspense>
-            }
             <IntroContent status={status}>
-              <IntroTitle id={titleId} aria-label="2019 was a bad year for Magic">2019 was a bad year for Magic</IntroTitle>
+              <Logo id={logoId} />
+              <Paragraph>
+                2019 was a bad year for Magic. Stable, non-rotating formats were forced into a standard-like rotation season following the powerful design philosophy following War of the Spark’s release.
+              </Paragraph>
+              <Paragraph>
+                This site uses cookies. By continuing to browse the site, you agree to our <Link to="/legal/privacy-policy">Privacy Policy</Link>.
+              </Paragraph>
             </IntroContent>
             <MemoizedScrollIndicator
               isHidden={scrollIndicatorHidden}
@@ -47,28 +49,50 @@ function Intro(props) {
 
 const IntroWrapper = styled.section`
   align-items: center;
-  background: ${props => props.theme.colorBackgroundDark};
+  background: ${props => props.theme.colorAccent};
   display: flex;
   height: 100vh;
   justify-content: center;
+  position: relative;
   width: 100%;
+  z-index: 1025;
 `;
 
 const IntroContent = styled.div`
   text-align: center;
   z-index: 2;
   padding: 0 40px;
+
+  ${Paragraph} {
+    font-weight: 400;
+    margin-top: 30px;
+    max-width: 800px;
+
+    :first-of-type {
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    :last-of-type {
+      font-size: 14px;
+    }
+
+    &, a {
+      color: ${props => props.theme.colorWhite}!important;
+    }
+  }
 `;
 
-const IntroTitle = styled(Title)`
+const Logo = styled(Icon).attrs({
+  icon: 'logo',
+  ariaLabel: 'Videre MTG',
+})`
   color: ${props => props.theme.colorWhite};
-  font-size: 58px;
-  letter-spacing: 7px;
-  line-height: 1.1;
-  max-width: 500px;
+  height: auto;
+  width: 260px;
 
   @media (max-width: ${props => props.theme.mobile}px) {
-    font-size: 48px;
+    width: 160px;
   }
 `;
 

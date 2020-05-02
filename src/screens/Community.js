@@ -51,11 +51,11 @@ const CommunityWrapper = styled.section`
 const CommunityContent = styled.div`
   display: flex;
   flex-direction: column;
+  margin: 160px 120px;
   max-width: 446px;
-  padding: 160px 120px;
 
   @media (max-width: ${props => props.theme.mobile}px) {
-    padding: 50px 40px;
+    margin: 50px 40px;
   }
 `;
 
