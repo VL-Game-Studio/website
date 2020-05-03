@@ -7,7 +7,7 @@ import Events from './Events';
 import Community from './Community';
 import { usePrefersReducedMotion, useRouteTransition } from 'hooks';
 
-export default function Home() {
+export default function Landing() {
   const { status } = useRouteTransition();
   const { hash, state } = useLocation();
   const initHash = useRef(true);

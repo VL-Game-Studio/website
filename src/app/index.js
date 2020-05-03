@@ -13,7 +13,8 @@ import { initialState, reducer } from 'app/reducer';
 import { rgba } from 'utils/style';
 import { reflow } from 'utils/transition';
 
-const Home = lazy(() => import('screens/Home'));
+const Landing = lazy(() => import('screens/Landing'));
+const Applet = lazy(() => import('screens/Applet'));
 
 export const AppContext = createContext();
 export const TransitionContext = createContext();
@@ -109,7 +110,8 @@ function AppRoutes() {
               <AppPage status={status}>
                 <Suspense fallback={<Fragment />}>
                   <Switch location={location}>
-                    <Route exact path="/" component={Home} />
+                    <Route exact path="/" component={Landing} />
+                    <Route path="/app" component={Applet} />
                   </Switch>
                 </Suspense>
               </AppPage>
