@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import styled from 'styled-components/macro';
 import { Link } from 'components/Link';
 import Icon from 'components/Icon';
+import NavToggle from 'components/NavToggle';
 import { useAppContext } from 'hooks';
 
 function Header() {
@@ -24,7 +25,7 @@ function Header() {
       >
         <Icon icon="logo" />
       </HeaderLogo>
-      <HeaderToggle onClick={handleMenuToggle} />
+      <NavToggle onClick={handleMenuToggle} />
     </HeaderWrapper>
   );
 }
@@ -47,31 +48,6 @@ const HeaderLogo = styled(Link)`
   padding: 10px;
   position: relative;
   z-index: 16;
-`;
-
-const HeaderToggle = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-  outline: 0;
-  position: relative;
-
-  ::before, ::after {
-    background: ${props => props.theme.colorAccent};
-    content: '';
-    display: block;
-    height: 2px;
-    position: relative;
-  }
-
-  ::before {
-    width: 28px;
-  }
-
-  ::after {
-    margin: 8px 0 0 14px;
-    width: 14px;
-  }
 `;
 
 export default memo(Header);
