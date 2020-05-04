@@ -48,18 +48,29 @@ const base = {
   monoFontStack: monoFontStack.join(', '),
   colorBlack: 'rgba(0, 0, 0, 1)',
   colorWhite: 'rgba(255, 255, 255, 1)',
+  colorAccent: 'rgba(114, 137, 218, 1)',
+  colorBackgroundDark: 'rgba(47, 44, 55, 1)',
+  colorBackgroundLight: `rgba(246, 249, 252, 1)`,
   maxWidthDesktop: 1100,
   maxWidthLaptop: 1000,
 };
 
-export const theme = {
+const light = {
   ...spacing,
   ...base,
   ...media,
-  colorBackground: 'rgba(242, 242, 242, 1)',
-  colorBackgroundDark: 'rgba(47, 44, 55, 1)',
-  colorBackgroundLight: base.colorWhite,
-  colorTitle: base.colorBlack,
-  colorText: rgba(base.colorBlack, 0.8),
-  colorAccent: 'rgba(114, 137, 218, 1)',
+  colorBackground: base.colorWhite,
+  colorTitle: `rgba(51, 51, 51, 1)`,
+  colorText: `rgba(102, 102, 102, 1)`,
 };
+
+const dark = {
+  ...spacing,
+  ...base,
+  ...media,
+  colorBackground: base.colorAccent,
+  colorTitle: base.colorWhite,
+  colorText: rgba(base.colorWhite, 0.8),
+};
+
+export const theme = { light, dark };

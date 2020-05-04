@@ -1,5 +1,4 @@
 import styled from 'styled-components/macro';
-import { rgba } from 'utils/style';
 
 export const Label = styled.label`
   color: ${props => props.theme.colorAccent};
@@ -20,9 +19,9 @@ export const Title = styled.h1`
 `;
 
 export const Paragraph = styled.p`
-  color: ${props => rgba(props.theme.colorTitle, 0.6)};
+  color: ${props => props.theme.colorText};
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1.7;
   margin-top: 24px;
 

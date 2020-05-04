@@ -46,7 +46,6 @@ export default function About(props) {
 
 const AboutWrapper = styled.section`
   align-items: center;
-  background: ${props => props.theme.colorBackgroundLight};
   display: flex;
   justify-content: center;
   width: 100%;

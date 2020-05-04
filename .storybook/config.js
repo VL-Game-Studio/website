@@ -1,7 +1,7 @@
 import { configure, addParameters, addDecorator } from '@storybook/react';
 import { themes } from '@storybook/theming';
 import React, { Fragment } from 'react';
-import { withKnobs } from '@storybook/addon-knobs';
+import { withKnobs, select } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { ThemeProvider } from 'styled-components';
 import { theme } from '../src/app/theme';
@@ -24,16 +24,18 @@ addParameters({
 });
 
 const themeKeys = {
-  'Dark': 'dark',
   'Light': 'light',
+  'Dark': 'dark',
 };
 
 addDecorator(story => {
   const content = story();
+  const themeKey = select('Theme', themeKeys, 'light');
+  const currentTheme = theme[themeKey];
 
   return (
     <HelmetProvider>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={currentTheme}>
         <Fragment>
           <Helmet>
             <link rel="preload" href={WhitneyBook} as="font" crossorigin="" />
@@ -43,7 +45,7 @@ addDecorator(story => {
             <style>{fontStyles}</style>
           </Helmet>
           <GlobalStyles />
-          <div id="storyRoot">{content}</div>
+          <div id="storyRoot" key={themeKey}>{content}</div>
         </Fragment>
       </ThemeProvider>
     </HelmetProvider>

@@ -65,6 +65,7 @@ export default function Events(props) {
 
 const EventsWrapper = styled.section`
   align-items: center;
+  background: ${props => props.theme.colorBackgroundLight};
   display: flex;
   justify-content: center;
   width: 100%;
@@ -90,7 +91,7 @@ const Column = styled.div`
 `;
 
 const EventsList = styled(Column)`
-  background: ${props => props.theme.colorBackgroundLight};
+  background: ${props => props.theme.colorBackground};
   padding: 40px 60px;
 
   @media (max-width: ${props => props.theme.mobile}px) {

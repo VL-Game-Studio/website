@@ -78,7 +78,7 @@ const IntroContent = styled.div`
     }
 
     &, a {
-      color: ${props => props.theme.colorWhite}!important;
+      color: ${props => rgba(props.theme.colorWhite, 0.8)}!important;
     }
   }
 `;

@@ -75,19 +75,35 @@ export default function Applet() {
 
 const AppletWrapper = styled.div`
   display: grid;
-  grid-gap: 75px;
-  grid-template-columns: 154px 1fr;
+  grid-gap: 150px;
+  grid-template-columns: 250px 1fr;
   min-height: 100vh;
   padding: 100px 120px;
   position: relative;
   width: 100vw;
+
+  @media (max-width: ${props => props.theme.desktop}px) {
+    grid-gap: 75px;
+    grid-template-columns: 154px 1fr;
+    padding: 80px 100px;
+  }
+
+  @media (max-width: ${props => props.theme.laptop}px) {
+    grid-gap: 60px;
+    grid-template-columns: 120px 1fr;
+    padding: 40px 60px;
+  }
+
+  @media (max-width: ${props => props.theme.tablet}px) {
+    grid-gap: 45px;
+    grid-template-columns: 100px 1fr;
+    padding: 20px 30px;
+  }
 `;
 
 const AppletNav = styled.nav`
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  position: fixed;
 
   label {
     color: ${props => rgba(props.theme.colorTitle, 0.4)};
@@ -106,8 +122,9 @@ const Logo = styled(Link)`
 
   &, svg {
     color: ${props => props.theme.colorAccent};
-    height: 21px;
-    width: 150px;
+    height: auto;
+    max-width: 150px;
+    width: 100%;
   }
 `;
 
