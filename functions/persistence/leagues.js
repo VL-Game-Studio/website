@@ -57,10 +57,10 @@ const leagues = {
 
     return league;
   },
-  async create({ name, limit, platform }) {
+  async create({ name, date, time, limit, platform }) {
     const id = await admin.database()
       .ref('/leagues')
-      .push({ name, limit, platform })
+      .push({ name, date, time, limit, platform })
       .then(({ key }) => key);
 
     await admin.database()
