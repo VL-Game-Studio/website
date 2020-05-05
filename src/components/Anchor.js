@@ -1,33 +1,54 @@
+import React from 'react';
 import styled, { css } from 'styled-components/macro';
+import Icon from 'components/Icon';
 
-const Anchor = styled.a.attrs(({ target }) => ({
+function Anchor(props) {
+  const { withArrow, children, ...rest } = props;
+
+  return (
+    <AnchorElem {...rest}>
+      {children}
+      {withArrow && <Icon icon="chevron" />}
+    </AnchorElem>
+  );
+}
+
+const AnchorElem = styled.a.attrs(({ target }) => ({
   rel: target === '_blank' ? 'noreferrer nofollower' : null
 }))`
-  align-items: center;
-  background: rgba(0, 0, 0, 0) none repeat scroll 0% 0%;
-  border: medium none;
-  color: ${props => props.theme.colorText};
-  cursor: pointer;
-  display: flex;
-  font-family: ${props => props.theme.fontStack};
+  color: rgb(30, 167, 253);
+  display: inline-block;
   font-size: 16px;
-  font-weight: 500;
-  justify-content: center;
-  line-height: 20px;
-  margin: 4px 0px 0px 16px;
-  outline: currentcolor none medium;
-  padding: 0px;
+  line-height: 1.5;
   text-decoration: none;
-  white-space: nowrap;
+  transition: transform 150ms ease-out 0s, color 150ms ease-out 0s;
+
+  ${props => props.withArrow && css`
+    svg {
+      bottom: -0.125em;
+      display: inline-block;
+      height: 1em;
+      margin-right: 0.4em;
+      position: relative;
+      vertical-align: text-top;
+      width: 1em;
+    }
+
+    & > svg:last-of-type {
+      bottom: auto;
+      height: 0.7em;
+      margin-left: 0.25em;
+      margin-right: 0px;
+      vertical-align: inherit;
+      width: 0.7em;
+    }
+  `}
 
   &:hover,
   &:focus {
-    text-decoration: underline;
+    color: rgb(2, 151, 245);
+    cursor: pointer;
   }
-
-  ${props => props.accent && css`
-    color: ${props => props.theme.colorAccent};
-  `}
 `;
 
 export default Anchor;

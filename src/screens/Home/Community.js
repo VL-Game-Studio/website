@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import styled, { useTheme } from 'styled-components/macro';
 import { Transition } from 'react-transition-group';
+import Wrapper from 'components/Wrapper';
 import { Label, Title } from 'components/Type';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
@@ -13,7 +14,7 @@ export default function Community(props) {
   const { colorWhite } = useTheme();
 
   return (
-    <CommunityWrapper
+    <Wrapper
       ref={sectionRef}
       id={id}
       aria-labelledby={labelId}
@@ -36,26 +37,14 @@ export default function Community(props) {
           </Fragment>
         )}
       </Transition>
-    </CommunityWrapper>
+    </Wrapper>
   );
 }
-
-const CommunityWrapper = styled.section`
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-`;
 
 const CommunityContent = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 160px 120px;
   max-width: 446px;
-
-  @media (max-width: ${props => props.theme.mobile}px) {
-    margin: 50px 40px;
-  }
 `;
 
 const IconButton = styled(Button)`

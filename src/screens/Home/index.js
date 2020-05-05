@@ -5,6 +5,7 @@ import Intro from './Intro';
 import About from './About';
 import Events from './Events';
 import Community from './Community';
+import Footer from 'components/Footer';
 import { usePrefersReducedMotion, useRouteTransition } from 'hooks';
 
 export default function Home() {
@@ -134,6 +135,7 @@ export default function Home() {
         sectionRef={community}
         visible={visibleSections.includes(community.current)}
       />
+      <Footer />
     </Fragment>
   );
 }

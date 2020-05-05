@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import styled from 'styled-components/macro';
 import { Transition } from 'react-transition-group';
+import Wrapper from 'components/Wrapper';
 import { Label, Title, Paragraph } from 'components/Type';
 import { Link } from 'components/Link';
 import { reflow } from 'utils/transition';
@@ -10,7 +11,7 @@ export default function About(props) {
   const labelId = `${id}-label`;
 
   return (
-    <AboutWrapper
+    <Wrapper
       ref={sectionRef}
       id={id}
       aria-labelledby={labelId}
@@ -40,28 +41,19 @@ export default function About(props) {
           </Fragment>
         )}
       </Transition>
-    </AboutWrapper>
+    </Wrapper>
   );
 }
-
-const AboutWrapper = styled.section`
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-`;
 
 const AboutContent = styled.div`
   display: grid;
   grid-gap: 142px;
   grid-template-columns: 446px 446px;
-  padding: 155px 120px;
 
   @media (max-width: ${props => props.theme.tablet}px) {
     grid-gap: 0;
     grid-row-gap: 30px;
     grid-template-columns: 1fr;
-    padding: 50px 40px;
   }
 `;
 

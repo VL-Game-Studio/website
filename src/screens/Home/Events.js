@@ -1,9 +1,11 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import styled from 'styled-components/macro';
 import { Transition } from 'react-transition-group';
+import Wrapper from 'components/Wrapper';
 import { Label, Title } from 'components/Type';
 import Button from 'components/Button';
 import { Link } from 'components/Link';
+import { rgba } from 'utils/style';
 import { reflow } from 'utils/transition';
 import prerender from 'utils/prerender';
 
@@ -33,63 +35,63 @@ export default function Events(props) {
   }, [visible]);
 
   return (
-    <EventsWrapper
-      ref={sectionRef}
-      id={id}
-      aria-labelledby={labelId}
-      {...rest}
-    >
-      <Transition
-        in={visible}
-        timeout={0}
-        onEnter={reflow}
+    <Background>
+      <Wrapper
+        ref={sectionRef}
+        id={id}
+        aria-labelledby={labelId}
+        {...rest}
       >
-        {status => (
-          <Fragment>
-            <EventsContent status={status}>
-              <Column>
-                <Label id={labelId} aria-label="Events">Events</Label>
-                <Title>Daily player-driven events from open play to competitive tournaments.</Title>
-              </Column>
-              <EventsList>
-                {events && Object.values(events).map(({ id, date, time, name, limit, players, platform }) => {
-                  const [month, day] = date.split(',')[0].split(' ');
-                  const path = `/events/${id}`;
+        <Transition
+          in={visible}
+          timeout={0}
+          onEnter={reflow}
+        >
+          {status => (
+            <Fragment>
+              <EventsContent status={status}>
+                <Column>
+                  <Label id={labelId} aria-label="Events">Events</Label>
+                  <Title>Daily player-driven events from open play to competitive tournaments.</Title>
+                </Column>
+                <EventsList>
+                  {events && Object.values(events).map(({ id, date, time, name, limit, players, platform }) => {
+                    const [month, day] = date.split(',')[0].split(' ');
+                    const path = `/events/${id}`;
 
-                  return (
-                    <Event key={id}>
-                      <EventDetails>
-                        <h1>{day}</h1>
-                        <Column>
-                          <h2>{month}</h2>
-                          <p>{time}</p>
-                        </Column>
-                        <Column>
-                          <h2>{name}</h2>
-                          <p>Players: {players ? Object.values(players).length : 0}/{limit} Platform: {platform}</p>
-                        </Column>
-                      </EventDetails>
-                      <EventControls>
-                        <Button as={Link} to={path} label="Register" />
-                      </EventControls>
-                    </Event>
-                  );
-                })}
-              </EventsList>
-            </EventsContent>
-          </Fragment>
-        )}
-      </Transition>
-    </EventsWrapper>
+                    return (
+                      <Event key={id}>
+                        <EventDetails>
+                          <h1>{day}</h1>
+                          <Column>
+                            <h2>{month}</h2>
+                            <p>{time}</p>
+                          </Column>
+                          <Column>
+                            <h2>{name}</h2>
+                            <p>Players: {players ? Object.values(players).length : 0}/{limit} Platform: {platform}</p>
+                          </Column>
+                        </EventDetails>
+                        <EventControls>
+                          <Button as={Link} to={path} label="Register" />
+                        </EventControls>
+                      </Event>
+                    );
+                  })}
+                </EventsList>
+              </EventsContent>
+            </Fragment>
+          )}
+        </Transition>
+      </Wrapper>
+    </Background>
   );
 }
 
-const EventsWrapper = styled.section`
-  align-items: center;
+const Background = styled.div`
   background: ${props => props.theme.colorBackgroundLight};
-  display: flex;
-  justify-content: center;
-  width: 100%;
+  border-bottom: 1px solid ${props => rgba(props.theme.colorBlack, 0.1)};
+  border-top: 1px solid ${props => rgba(props.theme.colorBlack, 0.1)};
 `;
 
 const EventsContent = styled.div`
