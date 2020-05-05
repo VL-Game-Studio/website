@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components/macro';
 import { Transition } from 'react-transition-group';
 import Button from 'components/Button';
 import { reflow } from 'utils/transition';
+import { rgba } from 'utils/style';
 
 export default function Overlay(props) {
   const { visible, title, description, children, onCancel, onSubmit } = props;
@@ -87,14 +88,15 @@ const OverlayContainer = styled.div`
 `;
 
 const OverlayContent = styled.div`
-  background: ${props => props.theme.colorBackground} none repeat scroll 0% 0%;
+  background: ${props => props.theme.colorBackgroundDiscord} none repeat scroll 0% 0%;
   border-radius: 5px;
+  color: ${props => props.theme.colorWhite};
   max-width: calc(-48px + 100vw);
   pointer-events: all;
   width: 500px;
 
   h4 {
-    color: ${props => props.theme.colorText};
+    color: ${props => rgba(props.theme.colorWhite, 0.8)};
     font-size: 16px;
     font-weight: 600;
     letter-spacing: 0.3px;

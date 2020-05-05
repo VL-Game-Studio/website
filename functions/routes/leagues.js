@@ -102,14 +102,15 @@ router.post('/join/:id', async (req, res) => {
   const { name, username, deckID, mainboard, sideboard } = req.body;
 
   try {
-    const league = deckID
-      ? await leagues.join({ id, name, username, deckID })
-      : await async function() {
-        const deck = validateDecklist(mainboard, sideboard);
-        const { id } = await decklists.create({ author: name, ...deck });
+    if (!deckID) {
+      const deck = validateDecklist(mainboard, sideboard);
+      const { id: decklistID } = await decklists.create({ author: name, ...deck });
 
-        return id;
-      };
+      const league = await leagues.join({ id, name, username, deckID: decklistID });
+      return res.status(201).json(league);
+    }
+
+    const league = await leagues.join({ id, name, username, deckID });
 
     return res.status(201).json(league);
   } catch (error) {

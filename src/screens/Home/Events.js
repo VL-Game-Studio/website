@@ -1,15 +1,36 @@
-import React, { Fragment } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import styled from 'styled-components/macro';
 import { Transition } from 'react-transition-group';
 import { Label, Title } from 'components/Type';
 import Button from 'components/Button';
 import { Link } from 'components/Link';
 import { reflow } from 'utils/transition';
-import events from 'data/events';
+import prerender from 'utils/prerender';
 
 export default function Events(props) {
   const { id, sectionRef, visible = true, ...rest } = props;
   const labelId = `${id}-label`;
+  const [events, setEvents] = useState();
+
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const response = await fetch('/functions/leagues', {
+          method: 'GET',
+          mode: 'cors',
+        });
+
+        const data = await response.json();
+        if (response.status !== 200) throw new Error(data.error);
+
+        return data && setEvents(data);
+      } catch (error) {
+        return console.error(error.message);
+      }
+    }
+
+    if (!prerender || !visible) fetchEvents();
+  }, [visible]);
 
   return (
     <EventsWrapper
@@ -31,8 +52,8 @@ export default function Events(props) {
                 <Title>Daily player-driven events from open play to competitive tournaments.</Title>
               </Column>
               <EventsList>
-                {events.map(({ id, date, time, name, description }) => {
-                  const [month, day] = date.split(' ');
+                {events && Object.values(events).map(({ id, date, time, name, limit, players, platform }) => {
+                  const [month, day] = date.split(',')[0].split(' ');
                   const path = `/events/${id}`;
 
                   return (
@@ -45,7 +66,7 @@ export default function Events(props) {
                         </Column>
                         <Column>
                           <h2>{name}</h2>
-                          <p>{description}</p>
+                          <p>Players: {players ? Object.values(players).length : 0}/{limit} Platform: {platform}</p>
                         </Column>
                       </EventDetails>
                       <EventControls>

@@ -50,7 +50,8 @@ const base = {
   colorWhite: 'rgba(255, 255, 255, 1)',
   colorAccent: 'rgba(114, 137, 218, 1)',
   colorBackgroundDark: 'rgba(47, 44, 55, 1)',
-  colorBackgroundLight: `rgba(246, 249, 252, 1)`,
+  colorBackgroundLight: 'rgba(246, 249, 252, 1)',
+  colorBackgroundDiscord: 'rgba(54, 57, 63, 1)',
   maxWidthDesktop: 1100,
   maxWidthLaptop: 1000,
 };
