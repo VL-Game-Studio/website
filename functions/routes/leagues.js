@@ -71,28 +71,27 @@ router.delete('/:id/players/:playerID', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const { name, date, time, limit, platform } = req.body;
+  const { name, ...rest } = req.body;
 
   try {
-    const league = await leagues.create({ name, date, time, limit, platform });
+    const league = await leagues.create({ name, ...rest });
 
     return res.status(201).json(league);
   } catch (error) {
-    console.error(`POST /leagues/create ({ name: ${name}, date: ${date}, time: ${time}, limit: ${limit}, platform: ${platform} }) >> ${error.stack}`);
+    console.error(`POST /leagues/create ({ name: ${name} }) >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while creating league: ${id}.` });
   }
 });
 
 router.post('/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, date, time, limit, platform } = req.body;
 
   try {
-    const leauge = await leagues.update({ id, name, date, time, limit, platform });
+    const leauge = await leagues.update({ id, ...req.body });
 
     return res.status(200).json(league);
   } catch (error) {
-    console.error(`POST /leagues/${id} ({ name: ${name}, date: ${date}, time: ${time}, limit: ${limit}, platform: ${platform} }) >> ${error.stack}`);
+    console.error(`POST /leagues/${id} ({ body: ${req.body} }) >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while updating league: ${id}.` });
   }
 });
