@@ -57,11 +57,11 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const { author, mainboard, sideboard } = req.body;
+  const { author, mainboard, sideboard, ...rest } = req.body;
 
   try {
     const deck = validateDecklist(mainboard, sideboard);
-    const decklist = await decklists.create({ author, ...deck });
+    const decklist = await decklists.create({ author, ...deck, ...rest });
 
     return res.status(201).json(decklist);
   } catch (error) {
@@ -72,15 +72,15 @@ router.post('/', async (req, res) => {
 
 router.post('/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, author, mainboard, sideboard } = req.body;
+  const { author, mainboard, sideboard, ...rest } = req.body;
 
   try {
     const deck = validateDecklist(mainboard, sideboard);
-    const decklist = await decklists.update({ id, author, ...deck });
+    const decklist = await decklists.update({ id, author, ...deck, ...rest });
 
     return res.status(201).json(decklist);
   } catch (error) {
-    console.error(`POST /decklists/${id} ({ name: ${name}, author: ${author}, mainboard: ${mainboard}, sideboard: ${sideboard} }) >> ${error.stack}`);
+    console.error(`POST /decklists/${id} ({ author: ${author}, mainboard: ${mainboard}, sideboard: ${sideboard} }) >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while updating decklist: ${id}.` });
   }
 });

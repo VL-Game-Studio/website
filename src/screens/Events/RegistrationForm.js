@@ -12,6 +12,7 @@ export default function RegistrationForm(props) {
   const history = useHistory();
   const name = useFormInput('');
   const username = useFormInput('');
+  const deckName = useFormInput('');
   const mainboard = useFormInput('');
   const sideboard = useFormInput('');
 
@@ -28,6 +29,7 @@ export default function RegistrationForm(props) {
         body: JSON.stringify({
           name: name.value,
           username: username.value,
+          deckName: deckName.value,
           mainboard: mainboard.value,
           sideboard: sideboard.value
         }),
@@ -40,7 +42,7 @@ export default function RegistrationForm(props) {
       console.error(error);
       return alert(error);
     }
-  }, [league, name.value, username.value, mainboard.value, sideboard.value, history]);
+  }, [league, name.value, username.value, deckName.value, mainboard.value, sideboard.value, history]);
 
   return (
     <Fragment>
@@ -69,6 +71,11 @@ export default function RegistrationForm(props) {
               required
             />
           </FormRow>
+          <Input
+            {...deckName}
+            label="Deck Name (Optional)"
+            inline
+          />
           <Input
             {...mainboard}
             label="Mainboard"
