@@ -10,7 +10,7 @@ import { usePrefersReducedMotion, useRouteTransition } from 'hooks';
 
 export default function Home() {
   const { status } = useRouteTransition();
-  const { hash, state } = useLocation();
+  const { search, hash, state } = useLocation();
   const initHash = useRef(true);
   const [visibleSections, setVisibleSections] = useState([]);
   const [scrollIndicatorHidden, setScrollIndicatorHidden] = useState(false);
@@ -19,6 +19,25 @@ export default function Home() {
   const events = useRef();
   const community = useRef();
   const prefersReducedMotion = usePrefersReducedMotion();
+
+  useEffect(() => {
+    async function sendCode() {
+      const code = search.split('?code=')[1];
+
+      const response = await fetch(`https://videre.live/functions/auth/${code}`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'content-type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+      return console.log(data);
+    }
+
+    if (search.includes('?code')) sendCode();
+  }, [search]);
 
   useEffect(() => {
     const revealSections = [intro, about, events, community];
