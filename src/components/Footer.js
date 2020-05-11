@@ -29,10 +29,14 @@ const Footer = () => (
 );
 
 const Title = styled.div`
-  color: ${props => props.theme.colorText};
+  color: ${props => rgba(props.theme.colorText, 0.8)};
   display: block;
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 20px;
   margin-bottom: 1rem;
+  text-transform: uppercase;
 `;
 
 const LogotypeWrapper = styled(Anchor)`

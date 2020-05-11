@@ -21,7 +21,6 @@ router.get('/redirect', async (req, res) => {
     const auth = await useFetch('https://discordapp.com/api/oauth2/token', {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'User-Agent': 'DiscordBot',
       },
       client_id: functions.config().discord.id,
       client_secret: functions.config().discord.key,
@@ -38,7 +37,7 @@ router.get('/redirect', async (req, res) => {
 
     return res.status(200).json(user);
   } catch (error) {
-    console.error(`POST /auth >> ${error.stack}`);
+    console.error(`GET /auth/redirect/?code=${code} >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while authorizing you via Discord.\n${error.message}` });
   }
 });
