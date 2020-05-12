@@ -14,23 +14,28 @@ Path | Method | Parameters | Description
 
 Path | Method | Parameters | Description
 --- | --- | --- | ---
-   /leagues/ | GET | *none* | Fetches all leagues, returning an object.
-   /leagues/:id | GET | *none* | Fetches a single league by id, returning an object.
-   /leagues/:id/players | GET | *none* | Fetches all players from a league by id, returning an object.
-   /leagues/:id/players/:playerID | GET | *none* | Fetches a single player by league and player id, returning an object.
-   /leagues/:id/players/:playerID | DELETE | *none* | Deletes a single player by league and player id, returning an object.
-   /leagues/ | POST | `name` `date` `time` `limit` `platform` | Generates and adds a league to the registry.
-   /leagues/:id | POST | `name` `date` `time` `limit` `platform` | Fetches and updates a league by id, returning an object.
-   /leagues/join/:id | POST | `name` `username` `deckID` or `deckName (optional)`, `mainboard`, and `sideboard` | Registers a user and a deck from deckID or mainboard and sideboard to an active league, returning an object.
-   /leagues/fire/:id | GET | *none* | Forcibly fires a league by id, returning a pairings object.
-   /leagues/results/:id | POST | `result` | Records player scores object: { player1Wins, player2Wins, draws } on an active league.
+   /leagues/ | GET | *none* | Fetches all league entries, returning an object.
+   /leagues/:id | GET | *none* | Fetches a single league entry by id, returning an object.
+   /leagues/:id | POST | `id` `deckID` `points` `matches` `opponents` | Creates or updates a league entry with player id, deckid, points, and match history, returning an object.
+   /leagues/pair/:id | GET | *none* | Generates and binds next league pairing.
+   /leagues/report/:id | POST | `deckID` `matches` | Updates match history and generates performance track from record.
+   /leagues/:id | DELETE | *none* | Fetches and deletes a league entry by id, returning an object.
 
- ## Users Methods
+## Players Methods
 
- Path | Method | Parameters | Description
- --- | --- | --- | ---
-   /users/ | GET | *none* | Fetches all users, returning an object.
-   /users/:id | GET | *none* | Fetches a single user by id, returning an object.
-   /users/ | POST | `name` `platforms` `roles` `decks` | Creates user and binds decks, returning an object.
-   /users/:id | POST | `name` `platforms` `roles` `decks` | Updates user and binds decks by id, returning an object.
-   /users/:id | DELETE | *none* | Fetches and deletes a user by id, returning an object.
+Path | Method | Parameters | Description
+--- | --- | --- | ---
+   /players/ | GET | *none* | Fetches all players, returning an object.
+   /players/:id | GET | *none* | Fetches a single player by id, returning an object.
+   /players/:id | POST | `name` `platforms` | Creates or updates player with optional id, Discord name, and platforms, returning an object.
+   /players/:id | DELETE | *none* | Fetches and deletes a player by id, returning an object.
+
+## Results Methods
+
+Path | Method | Parameters | Description
+--- | --- | --- | ---
+   /results/ | GET | *none* | Fetches all results, returning an object.
+   /results/:id | GET | *none* | Fetches a single result by id, returning an object.
+   /results/ | POST | `id` `deckID` `matches` | Creates a result with player id, deckid, and match history, returning an object.
+   /results/:id | POST | `id` `deckID` `matches` | Updates a result with player id, deckid, and match history, returning an object.
+   /results/:id | DELETE | *none* | Fetches and deletes a result by id, returning an object.

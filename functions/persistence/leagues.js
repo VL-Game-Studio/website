@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+const { results } = require('./results');
 
 const leagues = {
   async fetchAll() {
@@ -17,38 +18,10 @@ const leagues = {
 
     return league;
   },
-  async fetchPlayers(id) {
-    const player = await admin.database()
-      .ref(`/leagues/${id}/players`)
-      .once('value')
-      .then(snap => snap.val());
-
-    return player;
-  },
-  async fetchPlayer(id, playerID) {
-    const player = await admin.database()
-      .ref(`/leagues/${id}/players/${playerID}`)
-      .once('value')
-      .then(snap => snap.val());
-
-    return player;
-  },
-  async removePlayer(id, playerID) {
-    const player = await admin.database()
-      .ref(`/leagues/${id}/players/${playerID}`)
-      .once('value')
-      .then(snap => snap.val());
-
-    await admin.database()
-      .ref(`/leagues/${id}/players/${playerID}`)
-      .remove();
-
-    return player;
-  },
-  async update({ id, ...rest }) {
+  async set({ id, ...props }) {
     await admin.database()
       .ref(`/leagues/${id}`)
-      .update(rest);
+      .set({ id, ...props });
 
     const league = await admin.database()
       .ref(`/leagues/${id}`)
@@ -57,66 +30,63 @@ const leagues = {
 
     return league;
   },
-  async create(props) {
-    const id = await admin.database()
+  async pair(id) {
+    const league = await admin.database()
+      .ref(`/leagues/${id}`)
+      .once('value')
+      .then(snap => snap.val());
+    if (!league) throw new Error(`League data does not exist for player: ${id}.`);
+
+    const { points = 0, matches = [], opponents = [] } = league;
+    const players = await admin.database()
       .ref('/leagues')
-      .push(props)
-      .then(({ key }) => key);
+      .once('value')
+      .then(snap => snap.val());
+
+    const maxDiff = (Object.values(matches).length + 1) * 3;
+    const [opponent] = Object.values(playes).filter(opp =>
+      (!opp.opponents.includes(id) && Object.values(opp.matches).length === Object.values(matches).length) &&
+      (opp.id !== id && Math.abs(opp.points - points) <= maxDiff)
+    );
+    if (!opponent) return null;
+
+    await firebase.database()
+      .ref(`/leagues/${id}`)
+      .update({ opponents: [...opponents, opponent] });
+
+    return opponent;
+  },
+  async report({ id, result }) {
+    const player = await admin.database()
+      .ref(`/leagues/${id}`)
+      .once('value')
+      .then(snap => snap.val());
+    if (!player) throw new Error(`Could not find player to report: ${id}.`);
+
+    const { matches = [], opponents = [] } = player;
+    const [wins, ties, losses] = result;
+
+    const matchHistory = [
+      ...Object.values(matches),
+      {
+        round: Object.values(matches).length + 1,
+        record: `${wins}-${ties}-${losses}`,
+        opponent: Object.values(opponents)[Object.values(opponents).length],
+      },
+    ];
 
     await admin.database()
       .ref(`/leagues/${id}`)
-      .update({ id });
+      .update({ matches: matchHistory });
 
-    const league = await admin.database()
-      .ref(`/leagues/${id}`)
-      .once('value')
-      .then(snap => snap.val());
+    if (matchHistory.length === 5) {
+      const { deckID } = await admin.database()
+        .ref(`/leagues/${id}`)
+        .once('value')
+        .then(snap => snap.val());
 
-    return league;
-  },
-  async join({ id, name, username, deckID }) {
-    await admin.database()
-      .ref(`/leagues/${id}/players`)
-      .push({ name, username, deckID });
-
-    const league = await admin.database()
-      .ref(`/leagues/${id}`)
-      .once('value')
-      .then(snap => snap.val());
-
-    return league;
-  },
-  async report({ id, result, reportingPlayer }) {
-    const [player, draws, opponent] = result.split('-');
-
-    const { player1, player2 } = await admin.database()
-      .ref(`/leagues/${id}/pairings`)
-      .once('value')
-      .then(snap => snap.val());
-
-    if (![player1, player2].includes(reportingPlayer)) return false;
-
-    const activePlayer = reportingPlayer === player1;
-    const key = await admin.database()
-      .ref(`/leagues/${id}/results`)
-      .push({
-        player1: activePlayer ? player : opponent,
-        draws,
-        player2: activePlayer ? opponent : player,
-      })
-      .then(({ key }) => key);
-
-    const results = await admin.database()
-      .ref(`/leagues/${id}/results/${key}`)
-      .once('value')
-      .then(snap => snap.val());
-
-    return results;
-  },
-  async fire(id) {
-    await admin.database()
-      .ref(`/leagues/${id}`)
-      .update({ fired: true });
+      await results.create({ id, deckID, matches: matchHistory });
+    }
 
     const league = await admin.database()
       .ref(`/leagues/${id}`)
@@ -130,6 +100,7 @@ const leagues = {
       .ref(`/leagues/${id}`)
       .once('value')
       .then(snap => snap.val());
+    if (!league) return false;
 
     await admin.database()
       .ref(`/leagues/${id}`)

@@ -1,64 +1,64 @@
 const admin = require('firebase-admin');
 
-const decklists = {
+const results = {
   async fetchAll() {
-    const allDecklists = await admin.database()
-      .ref('/decklists')
+    const allResults = await admin.database()
+      .ref('/results')
       .once('value')
       .then(snap => snap.val());
 
-    return allDecklists;
+    return allResults;
   },
   async fetch(id) {
-    const decklist = await admin.database()
-      .ref(`/decklists/${id}`)
+    const result = await admin.database()
+      .ref(`/results/${id}`)
       .once('value')
       .then(snap => snap.val());
 
-    return decklist;
+    return result;
   },
   async update({ id, ...rest }) {
     await admin.database()
-      .ref(`/decklists/${id}`)
+      .ref(`/results/${id}`)
       .update(rest);
 
-    const decklist = await admin.database()
-      .ref(`/decklists/${id}`)
+    const result = await admin.database()
+      .ref(`/results/${id}`)
       .once('value')
       .then(snap => snap.val());
 
-    return decklist;
+    return result;
   },
   async create(props) {
     const id = await admin.database()
-      .ref('/decklists')
+      .ref('/results')
       .push(props)
       .then(({ key }) => key);
 
     await admin.database()
-      .ref(`/decklists/${id}`)
+      .ref(`/results/${id}`)
       .update({ id });
 
-    const decklist = await admin.database()
-      .ref(`/decklists/${id}`)
+    const result = await admin.database()
+      .ref(`/results/${id}`)
       .once('value')
       .then(snap => snap.val());
 
-    return decklist;
+    return result;
   },
   async delete(id) {
-    const decklist = await admin.database()
-      .ref(`/decklists/${id}`)
+    const result = await admin.database()
+      .ref(`/results/${id}`)
       .once('value')
       .then(snap => snap.val());
-    if (!decklist) return false;
+    if (!result) return false;
 
     await admin.database()
-      .ref(`/decklists/${id}`)
+      .ref(`/results/${id}`)
       .remove();
 
-    return decklist;
+    return result;
   },
 };
 
-module.exports = decklists;
+module.exports = results;

@@ -1,9 +1,11 @@
 const decklists = require('./decklists');
 const leagues = require('./leagues');
-const users = require('./users');
+const players = require('./players');
+const results = require('./results');
 
 module.exports = {
   decklists,
   leagues,
-  users,
+  players,
+  results,
 };

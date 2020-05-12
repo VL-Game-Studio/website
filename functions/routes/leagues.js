@@ -1,6 +1,5 @@
 const { Router } = require('express');
-const { leagues, decklists } = require('../persistence');
-const { validateDecklist } = require('../utils');
+const { leagues } = require('../persistence');
 
 const router = new Router();
 
@@ -11,7 +10,7 @@ router.get('/', async (req, res) => {
     return res.status(200).json(allLeagues);
   } catch (error) {
     console.error(`GET /leagues >> ${error.stack}`);
-    return res.status(500).json({ error: 'An error occured while fetching leagues.' });
+    return res.status(500).json({ error: 'An error occured while fetching all league info.' });
   }
 });
 
@@ -20,130 +19,67 @@ router.get('/:id', async (req, res) => {
 
   try {
     const league = await leagues.fetch(id);
-    if (!league) return res.status(404).json({ message: `League: ${id} was not found.` });
+    if (!league) return res.status(404).json({ error: `League info could not be found for player: ${id}.` });
 
     return res.status(200).json(league);
   } catch (error) {
     console.error(`GET /leagues/${id} >> ${error.stack}`);
-    return res.status(500).json({ error: `An error occured while fetching league: ${id}.` });
-  }
-});
-
-router.get('/:id/players', async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const players = await leagues.fetchPlayers(id);
-
-    return res.status(200).json(players);
-  } catch (error) {
-    console.error(`GET /leagues/${id}/players >> ${error.stack}`);
-    return res.status(500).json({ error: `An error occured while fetching players from league: ${id}.` });
-  }
-});
-
-router.get('/:id/players/:playerID', async (req, res) => {
-  const { id, playerID } = req.params;
-
-  try {
-    const player = await leagues.fetchPlayer(id, playerID);
-    if (!player) return res.status(404).json({ message: `Player: ${playerID} was not found.` });
-
-    return res.status(200).json(player);
-  } catch (error) {
-    console.error(`GET /leagues/${id}/players/${playerID} >> ${error.stack}`);
-    return res.status(500).json({ error: `An error occured while fetching player: ${playerID} from league: ${id}.` });
-  }
-});
-
-router.delete('/:id/players/:playerID', async (req, res) => {
-  const { id, playerID } = req.params;
-
-  try {
-    const player = await leagues.fetchPlayer(id, playerID);
-    if (!player) return res.status(404).json({ message: `Player: ${playerID} was not found.` });
-
-    return res.status(200).json(player);
-  } catch (error) {
-    console.error(`DELETE /leagues/${id}/players/${playerID} >> ${error.stack}`);
-    return res.status(500).json({ error: `An error occured while deleting player: ${playerID} from league: ${id}.` });
-  }
-});
-
-router.post('/', async (req, res) => {
-  const { name, ...rest } = req.body;
-
-  try {
-    const league = await leagues.create({ name, ...rest });
-
-    return res.status(201).json(league);
-  } catch (error) {
-    console.error(`POST /leagues/create ({ name: ${name} }) >> ${error.stack}`);
-    return res.status(500).json({ error: `An error occured while creating league: ${id}.` });
+    return res.status(500).json({ error: `An error occured while fetching league info for player: ${id}.` });
   }
 });
 
 router.post('/:id', async (req, res) => {
   const { id } = req.params;
+  const { deckID, points, matches, opponents } = req.body;
 
   try {
-    const leauge = await leagues.update({ id, ...req.body });
-
-    return res.status(200).json(league);
-  } catch (error) {
-    console.error(`POST /leagues/${id} ({ body: ${req.body} }) >> ${error.stack}`);
-    return res.status(500).json({ error: `An error occured while updating league: ${id}.` });
-  }
-});
-
-router.post('/join/:id', async (req, res) => {
-  const { id } = req.params;
-  const { name, username, deckID, deckName, mainboard, sideboard } = req.body;
-
-  try {
-    if (!deckID) {
-      const deck = validateDecklist(mainboard, sideboard);
-      const { id: decklistID } = await decklists.create({ author: name, name: deckName, ...deck });
-
-      const league = await leagues.join({ id, name, username, deckID: decklistID });
-      return res.status(201).json(league);
-    }
-
-    const league = await leagues.join({ id, name, username, deckID });
+    const league = await leagues.set({ id, deckID, points, matches, opponents });
 
     return res.status(201).json(league);
   } catch (error) {
-    console.error(`POST /leagues/join/${id} ({ name: ${name}, username: ${username}, mainboard: ${mainboard}, sideboard: ${sideboard} }) >> ${error.stack}`);
-    return res.status(500).json({ error: `An error occured while joining league: ${id}.` });
+    console.error(`POST /leagues/${id} ({ deckID: ${deckID}, points: ${points}, matches: ${matches}, opponents: ${opponents} }) >> ${error.stack}`);
+    return res.status(500).json({ error: `An error occured while processing league info for player: ${id}.` });
   }
 });
 
-router.get('/fire/:id', async (req, res) => {
+router.get('/pair/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const league = await leagues.fire(id);
+    const opponent = await leagues.pair(id);
+
+    return res.status(200).json(opponent);
+  } catch (error) {
+    console.error(`GET /leagues/pair/${id} >> ${error.stack}`);
+    return res.status(500).json({ error: `An error occured while pairing player: ${id}.` });
+  }
+});
+
+router.post('/report/:id', async (req, res) => {
+  const { id } = req.params;
+  const { result } = req.body;
+
+  try {
+    const league = await leagues.report({ id, result });
 
     return res.status(200).json(league);
   } catch (error) {
-    console.error(`GET /fire/${id} >> ${error.stack}`);
-    return res.status(500).json({ error: `An error occured while firing league: ${id}.` });
+    console.error(`POST /leagues/report/${id} ({ result: ${result} }) >> ${error.stack}`);
+    return res.status(500).json({ error: `An error occured while processing league result for player: ${id}.` });
   }
 });
 
-router.post('/results/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
   const { id } = req.params;
-  const { result, reportingPlayer } = req.body;
 
   try {
-    if (!result.includes('-')) return res.status(400).json({ error: 'Invalid result format. Expected WINS-TIES-LOSSES.' });
-    const results = await leagues.report({ id, result, reportingPlayer });
-    if (!results) return res.status(403).json({ error: `Reporting player is not playing in event: ${id}.` });
+    const league = await leagues.delete(id);
+    if (!league) return res.status(404).json({ error: `League info could not be found for player: ${id}.` });
 
-    return res.status(201).json(results);
+    return res.status(200).json(league);
   } catch (error) {
-    console.error(`POST /leagues/results/${league} ({ result: ${result} }) >> ${error.stack}`);
-    return res.status(500).json({ error: 'An error occured while processing your match result.' });
+    console.error(`DELETE /leagues/${id} >> ${error.stack}`);
+    return res.status(500).json({ error: `An error occured while deleting league info for player: ${id}.` });
   }
 });
 

@@ -1,6 +1,6 @@
 {
   "name": "functions",
-  "description": "Cloud Functions for videre.codyb.co",
+  "description": "Cloud Functions for videre.live",
   "scripts": {
     "lint": "eslint .",
     "serve": "firebase serve --only functions",

@@ -47,7 +47,7 @@ router.get('/:id', async (req, res) => {
 
   try {
     const decklist = await decklists.fetch(id);
-    if (!decklist) return res.status(404).json({ message: `Decklist: ${id} was not found.` });
+    if (!decklist) return res.status(404).json({ error: `Decklist: ${id} was not found.` });
 
     return res.status(200).json(decklist);
   } catch (error) {
@@ -78,7 +78,7 @@ router.post('/:id', async (req, res) => {
     const deck = validateDecklist(mainboard, sideboard);
     const decklist = await decklists.update({ id, author, ...deck, ...rest });
 
-    return res.status(201).json(decklist);
+    return res.status(200).json(decklist);
   } catch (error) {
     console.error(`POST /decklists/${id} ({ author: ${author}, mainboard: ${mainboard}, sideboard: ${sideboard} }) >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while updating decklist: ${id}.` });
@@ -90,6 +90,7 @@ router.delete('/:id', async (req, res) => {
 
   try {
     const decklist = await decklists.delete(id);
+    if (!decklist) return res.status(404).json({ message: `Decklist: ${id} was not found.` });
 
     return res.status(200).json(decklist);
   } catch (error) {
