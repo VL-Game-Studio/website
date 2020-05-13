@@ -30,14 +30,13 @@ router.get('/:id', async (req, res) => {
 
 router.post('/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, platforms } = req.body;
 
   try {
-    const player = await players.set({ id, name, platforms });
+    const player = await players.set({ ...req.body, id });
 
     return res.status(200).json(player);
   } catch (error) {
-    console.error(`POST /players/${id} ({ name: ${name}, platforms: ${platforms} }) >> ${error.stack}`);
+    console.error(`POST /players/${id} ({ body: ${req.body} }) >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while processing player: ${id}.` });
   }
 });

@@ -44,9 +44,10 @@ const leagues = {
       .then(snap => snap.val());
 
     const maxDiff = (Object.values(matches).length + 1) * 3;
-    const [opponent] = Object.values(playes).filter(opp =>
-      (!opp.opponents.includes(id) && Object.values(opp.matches).length === Object.values(matches).length) &&
-      (opp.id !== id && Math.abs(opp.points - points) <= maxDiff)
+    const [opponent] = Object.values(players).filter(opp =>
+      ((opp.opponents && !opp.opponents.includes(id)) &&
+      (opp.matches && Object.values(opp.matches).length === Object.values(matches).length)) &&
+      (opp.id && (opp.id !== id && (opp.points && Math.abs(opp.points - points) <= maxDiff)))
     );
     if (!opponent) return null;
 

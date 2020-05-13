@@ -30,14 +30,15 @@ router.get('/:id', async (req, res) => {
 
 router.post('/:id', async (req, res) => {
   const { id } = req.params;
-  const { deckID, points, matches, opponents } = req.body;
+  const { deckID, ...rest } = req.body;
+  if (!deckID) return res.status(400).json({ error: 'DeckID is a required field.' });
 
   try {
-    const league = await leagues.set({ id, deckID, points, matches, opponents });
+    const league = await leagues.set({ id, deckID, ...rest });
 
     return res.status(201).json(league);
   } catch (error) {
-    console.error(`POST /leagues/${id} ({ deckID: ${deckID}, points: ${points}, matches: ${matches}, opponents: ${opponents} }) >> ${error.stack}`);
+    console.error(`POST /leagues/${id} ({ deckID: ${deckID}, rest: ${rest} }) >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while processing league info for player: ${id}.` });
   }
 });
@@ -47,6 +48,7 @@ router.get('/pair/:id', async (req, res) => {
 
   try {
     const opponent = await leagues.pair(id);
+    if (!opponent) return res.status(409).json({ error: `Could not find player to pair with: ${id}.` });
 
     return res.status(200).json(opponent);
   } catch (error) {
