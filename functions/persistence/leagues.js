@@ -64,7 +64,7 @@ const leagues = {
       .then(snap => snap.val());
     if (!player) throw new Error(`Could not find player to report: ${id}.`);
 
-    const { matches = [], opponents = [] } = player;
+    const { points = 0, matches = [], opponents = [] } = player;
     const [wins, ties, losses] = result;
 
     const matchHistory = [
@@ -78,7 +78,10 @@ const leagues = {
 
     await admin.database()
       .ref(`/leagues/${id}`)
-      .update({ matches: matchHistory });
+      .update({
+        points: points + ((wins * 3) + ties),
+        matches: matchHistory,
+      });
 
     if (matchHistory.length === 5) {
       const { deckID } = await admin.database()
