@@ -8,6 +8,7 @@
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
+    "preflight": "eslint . && jest --verbose --testTimeout=10000",
     "test": "jest --watchAll --verbose --testTimeout=10000"
   },
   "dependencies": {
