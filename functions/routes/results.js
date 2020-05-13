@@ -32,7 +32,7 @@ router.post('/', async (req, res) => {
   const { deckID, matches } = req.body;
 
   try {
-    const result = await results.create({ id, deckID, matches });
+    const result = await results.create({ deckID, matches });
 
     return res.status(200).json(result);
   } catch (error) {
