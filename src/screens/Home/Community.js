@@ -30,7 +30,7 @@ export default function Community(props) {
             <CommunityContent status={status}>
               <Label id={labelId} aria-label="Community">Community</Label>
               <Title>Help us build the Modern format that Magic players deserve.</Title>
-              <IconButton label="Join Discord">
+              <IconButton label="Join Discord" onClick={() => window.open('https://discord.gg/mjtTnr8')}>
                 <Icon icon="discord" color={rgba(colorWhite, 0.8)} />
               </IconButton>
             </CommunityContent>

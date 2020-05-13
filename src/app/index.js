@@ -154,7 +154,7 @@ export const GlobalStyles = createGlobalStyle`
 
   ::selection {
     background: ${props => props.theme.colorAccent};
-    color: ${props => rgba(props.theme.colorText, 0.9)}
+    color: ${props => rgba(props.theme.colorWhite, 0.9)}
   }
 
   #root *,

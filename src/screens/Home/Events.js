@@ -13,20 +13,24 @@ export default function Events(props) {
   const { id, sectionRef, visible = true, ...rest } = props;
   const labelId = `${id}-label`;
   const [events, setEvents] = useState();
+  const [complete, setComplete] = useState();
 
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const response = await fetch('/functions/leagues', {
+        const response = await fetch('/functions/events', {
           method: 'GET',
           mode: 'cors',
         });
+        if (response.status !== 200) throw new Error(`An error occured while fetching events: Error ${response.status} - ${response.statusText}`);
 
         const data = await response.json();
-        if (response.status !== 200) throw new Error(data.error);
+        if (data.error) throw new Error(data.error);
 
+        setComplete(true);
         return data && setEvents(data);
       } catch (error) {
+        setComplete(false);
         return console.error(error.message);
       }
     }
@@ -55,7 +59,9 @@ export default function Events(props) {
                   <Title>Daily player-driven events from open play to competitive tournaments.</Title>
                 </Column>
                 <EventsList>
-                  {events && Object.values(events).map(({ id, date, time, name, limit, players, platform }) => {
+                  {(!complete && complete !== false) && `Fetching events...`}
+                  {complete === false && `No events are currently scheduled.`}
+                  {complete && Object.values(events).map(({ id, date, time, name, limit, players, platform }) => {
                     const [month, day] = date.split(',')[0].split(' ');
                     const path = `/events/${id}`;
 
