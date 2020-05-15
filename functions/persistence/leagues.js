@@ -73,13 +73,13 @@ const leagues = {
     if (!player) throw new Error(`Could not find player to report: ${id}.`);
 
     const { points = 0, matches = [], opponents = [] } = player;
-    const [wins, ties, losses] = result;
+    const [wins, losses, ties] = result;
 
     const matchHistory = [
       ...Object.values(matches),
       {
         round: Object.values(matches).length + 1,
-        record: `${wins}-${ties}-${losses}`,
+        record: `${wins}-${losses}-${ties}`,
         opponent: Object.values(opponents)[Object.values(opponents).length],
       },
     ];
