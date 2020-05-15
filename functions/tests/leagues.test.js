@@ -2,6 +2,8 @@ const request = require('supertest');
 const app = require('.');
 
 describe('Leagues', () => {
+  const format = 'modern';
+  const platform = 'mtgo';
   const testLeague = {
     id: '123',
     deckID: 'TestDeck',
@@ -46,7 +48,7 @@ describe('Leagues', () => {
     const { id, ...rest } = testLeague;
 
     const res = await request(app)
-      .post(`/leagues/${id}`)
+      .post(`/leagues/${format}/${platform}/${id}`)
       .send(rest);
 
     expect(res.statusCode).toEqual(201);
@@ -56,14 +58,26 @@ describe('Leagues', () => {
     });
   });
 
-  it('fetches all leagues', async () => {
+  it(`fetches all ${format} leagues`, async () => {
     const { id } = testLeague;
 
     const res = await request(app)
-      .get('/leagues');
+      .get(`/leagues/${format}`);
 
     expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty(id);
+    Object.keys(testLeague).forEach(key => {
+      expect(res.body[platform][id]).toHaveProperty(key);
+      expect(res.body[platform][id][key]).toEqual(testLeague[key]);
+    });
+  });
+
+  it(`fetches all ${format} leagues for ${platform}`, async () => {
+    const { id } = testLeague;
+
+    const res = await request(app)
+      .get(`/leagues/${format}/${platform}`);
+
+    expect(res.statusCode).toEqual(200);
     Object.keys(testLeague).forEach(key => {
       expect(res.body[id]).toHaveProperty(key);
       expect(res.body[id][key]).toEqual(testLeague[key]);
@@ -74,7 +88,7 @@ describe('Leagues', () => {
     const { id } = testLeague;
 
     const res = await request(app)
-      .get(`/leagues/${id}`);
+      .get(`/leagues/${format}/${platform}/${id}`);
 
     expect(res.statusCode).toEqual(200);
     Object.keys(testLeague).forEach(key => {
@@ -87,7 +101,7 @@ describe('Leagues', () => {
     const { id } = testLeague;
 
     const res = await request(app)
-      .delete(`/leagues/${id}`);
+      .delete(`/leagues/${format}/${platform}/${id}`);
 
     expect(res.statusCode).toEqual(200);
     Object.keys(testLeague).forEach(key => {

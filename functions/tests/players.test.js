@@ -5,10 +5,9 @@ describe('Players', () => {
   const testPlayer = {
     id: '123',
     name: 'Test#1234',
-    platforms: [{
-      type: 'MTGO',
-      username: 'TestUsername'
-    }]
+    platforms: {
+      mtgo: 'TestUsername'
+    }
   };
 
   it('creates player', async () => {

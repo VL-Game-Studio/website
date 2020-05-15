@@ -14,12 +14,14 @@ Path | Method | Parameters | Description
 
 Path | Method | Parameters | Description
 --- | --- | --- | ---
-   /leagues/ | GET | *none* | Fetches all league entries, returning an object.
-   /leagues/:id | GET | *none* | Fetches a single league entry by id, returning an object.
-   /leagues/:id | POST | `id` `deckID` `points` `matches` `opponents` | Creates or updates a league entry with player id, deckid, points, and match history, returning an object.
-   /leagues/pair/:id | GET | *none* | Generates and binds next league pairing.
-   /leagues/report/:id | POST | `deckID` `matches` | Updates match history and generates performance track from record.
-   /leagues/:id | DELETE | *none* | Fetches and deletes a league entry by id, returning an object.
+   /leagues/ | GET | *none* | Fetches all league entries for every format and platform, returning an object.
+   /leagues/:format | GET | *none* | Fetches all league entries by format, returning an object.
+   /leagues/:format/:platform | GET | *none* | Fetches all league entries by format and platform, returning an object.
+   /leagues/:format/:platform/:id | GET | *none* | Fetches a single league entry by id, returning an object.
+   /leagues/:format/:platform/:id | POST | `id` `deckID` `points` `matches` `opponents` | Creates or updates a league entry with player id, deckid, points, and match history, returning an object.
+   /leagues/pair/:format/:platform/:id | GET | *none* | Generates and binds next league pairing.
+   /leagues/report/:format/:platform/:id | POST | `record` | Updates match history and generates performance track from record.
+   /leagues/:format/:platform/:id | DELETE | *none* | Fetches and deletes a league entry by id, returning an object.
 
 ## Players Methods
 
