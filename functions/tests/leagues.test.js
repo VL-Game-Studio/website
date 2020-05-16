@@ -7,32 +7,22 @@ describe('Leagues', () => {
     format: 'modern',
     platform: 'mtgo',
     deckID: 'TestDeck',
-    points: '15',
+    points: 9,
     matches: [
       {
-        round: '1',
+        round: 1,
         record: '2-0-0',
         opponent: 'Opponent #1'
       },
       {
-        round: '2',
+        round: 2,
         record: '2-0-0',
         opponent: 'Opponent #2'
       },
       {
-        round: '3',
+        round: 3,
         record: '2-0-0',
         opponent: 'Opponent #3'
-      },
-      {
-        round: '4',
-        record: '2-0-0',
-        opponent: 'Opponent #4'
-      },
-      {
-        round: '5',
-        record: '2-0-0',
-        opponent: 'Opponent #5'
       },
     ],
     opponents: [
@@ -40,8 +30,7 @@ describe('Leagues', () => {
       'Opponent #2',
       'Opponent #3',
       'Opponent #4',
-      'Opponent #5'
-    ]
+    ],
   };
 
   it('creates league', async () => {
@@ -82,6 +71,31 @@ describe('Leagues', () => {
       expect(res.body).toHaveProperty(key);
       expect(res.body[key]).toEqual(testLeague[key]);
     });
+  });
+
+  it('reports league match result', async () => {
+    const { id } = testLeague;
+
+    const res = await request(app)
+      .post(`/leagues/report/${id}`)
+      .send({ result: '2-0-0' });
+
+    expect(res.statusCode).toEqual(200);
+    testLeague.matches = res.body.matches;
+    testLeague.points = res.body.points;
+    Object.keys(testLeague).forEach(key => {
+      expect(res.body).toHaveProperty(key);
+      expect(res.body[key]).toEqual(testLeague[key]);
+    });
+  });
+
+  it('gets next pairing', async () => {
+    const { id } = testLeague;
+
+    const res = await request(app)
+      .get(`/leagues/pair/${id}`);
+
+    expect(res.statusCode).toEqual(409);
   });
 
   it('deletes league', async () => {

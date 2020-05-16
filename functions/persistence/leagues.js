@@ -41,7 +41,7 @@ const leagues = {
       .ref(`/leagues/${id}`)
       .once('value')
       .then(snap => snap.val());
-    if (!league) throw new Error(`League data does not exist for player: ${id}.`);
+    if (!league) return false;
 
     const { format, platform, points = 0, matches = [], opponents = [] } = league;
     const players = await admin.database()
@@ -70,24 +70,24 @@ const leagues = {
       .ref(`/leagues/${id}`)
       .once('value')
       .then(snap => snap.val());
-    if (!player) throw new Error(`Could not find player to report: ${id}.`);
+    if (!player) return false;
 
     const { points = 0, matches = [], opponents = [] } = player;
-    const [wins, losses, ties] = result;
+    const [wins, losses, ties] = result.split('-');
 
     const matchHistory = [
       ...Object.values(matches),
       {
         round: Object.values(matches).length + 1,
         record: `${wins}-${losses}-${ties}`,
-        opponent: Object.values(opponents)[Object.values(opponents).length],
+        opponent: Object.values(opponents)[Object.values(opponents).length - 1],
       },
     ];
 
     await admin.database()
       .ref(`/leagues/${id}`)
       .update({
-        points: points + ((wins * 3) + ties),
+        points: parseInt(points) + ((parseInt(wins) === 2 ? 3 : parseInt(wins) === 1 ? 1 : 0) + parseInt(ties)),
         matches: matchHistory,
       });
 

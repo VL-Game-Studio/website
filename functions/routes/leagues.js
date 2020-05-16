@@ -72,6 +72,7 @@ router.post('/report/:id', async (req, res) => {
 
   try {
     const league = await leagues.report({ id, result });
+    if (!league) return res.status(400).json({ error: 'You are currently not in a league.' });
 
     return res.status(200).json(league);
   } catch (error) {
