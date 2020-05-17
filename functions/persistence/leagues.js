@@ -18,12 +18,12 @@ const leagues = {
 
     return league;
   },
-  async set({ id, format, platform, ...props }) {
+  async create({ id, format, platform, ...props }) {
     const leagueExists = await admin.database()
       .ref(`/leagues/${id}`)
       .once('value')
       .then(snap => snap.val());
-    if (leagueExists) throw new Error(`Player: ${id} is already in a league!`);
+    if (leagueExists) return false;
 
     await admin.database()
       .ref(`/leagues/${id}`)

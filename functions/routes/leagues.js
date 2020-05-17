@@ -36,13 +36,14 @@ router.post('/:id', async (req, res) => {
   if (!platform) return res.status(400).json({ error: 'Platform is a required field.' });
 
   try {
-    const league = await leagues.set({
+    const league = await leagues.create({
       id,
       format,
       platform,
       deckID,
       ...rest
     });
+    if (!league) return res.status(400).json({ error: `Player: ${id} is already in a league.` });
 
     return res.status(201).json(league);
   } catch (error) {
