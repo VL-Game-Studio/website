@@ -138,24 +138,23 @@ function AppRoutes() {
 export const GlobalStyles = createGlobalStyle`
   html,
   body {
-  	-moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: antialiased;
-    background: ${props => props.theme.colorBackground};
-    border: 0;
     box-sizing: border-box;
-    color: ${props => props.theme.colorText};
     font-family: ${props => props.theme.fontStack};
-    font-size: 16px;
     font-weight: 400;
+    background: ${props => props.theme.colorBackground};
+    color: ${props => props.theme.colorText};
+    border: 0;
     margin: 0;
-    overflow-x: hidden;
     width: 100vw;
+    overflow-x: hidden;
   }
 
   *,
   *::before,
   *::after {
     box-sizing: inherit;
+    margin: 0;
+    padding: 0;
   }
 
   ::selection {
@@ -172,11 +171,6 @@ export const GlobalStyles = createGlobalStyle`
       transition-delay: 0s;
       transition-duration: 0s;
     }
-  }
-
-  h1, h2, h3, h4, p, label {
-    margin: 0;
-    padding: 0;
   }
 `;
 

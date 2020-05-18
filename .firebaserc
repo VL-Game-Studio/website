@@ -1,15 +1,15 @@
 {
   "projects": {
-    "default": "project-videre"
+    "default": "project-modern"
   },
   "targets": {
-    "project-videre": {
+    "project-modern": {
       "hosting": {
         "website": [
-          "project-videre"
+          "project-modern"
         ],
         "storybook": [
-          "videre-storybook"
+          "project-modern-storybook"
         ]
       }
     }

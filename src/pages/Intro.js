@@ -81,6 +81,10 @@ const IntroContent = styled.div`
     justify-content: center;
     width: 100%;
 
+    h1, p, button {
+      margin-left: 0;
+    }
+
     h1 {
       margin-top: 33px;
     }
