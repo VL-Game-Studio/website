@@ -1,16 +1,10 @@
 import React from 'react';
 import { ReactComponent as IconLogo } from 'assets/icons/logo.svg';
-import { ReactComponent as IconDiscord } from 'assets/icons/discord.svg';
-import { ReactComponent as IconGithub } from 'assets/icons/github.svg';
-import { ReactComponent as IconReddit } from 'assets/icons/reddit.svg';
-import { ReactComponent as IconChevron } from 'assets/icons/chevron.svg';
+import { ReactComponent as IconArrowRight } from 'assets/icons/arrow-right.svg';
 
 const icons = {
   logo: IconLogo,
-  discord: IconDiscord,
-  github: IconGithub,
-  reddit: IconReddit,
-  chevron: IconChevron,
+  arrowRight: IconArrowRight,
 };
 
 const Icon = ({ icon, style, className }) => {

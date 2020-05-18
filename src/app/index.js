@@ -5,52 +5,58 @@ import { Transition, TransitionGroup, config as transitionConfig } from 'react-t
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { theme } from 'app/theme';
 import { useLocalStorage, usePrefersReducedMotion } from 'hooks';
-import WhitneyBook from 'assets/fonts/whitney-book.woff2';
-import WhitneyMedium from 'assets/fonts/whitney-medium.woff2';
-import WhitneySemiBold from 'assets/fonts/whitney-semibold.woff2';
-import WhitneyBold from 'assets/fonts/whitney-bold.woff2';
+import MontserratLight from 'assets/fonts/montserrat-light.woff2';
+import MontserratRegular from 'assets/fonts/montserrat-regular.woff2';
+import MontserratMedium from 'assets/fonts/montserrat-medium.woff2';
+import MontserratSemiBold from 'assets/fonts/montserrat-semibold.woff2';
+import MontserratBold from 'assets/fonts/montserrat-bold.woff2';
 import { initialState, reducer } from 'app/reducer';
-import { rgba } from 'utils/style';
 import { reflow } from 'utils/transition';
 
-const Home = lazy(() => import('screens/Home'));
-const Events = lazy(() => import('screens/Events'));
+const Home = lazy(() => import('pages/Home'));
 
 export const AppContext = createContext();
 export const TransitionContext = createContext();
 
 export const fontStyles = `
   @font-face {
-    font-family: 'Whitney';
+    font-family: 'Montserrat';
+    font-weight: 300;
+    src: url(${MontserratLight}) format('woff2');
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Montserrat';
     font-weight: 400;
-    src: url(${WhitneyBook}) format('woff2');
+    src: url(${MontserratRegular}) format('woff2');
     font-display: swap;
   }
 
   @font-face {
-    font-family: 'Whitney';
+    font-family: 'Montserrat';
     font-weight: 500;
-    src: url(${WhitneyMedium}) format('woff2');
+    src: url(${MontserratMedium}) format('woff2');
     font-display: swap;
   }
 
   @font-face {
-    font-family: 'Whitney';
+    font-family: 'Montserrat';
     font-weight: 600;
-    src: url(${WhitneySemiBold}) format('woff2');
+    src: url(${MontserratSemiBold}) format('woff2');
     font-display: swap;
   }
 
   @font-face {
-    font-family: 'Whitney';
+    font-family: 'Montserrat';
     font-weight: 700;
-    src: url(${WhitneyBold}) format('woff2');
+    src: url(${MontserratBold}) format('woff2');
     font-display: swap;
   }
 `;
 
 function App() {
-  const [storedTheme] = useLocalStorage('theme', 'light');
+  const [storedTheme] = useLocalStorage('theme', 'dark');
   const [state, dispatch] = useReducer(reducer, initialState);
   const prefersReducedMotion = usePrefersReducedMotion();
   const { currentTheme } = state;
@@ -92,10 +98,11 @@ function AppRoutes() {
     <Fragment>
       <Helmet>
         <link rel="canonical" href={`https://videre.live${pathname}`} />
-        <link rel="preload" href={WhitneyBook} as="font" crossorigin="" />
-        <link rel="preload" href={WhitneyMedium} as="font" crossorigin="" />
-        <link rel="preload" href={WhitneySemiBold} as="font" crossorigin="" />
-        <link rel="preload" href={WhitneyBold} as="font" crossorigin="" />
+        <link rel="preload" href={MontserratLight} as="font" crossorigin="" />
+        <link rel="preload" href={MontserratRegular} as="font" crossorigin="" />
+        <link rel="preload" href={MontserratMedium} as="font" crossorigin="" />
+        <link rel="preload" href={MontserratSemiBold} as="font" crossorigin="" />
+        <link rel="preload" href={MontserratBold} as="font" crossorigin="" />
         <style>{fontStyles}</style>
       </Helmet>
       <GlobalStyles />
@@ -117,7 +124,6 @@ function AppRoutes() {
                 <Suspense fallback={<Fragment />}>
                   <Switch location={location}>
                     <Route exact path="/" component={Home} />
-                    <Route path="/events" component={Events} />
                   </Switch>
                 </Suspense>
               </AppPage>
@@ -154,7 +160,7 @@ export const GlobalStyles = createGlobalStyle`
 
   ::selection {
     background: ${props => props.theme.colorAccent};
-    color: ${props => rgba(props.theme.colorWhite, 0.9)}
+    color: ${props => props.theme.colorWhite}
   }
 
   #root *,

@@ -1,16 +1,16 @@
-# 🌐 [Videre.live](https://videre.live)
+# 🌐 [Project Modern Website](https://projectmodern.gg)
 
-[![Site preview](/public/social-image.png)](https://videre.live)
+[![Site preview](/public/social-image.png)](https://projectmodern.gg)
 
 # Issues / bugs
 
-Make sure you check to see if your issue is related to other issues before creating any, or if it is on [the list of things we fixed but haven't released yet](https://github.com/VidereMTG/videre.live/wiki/features-and-fixes-not-released-yet).
+Make sure you check to see if your issue is related to other issues before creating any, or if it is on [the list of things we fixed but haven't released yet](https://github.com/ProjectModern/website/wiki/features-and-fixes-not-released-yet).
 
-Be sure to tag your issue [here](https://github.com/VidereMTG/videre.live/issues) using the **bug** tag!
+Be sure to tag your issue [here](https://github.com/ProjectModern/website/issues) using the **bug** tag!
 
 # Designers and Developers
 
-If you  are interested in designing or developing videre.live with us, you can reach to us through the [Official VidereMTG Discord](https://discord.gg/mjtTnr8) which we check regularly.
+If you  are interested in designing or developing videre.live with us, you can reach to us through the [Official Project Modern Discord](https://discord.gg/mjtTnr8) which we check regularly.
 
 ## Scripts
 

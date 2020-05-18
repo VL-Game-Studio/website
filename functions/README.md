@@ -1,4 +1,4 @@
-# Videre Cloud Functions
+# Project Modern Cloud Functions
 
 ## Decklists Methods
 

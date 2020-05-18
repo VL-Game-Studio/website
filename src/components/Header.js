@@ -2,30 +2,14 @@ import React, { memo } from 'react';
 import styled from 'styled-components/macro';
 import { Link } from 'components/Link';
 import Icon from 'components/Icon';
-import NavToggle from 'components/NavToggle';
-import { useAppContext } from 'hooks';
 
-function Header() {
-  const { menuOpen, dispatch } = useAppContext();
-
-  const handleMobileNavClick = () => {
-    if (menuOpen) dispatch({ type: 'toggleMenu' });
-  };
-
-  const handleMenuToggle = () => {
-    dispatch({ type: 'toggleMenu' });
-  };
+function Header(props) {
 
   return (
-    <HeaderWrapper role="banner">
-      <HeaderLogo
-        to={{ pathname: '/', hash: '#intro' }}
-        aria-label="VidereMTG"
-        onClick={handleMobileNavClick}
-      >
+    <HeaderWrapper>
+      <Link to="/" aria-label="Project Modern, Putting Players First">
         <Icon icon="logo" />
-      </HeaderLogo>
-      <NavToggle onClick={handleMenuToggle} />
+      </Link>
     </HeaderWrapper>
   );
 }
@@ -33,21 +17,26 @@ function Header() {
 const HeaderWrapper = styled.header`
   align-items: center;
   display: flex;
-  flex-direction: row;
+  height: 150px;
   justify-content: space-between;
-  left: 40px;
+  left: 0;
+  margin: 0 auto;
+  max-width: calc(100% - 100px);
+  pointer-events: none;
   position: fixed;
-  right: 40px;
-  top: 40px;
-  z-index: 1024;
-`;
+  right: 0;
+  top: 0;
+  transition: opacity 0.55s ${props => props.theme.bezierFastoutSlowin};
+  z-index: 21;
 
-const HeaderLogo = styled(Link)`
-  color: ${props => props.theme.colorAccent}!important;
-  display: flex;
-  padding: 10px;
-  position: relative;
-  z-index: 16;
+  &, a {
+    color: ${props => props.theme.colorTitle};
+  }
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    height: 116px;
+    max-width: calc(100% - 40px);
+  }
 `;
 
 export default memo(Header);

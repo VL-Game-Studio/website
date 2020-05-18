@@ -1,6 +1,6 @@
 {
-  "short_name": "videre.live",
-  "name": "VidereMTG",
+  "short_name": "projectmodern.gg",
+  "name": "Project Modern",
   "icons": [
     {
       "src": "favicon.png",
@@ -20,6 +20,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#7289DA",
-  "background_color": "#7289DA"
+  "theme_color": "#f84525",
+  "background_color": "#f84525"
 }

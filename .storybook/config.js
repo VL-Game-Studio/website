@@ -6,31 +6,32 @@ import { withA11y } from '@storybook/addon-a11y';
 import { ThemeProvider } from 'styled-components';
 import { theme } from '../src/app/theme';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
-import WhitneyBook from 'assets/fonts/whitney-book.woff2';
-import WhitneyMedium from 'assets/fonts/whitney-medium.woff2';
-import WhitneySemiBold from 'assets/fonts/whitney-semibold.woff2';
-import WhitneyBold from 'assets/fonts/whitney-bold.woff2';
+import MontserratLight from 'assets/fonts/montserrat-light.woff2';
+import MontserratRegular from 'assets/fonts/montserrat-regular.woff2';
+import MontserratMedium from 'assets/fonts/montserrat-medium.woff2';
+import MontserratSemiBold from 'assets/fonts/montserrat-semibold.woff2';
+import MontserratBold from 'assets/fonts/montserrat-bold.woff2';
 import { fontStyles, GlobalStyles } from '../src/app';
 
 addParameters({
   options: {
     theme: {
       ...theme,
-      brandImage: 'https://videre.live/icon.svg',
-      brandTitle: 'VidereMTG Components',
-      brandUrl: 'https://videre.live',
+      brandImage: 'https://projectmodern.gg/icon.svg',
+      brandTitle: 'Project Modern Components',
+      brandUrl: 'https://projectmodern.gg',
     },
   },
 });
 
 const themeKeys = {
-  'Light': 'light',
   'Dark': 'dark',
+  'Light': 'light',
 };
 
 addDecorator(story => {
   const content = story();
-  const themeKey = select('Theme', themeKeys, 'light');
+  const themeKey = select('Theme', themeKeys, 'dark');
   const currentTheme = theme[themeKey];
 
   return (
@@ -38,10 +39,11 @@ addDecorator(story => {
       <ThemeProvider theme={currentTheme}>
         <Fragment>
           <Helmet>
-            <link rel="preload" href={WhitneyBook} as="font" crossorigin="" />
-            <link rel="preload" href={WhitneyMedium} as="font" crossorigin="" />
-            <link rel="preload" href={WhitneySemiBold} as="font" crossorigin="" />
-            <link rel="preload" href={WhitneyBold} as="font" crossorigin="" />
+            <link rel="preload" href={MontserratLight} as="font" crossorigin="" />
+            <link rel="preload" href={MontserratRegular} as="font" crossorigin="" />
+            <link rel="preload" href={MontserratMedium} as="font" crossorigin="" />
+            <link rel="preload" href={MontserratSemiBold} as="font" crossorigin="" />
+            <link rel="preload" href={MontserratBold} as="font" crossorigin="" />
             <style>{fontStyles}</style>
           </Helmet>
           <GlobalStyles />

@@ -1,6 +1,6 @@
 {
   "name": "functions",
-  "description": "Cloud Functions for videre.live",
+  "description": "Cloud Functions for Project Modern",
   "scripts": {
     "lint": "eslint .",
     "serve": "firebase serve --only functions",
