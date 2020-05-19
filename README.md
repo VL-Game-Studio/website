@@ -4,13 +4,13 @@
 
 # Issues / bugs
 
-Make sure you check to see if your issue is related to other issues before creating any, or if it is on [the list of things we fixed but haven't released yet](https://github.com/ProjectModern/website/wiki/features-and-fixes-not-released-yet).
+Make sure you check to see if your issue is related to other issues before creating any, or if it is on [the list of things we fixed but haven't released yet](https://github.com/Project-Modern/website/wiki/features-and-fixes-not-released-yet).
 
-Be sure to tag your issue [here](https://github.com/ProjectModern/website/issues) using the **bug** tag!
+Be sure to tag your issue [here](https://github.com/Project-Modern/website/issues) using the **bug** tag!
 
 # Designers and Developers
 
-If you  are interested in designing or developing videre.live with us, you can reach to us through the [Official Project Modern Discord](https://discord.gg/mjtTnr8) which we check regularly.
+If you  are interested in designing or developing videre.live with us, you can reach to us through the [Project Modern Discord](https://discord.gg/mjtTnr8) which we check regularly.
 
 ## Scripts
 
