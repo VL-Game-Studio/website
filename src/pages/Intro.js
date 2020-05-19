@@ -86,8 +86,8 @@ const IntroContent = styled.div`
   padding-left: 50px;
 
   ${Label} {
-    position: relative;
     left: -50px;
+    position: relative;
   }
 
   ${Title} {
@@ -100,19 +100,11 @@ const IntroContent = styled.div`
     max-width: 530px;
   }
 
-  @media (max-width: ${props => props.theme.desktop}px) {
-    width: 70%;
-  }
-
   @media (max-width: ${props => props.theme.tablet}px) {
     padding-left: 0;
 
     ${Label} {
       left: 0;
-    }
-
-    ${Title}, ${Paragraph} {
-      max-width: none;
     }
   }
 
@@ -120,10 +112,13 @@ const IntroContent = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 100%;
 
     ${Title} {
       margin-top: 33px;
+    }
+
+    ${Title}, ${Paragraph} {
+      max-width: none;
     }
   }
 `;

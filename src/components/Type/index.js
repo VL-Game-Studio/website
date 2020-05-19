@@ -32,12 +32,4 @@ export const Paragraph = styled.p`
   font-weight: 300;
   letter-spacing: 0.03em;
   line-height: 36px;
-
-  @media (max-width: ${props => props.theme.desktop}px) {
-    width: 80%;
-  }
-
-  @media (max-width: ${props => props.theme.mobile}px) {
-    width: 70%;
-  }
 `;
