@@ -98,7 +98,7 @@ export default function Home(props) {
         title="Project Modern - Putting Players First"
         meta={[{
           name: "description",
-          content: "Project Modern is a community-backed format that prioritizes format health over profit.",
+          content: "Project Modern is a community-backed MTG format that prioritizes players over profits.",
         }]}
       />
       <Header />
