@@ -1,6 +1,17 @@
 # Project Modern Cloud Functions
 
-## Decklists Methods
+## Public Methods
+
+### Events Methods
+
+Path | Method | Parameters | Description
+--- | --- | --- | ---
+   /events/ | GET | *none* | Fetches all events, returning an object.
+   /events/:id | GET | *none* | Fetches a single event by id, returning an object.
+   /events/ | POST | `name` `description` `time` `date` `platform` | Creates an event, returning an event object.
+   /events/:id | DELETE | *none* | Fetches and deletes an event by id, returning an object.
+
+### Decklists Methods
 
 Path | Method | Parameters | Description
 --- | --- | --- | ---
@@ -10,7 +21,9 @@ Path | Method | Parameters | Description
    /decklists/:id | POST | `name (optional)` `author` `mainboard` `sideboard` | Validates mainboard and sideboard and adds to registry or throws error on infractions, returning an object.
    /decklists/:id | DELETE | *none* | Fetches and deletes a decklist by id, returning an object.
 
-## Leagues Methods
+## Private Methods
+
+### Leagues Methods
 
 Path | Method | Parameters | Description
 --- | --- | --- | ---
@@ -21,7 +34,7 @@ Path | Method | Parameters | Description
    /leagues/report/:id | POST | `record` | Updates match history and generates performance track from record.
    /leagues/:id | DELETE | *none* | Fetches and deletes a league entry by id, returning an object.
 
-## Players Methods
+### Players Methods
 
 Path | Method | Parameters | Description
 --- | --- | --- | ---
@@ -30,7 +43,7 @@ Path | Method | Parameters | Description
    /players/:id | POST | `name` `platforms` | Creates or updates player with optional id, Discord name, and platforms, returning an object.
    /players/:id | DELETE | *none* | Fetches and deletes a player by id, returning an object.
 
-## Results Methods
+### Results Methods
 
 Path | Method | Parameters | Description
 --- | --- | --- | ---

@@ -10,9 +10,11 @@ Be sure to tag your issue [here](https://github.com/Project-Modern/website/issue
 
 # Designers and Developers
 
-If you  are interested in designing or developing videre.live with us, you can reach to us through the [Project Modern Discord](https://discord.gg/mjtTnr8) which we check regularly.
+If you  are interested in designing or developing with us, you can reach to us through the [Project Modern Discord](https://discord.gg/mjtTnr8) which we check regularly.
 
 ## Scripts
+
+Make sure you have nodejs and yarn installed. Install dependencies with:
 
 ```bash
 yarn
