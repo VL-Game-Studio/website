@@ -31,7 +31,7 @@ function Button(props) {
 }
 
 const linkStyles = css`
-  color: ${props => props.theme.colorTitle};
+  color: ${props => props.color || props.dark ? props.theme.colorWhite : props.theme.colorTitle};
   font-family: ${props => props.theme.fontStack};
   font-size: 12px;
   font-weight: 700;
@@ -77,7 +77,7 @@ const ButtonWrapper = styled.button`
   }
 
   ::before {
-    background: #323135;
+    background: ${props => props.color || props.dark ? '#323135' : '#F2F2F2'};
     border-radius: 24px;
     content: '';
     display: block;

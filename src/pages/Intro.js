@@ -29,9 +29,9 @@ function Intro(props) {
           <IntroContainer status={status}>
             <IntroContent>
               <Label>Project Modern</Label>
-              <Title id={titleId}>A community-run format that puts players first</Title>
-              <Paragraph>Project Modern is a community-backed MTG format that prioritizes players over profits.</Paragraph>
-              <Button href="https://discord.gg/mjtTnr8" label="Get Started" />
+              <Title dark id={titleId}>A community-run format that puts players first</Title>
+              <Paragraph dark>Project Modern is a community-backed MTG format that prioritizes players over profits.</Paragraph>
+              <Button dark href="https://discord.gg/mjtTnr8" label="Get Started" />
             </IntroContent>
           </IntroContainer>
         )}
@@ -42,11 +42,9 @@ function Intro(props) {
 
 const IntroWrapper = styled.section`
   align-items: center;
-  background: ${props => props.theme.colorBackground};
+  background: ${props => props.theme.colorBackgroundDark};
   display: flex;
   min-height: 100vh;
-  overflow: hidden;
-  padding-top: 0;
   padding: 0 50px;
 
   @media (max-width: ${props => props.theme.mobile}px) {
@@ -82,7 +80,10 @@ const IntroContainer = styled.section`
 `;
 
 const IntroContent = styled.div`
-  margin-top: 100px;
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  margin: 100px 0;
   padding-left: 50px;
 
   ${Label} {

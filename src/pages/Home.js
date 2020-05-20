@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import Header from 'components/Header';
 import Intro from 'pages/Intro';
+import About from 'pages/About';
+import Events from 'pages/Events';
+import GetStarted from 'pages/GetStarted';
+import Footer from 'components/Footer';
 import { usePrefersReducedMotion, useRouteTransition } from 'hooks';
 
 export default function Home(props) {
@@ -11,10 +14,14 @@ export default function Home(props) {
   const initHash = useRef(true);
   const [visibleSections, setVisibleSections] = useState([]);
   const intro = useRef();
+  const about = useRef();
+  const events = useRef();
+  const getStarted = useRef();
+  const footer = useRef();
   const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
-    const revealSections = [intro];
+    const revealSections = [intro, about, events, getStarted, footer];
 
     const sectionObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
@@ -44,7 +51,7 @@ export default function Home(props) {
 
     const handleHashchange = (hash, scroll) => {
       clearTimeout(scrollTimeout);
-      const hashSections = [intro];
+      const hashSections = [intro, about, events, getStarted];
       const hashString = hash.replace('#', '');
       const element = hashSections.filter(item => item.current.id === hashString)[0];
       if (!element) return;
@@ -101,10 +108,28 @@ export default function Home(props) {
           content: "Project Modern is a community-backed MTG format that prioritizes players over profits.",
         }]}
       />
-      <Header />
       <Intro
         id="intro"
         sectionRef={intro}
+      />
+      <About
+        id="about"
+        sectionRef={about}
+        visible={visibleSections.includes(about.current)}
+      />
+      <Events
+        id="events"
+        sectionRef={events}
+        visible={visibleSections.includes(events.current)}
+      />
+      <GetStarted
+        id="get-started"
+        sectionRef={getStarted}
+        visible={visibleSections.includes(getStarted.current)}
+      />
+      <Footer
+        sectionRef={footer}
+        visible={visibleSections.includes(footer.current)}
       />
     </Fragment>
   );

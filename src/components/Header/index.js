@@ -6,8 +6,11 @@ import Icon from 'components/Icon';
 function Header(props) {
 
   return (
-    <HeaderWrapper>
-      <Link to="/" aria-label="Project Modern, Putting Players First">
+    <HeaderWrapper role="banner">
+      <Link
+        to={{ pathname: '/', hash: '#intro' }}
+        aria-label="Project Modern, Putting Players First"
+      >
         <Icon icon="logo" />
       </Link>
     </HeaderWrapper>
@@ -23,14 +26,14 @@ const HeaderWrapper = styled.header`
   margin: 0 auto;
   max-width: calc(100% - 100px);
   pointer-events: none;
-  position: fixed;
+  position: absolute;
   right: 0;
   top: 0;
   transition: opacity 0.55s ${props => props.theme.bezierFastoutSlowin};
-  z-index: 21;
+  z-index: 1024;
 
   &, a {
-    color: ${props => props.theme.colorTitle};
+    color: ${props => props.theme.colorWhite};
   }
 
   @media (max-width: ${props => props.theme.mobile}px) {

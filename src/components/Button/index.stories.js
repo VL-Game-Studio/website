@@ -10,7 +10,6 @@ export default {
 
 export const button = () => (
   <StoryContainer padding={30} gutter={30}>
-    <Button label="Button" />
-    <Button href="#" onClick={(e) => e.preventDefault()} label="Button Link" />
+    <Button dark href="#" onClick={(e) => e.preventDefault()} label="Button Link" />
   </StoryContainer>
 );

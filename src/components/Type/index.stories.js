@@ -1,6 +1,6 @@
 import React from 'react';
 import { withKnobs } from '@storybook/addon-knobs';
-import { Label, Title, Paragraph } from 'components/Type';
+import { Label, Title, Title2, Paragraph } from 'components/Type';
 import { StoryContainer } from '../../../.storybook/StoryContainer';
 
 export default {
@@ -16,12 +16,13 @@ export const label = () => (
 
 export const title = () => (
   <StoryContainer padding={30} gutter={30}>
-    <Title>Title Text</Title>
+    <Title dark>Title One</Title>
+    <Title2 dark>Title Two</Title2>
   </StoryContainer>
 );
 
 export const paragraph = () => (
   <StoryContainer padding={30} gutter={30}>
-    <Paragraph>Paragraph Text</Paragraph>
+    <Paragraph dark>Paragraph Text</Paragraph>
   </StoryContainer>
 );

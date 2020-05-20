@@ -1,7 +1,7 @@
 import styled from 'styled-components/macro';
 
 export const Label = styled.label`
-  color: ${props => props.theme.colorAccent};
+  color: ${props => props.color || props.theme.colorAccent};
   font-size: 16px;
   font-weight: 600;
   letter-spacing: 0.6em;
@@ -15,7 +15,7 @@ export const Label = styled.label`
 `;
 
 export const Title = styled.h1`
-  color: ${props => props.theme.colorTitle};
+  color: ${props => props.dark ? props.theme.colorWhite : props.theme.colorTitle};
   font-size: 72px;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -27,9 +27,22 @@ export const Title = styled.h1`
   }
 `;
 
+export const Title2 = styled.h2`
+  color: ${props => props.dark ? props.theme.colorWhite : props.theme.colorTitle};
+  font-size: 54px;
+  font-weight: 700;
+  line-height: 74px;
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    font-size: 28px;
+    line-height: 34px;
+  }
+`;
+
 export const Paragraph = styled.p`
   font-size: 20px;
   font-weight: 300;
   letter-spacing: 0.03em;
   line-height: 36px;
+  color: ${props => props.dark ? props.theme.colorWhite : props.theme.colorText};
 `;

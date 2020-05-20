@@ -9,13 +9,13 @@ export default {
 };
 
 export const logo = () => (
-  <StoryContainer padding={30} gutter={30}>
+  <StoryContainer padding={30} gutter={30} style={{ color: 'white' }}>
     <Icon icon="logo" />
   </StoryContainer>
 );
 
 export const links = () => (
-  <StoryContainer padding={30} gutter={30}>
+  <StoryContainer padding={30} gutter={30} style={{ color: 'white' }}>
     <Icon icon="arrowRight" />
   </StoryContainer>
 );

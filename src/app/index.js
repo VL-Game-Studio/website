@@ -3,17 +3,19 @@ import styled, { createGlobalStyle, ThemeProvider, css } from 'styled-components
 import { BrowserRouter, Switch, Route, useLocation } from 'react-router-dom';
 import { Transition, TransitionGroup, config as transitionConfig } from 'react-transition-group';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
+import Header from 'components/Header';
 import { theme } from 'app/theme';
-import { useLocalStorage, usePrefersReducedMotion } from 'hooks';
-import MontserratLight from 'assets/fonts/montserrat-light.woff2';
-import MontserratRegular from 'assets/fonts/montserrat-regular.woff2';
-import MontserratMedium from 'assets/fonts/montserrat-medium.woff2';
-import MontserratSemiBold from 'assets/fonts/montserrat-semibold.woff2';
-import MontserratBold from 'assets/fonts/montserrat-bold.woff2';
+import { usePrefersReducedMotion } from 'hooks';
 import { initialState, reducer } from 'app/reducer';
 import { reflow } from 'utils/transition';
+import montserratLight from 'assets/fonts/montserrat-light.woff2';
+import montserratRegular from 'assets/fonts/montserrat-regular.woff2';
+import montserratMedium from 'assets/fonts/montserrat-medium.woff2';
+import montserratSemiBold from 'assets/fonts/montserrat-semibold.woff2';
+import montserratBold from 'assets/fonts/montserrat-bold.woff2';
 
 const Home = lazy(() => import('pages/Home'));
+const NotFound = lazy(() => import('pages/NotFound'));
 
 export const AppContext = createContext();
 export const TransitionContext = createContext();
@@ -22,44 +24,42 @@ export const fontStyles = `
   @font-face {
     font-family: 'Montserrat';
     font-weight: 300;
-    src: url(${MontserratLight}) format('woff2');
+    src: url(${montserratLight}) format('woff2');
     font-display: swap;
   }
 
   @font-face {
     font-family: 'Montserrat';
     font-weight: 400;
-    src: url(${MontserratRegular}) format('woff2');
+    src: url(${montserratRegular}) format('woff2');
     font-display: swap;
   }
 
   @font-face {
     font-family: 'Montserrat';
     font-weight: 500;
-    src: url(${MontserratMedium}) format('woff2');
+    src: url(${montserratMedium}) format('woff2');
     font-display: swap;
   }
 
   @font-face {
     font-family: 'Montserrat';
     font-weight: 600;
-    src: url(${MontserratSemiBold}) format('woff2');
+    src: url(${montserratSemiBold}) format('woff2');
     font-display: swap;
   }
 
   @font-face {
     font-family: 'Montserrat';
     font-weight: 700;
-    src: url(${MontserratBold}) format('woff2');
+    src: url(${montserratBold}) format('woff2');
     font-display: swap;
   }
 `;
 
 function App() {
-  const [storedTheme] = useLocalStorage('theme', 'dark');
   const [state, dispatch] = useReducer(reducer, initialState);
   const prefersReducedMotion = usePrefersReducedMotion();
-  const { currentTheme } = state;
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -73,13 +73,9 @@ function App() {
     window.history.scrollRestoration = 'manual';
   }, []);
 
-  useEffect(() => {
-    dispatch({ type: 'setTheme', value: theme[storedTheme] });
-  }, [storedTheme]);
-
   return (
     <HelmetProvider>
-      <ThemeProvider theme={currentTheme}>
+      <ThemeProvider theme={theme}>
         <AppContext.Provider value={{ ...state, dispatch }}>
           <BrowserRouter>
             <AppRoutes />
@@ -98,15 +94,16 @@ function AppRoutes() {
     <Fragment>
       <Helmet>
         <link rel="canonical" href={`https://videre.live${pathname}`} />
-        <link rel="preload" href={MontserratLight} as="font" crossorigin="" />
-        <link rel="preload" href={MontserratRegular} as="font" crossorigin="" />
-        <link rel="preload" href={MontserratMedium} as="font" crossorigin="" />
-        <link rel="preload" href={MontserratSemiBold} as="font" crossorigin="" />
-        <link rel="preload" href={MontserratBold} as="font" crossorigin="" />
+        <link rel="preload" href={montserratLight} as="font" crossorigin="" />
+        <link rel="preload" href={montserratRegular} as="font" crossorigin="" />
+        <link rel="preload" href={montserratMedium} as="font" crossorigin="" />
+        <link rel="preload" href={montserratSemiBold} as="font" crossorigin="" />
+        <link rel="preload" href={montserratBold} as="font" crossorigin="" />
         <style>{fontStyles}</style>
       </Helmet>
       <GlobalStyles />
       <SkipToMain href="#MainContent">Skip to main content</SkipToMain>
+      <Header location={location} />
       <TransitionGroup
         component={AppMainContent}
         tabIndex={-1}
@@ -124,6 +121,7 @@ function AppRoutes() {
                 <Suspense fallback={<Fragment />}>
                   <Switch location={location}>
                     <Route exact path="/" component={Home} />
+                    <Route component={NotFound} />
                   </Switch>
                 </Suspense>
               </AppPage>
@@ -141,7 +139,7 @@ export const GlobalStyles = createGlobalStyle`
     box-sizing: border-box;
     font-family: ${props => props.theme.fontStack};
     font-weight: 400;
-    background: ${props => props.theme.colorBackground};
+    background: ${props => props.theme.colorBackgroundDark};
     color: ${props => props.theme.colorText};
     border: 0;
     margin: 0;
@@ -175,7 +173,7 @@ export const GlobalStyles = createGlobalStyle`
 `;
 
 const AppMainContent = styled.main`
-  background: ${props => props.theme.colorBackground};
+  background: ${props => props.theme.colorBackgroundDark};
   display: grid;
   grid-template-columns: 100%;
   outline: none;
