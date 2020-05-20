@@ -54,14 +54,20 @@ const leagues = {
       .filter(opp => opp.id && opp.id !== id)
       .filter(opp => opp.format && opp.format === format)
       .filter(opp => opp.platform && opp.platform === platform)
-      .filter(opp => opp.opponents && !opp.opponents.includes(id))
-      .filter(opp => opp.matches && Object.values(opp.matches).length === Object.values(matches).length)
-      .filter(opp => opp.points && Math.abs(opp.points - points) <= maxDiff);
+      .filter(({ opponents: oppOpponents = [] }) => !Object.values(oppOpponents).includes(league))
+      .filter(({ matches: oppMatches = [], opponents: oppOpponents = [] }) =>
+        Object.values(oppOpponents).length === Object.values(oppMatches).length && Object.values(oppMatches).length === Object.values(matches).length
+      )
+      .filter(({ points: oppPoints = 0 }) => Math.abs(oppPoints - points) <= maxDiff);
     if (!opponent) return null;
 
-    await firebase.database()
+    await admin.database()
       .ref(`/leagues/${id}`)
-      .update({ opponents: [...opponents, opponent] });
+      .update({ opponents: opponents ? [...opponents, opponent] : [opponent] });
+
+    await admin.database()
+      .ref(`/leagues/${opponent.id}`)
+      .update({ opponents: opponent.opponents ? [...opponent.opponents, league] : [league] });
 
     return opponent;
   },
