@@ -61,6 +61,7 @@ export const theme = {
   ...base,
   ...media,
   ...easing,
+  themeId: 'light',
   colorBackground: 'rgba(255, 255, 255, 1)',
   colorBackgroundSecondary: 'rgba(249, 249, 249, 1)',
   colorBackgroundDark: 'rgba(31, 30, 29, 1)',

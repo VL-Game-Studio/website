@@ -22,7 +22,7 @@ function Button(props) {
         </AnchorLink>
       }
       {to &&
-        <Link to={to}>
+        <Link to={to} style={{ textDecoration: 'none' }}>
           <ButtonContent {...rest} />
         </Link>
       }

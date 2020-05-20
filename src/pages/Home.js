@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, Fragment } from 'react';
+import { useTheme } from 'styled-components/macro';
 import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import Intro from 'pages/Intro';
@@ -6,10 +7,13 @@ import About from 'pages/About';
 import Events from 'pages/Events';
 import GetStarted from 'pages/GetStarted';
 import Footer from 'components/Footer';
-import { usePrefersReducedMotion, useRouteTransition } from 'hooks';
+import { useAppContext, usePrefersReducedMotion, useRouteTransition } from 'hooks';
 
 export default function Home(props) {
   const { status } = useRouteTransition();
+  const { dispatch } = useAppContext();
+  const theme = useTheme();
+  const themeRef = useRef(theme);
   const { hash, state } = useLocation();
   const initHash = useRef(true);
   const [visibleSections, setVisibleSections] = useState([]);
@@ -19,6 +23,25 @@ export default function Home(props) {
   const getStarted = useRef();
   const footer = useRef();
   const prefersReducedMotion = usePrefersReducedMotion();
+
+  useEffect(() => {
+    themeRef.current = theme;
+  }, [theme]);
+
+  useEffect(() => {
+    if (status === 'entered' || status === 'exiting') {
+      dispatch({
+        type: 'updateTheme',
+        value: { themeId: 'dark' },
+      });
+    }
+
+    return function cleanUp() {
+      if (status !== 'entered') {
+        dispatch({ type: 'updateTheme' });
+      }
+    };
+  }, [dispatch, status]);
 
   useEffect(() => {
     const revealSections = [intro, about, events, getStarted, footer];

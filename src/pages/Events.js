@@ -1,10 +1,15 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { useState, useEffect, useRef, Fragment, memo } from 'react';
 import styled, { css } from 'styled-components/macro';
+import { Helmet } from 'react-helmet-async';
 import { Transition } from 'react-transition-group';
-import { Label, Title2, Paragraph } from 'components/Type';
+import { Label, Title, Title2, Paragraph } from 'components/Type';
 import Icon from 'components/Icon';
 import { Link } from 'components/Link';
 import { AnimFade } from 'utils/style';
+import Button from 'components/Button';
+import GetStarted from 'pages/GetStarted';
+import Footer from 'components/Footer';
+import { useScrollRestore } from 'hooks';
 import { reflow } from 'utils/transition';
 import prerender from 'utils/prerender';
 
@@ -33,44 +38,220 @@ function Events(props) {
     if (!prerender) fetchEvents();
   }, []);
 
+  if (!sectionRef) return <EventsPage />;
+
   return (
-    <EventsWrapper
-      ref={sectionRef}
+    <EventsPanel
       id={id}
-      aria-labelledby={titleId}
-      tabIndex={-1}
+      titleId={titleId}
+      sectionRef={sectionRef}
+      visible={visible}
+      events={events}
       {...rest}
-    >
-      <Transition
-        in={visible}
-        timeout={4000}
-        onEnter={reflow}
-      >
-        {status => (
-          <EventsContainer status={status}>
-            <EventsContent>
-              <Label>Active Events</Label>
-              <Title2 id={titleId}>New Tourmaments Every Day</Title2>
-              <Tournaments>
-                {!events && <Paragraph>There aren't any active tournaments right now.</Paragraph>}
-                {events?.map(({ id, name, description }) => (
-                  <Tournament to={`/${events}/${id}`} aria-label={name}>
-                    <TournamentName>
-                      <span>{name}</span>
-                      <div></div>
-                    </TournamentName>
-                    <TournamentInfo>{description}</TournamentInfo>
-                    <Icon icon="plus" />
-                  </Tournament>
-                ))}
-              </Tournaments>
-            </EventsContent>
-          </EventsContainer>
-        )}
-      </Transition>
-    </EventsWrapper>
+    />
   );
 }
+
+function EventsPage(props) {
+  const [visibleSections, setVisibleSections] = useState([]);
+  const events = useRef();
+  const getStarted = useRef();
+  const footer = useRef();
+  useScrollRestore();
+
+  useEffect(() => {
+    const revealSections = [events, getStarted, footer];
+
+    const sectionObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const section = entry.target;
+          observer.unobserve(section);
+          if (visibleSections.includes(section)) return;
+          setVisibleSections(prevSections => [...prevSections, section]);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px' });
+
+    revealSections.forEach(section => {
+      sectionObserver.observe(section.current);
+    });
+
+    return function cleanUp() {
+      sectionObserver.disconnect();
+    };
+  }, [visibleSections]);
+
+  return (
+    <Fragment>
+      <Helmet
+        title="Events - Project Modern"
+      />
+      <EventsHeroWrapper>
+        <Transition
+          appear={!prerender}
+          in={!prerender}
+          timeout={3000}
+          onEnter={reflow}
+        >
+          {status => (
+            <EventsHeroContainer status={status}>
+              <EventsHeroContent>
+                <Label>Events</Label>
+                <Title>Level up your skills with daily tournaments</Title>
+              </EventsHeroContent>
+            </EventsHeroContainer>
+          )}
+        </Transition>
+      </EventsHeroWrapper>
+      <EventsPanel
+        alternate
+        id="events"
+        sectionRef={events}
+        visible={visibleSections.includes(events.current)}
+      />
+      <GetStarted
+        id="get-started"
+        sectionRef={getStarted}
+        visible={visibleSections.includes(getStarted.current)}
+      />
+      <Footer
+        sectionRef={footer}
+        visible={visibleSections.includes(footer.current)}
+      />
+    </Fragment>
+  );
+}
+
+const EventsHeroWrapper = styled.section`
+  align-items: center;
+  background: ${props => props.theme.colorBackground};
+  display: flex;
+  padding: 0 50px;
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    padding: 0 20px;
+  }
+`;
+
+const EventsHeroContainer = styled.div`
+  margin: 0 auto;
+  max-width: 1200px;
+  opacity: 0;
+  width: 100%;
+
+  @media (max-width: ${props => props.theme.desktop}px) {
+    max-width: 1080px;
+  }
+
+  @media (max-width: ${props => props.theme.laptop}px) {
+    max-width: 960px;
+  }
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    max-width: 100%;
+  }
+
+  ${props => props.status === 'entering' && css`
+    animation: ${css`${AnimFade} 0.6s ease 0.2s forwards`};
+  `}
+
+  ${props => props.status === 'entered' && css`
+    opacity: 1;
+  `}
+`;
+
+const EventsHeroContent = styled.div`
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  margin: 180px 0;
+  padding-left: 50px;
+
+  ${Label} {
+    left: -50px;
+    position: relative;
+  }
+
+  ${Title} {
+    margin-top: 45px;
+    width: 56%;
+  }
+
+  @media (max-width: ${props => props.theme.laptop}px) {
+    ${Title} {
+      width: 70%;
+    }
+  }
+
+  @media (max-width: ${props => props.theme.tablet}px) {
+    padding-left: 35px;
+
+    ${Label} {
+      left: -35px;
+    }
+
+    ${Title} {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    margin: 116px 0;
+    padding-left: 0;
+
+    ${Label} {
+      left: 0;
+    }
+  }
+`;
+
+const EventsPanel = ({
+  id,
+  titleId,
+  sectionRef,
+  visible,
+  events,
+  alternate,
+  ...rest
+}) => (
+  <EventsWrapper
+    ref={sectionRef}
+    id={id}
+    aria-labelledby={titleId}
+    tabIndex={-1}
+    {...rest}
+  >
+    <Transition
+      in={visible}
+      timeout={4000}
+      onEnter={reflow}
+    >
+      {status => (
+        <EventsContainer status={status}>
+          <EventsContent alternate={alternate}>
+            {!alternate && <Label>Active Events</Label>}
+            <Title2 id={titleId}>{alternate ? 'Active Events' : 'New Tourmaments Every Day'}</Title2>
+            <Tournaments alternate={alternate}>
+              {!events && <Paragraph>There aren't any active events right now.</Paragraph>}
+              {events?.map(({ id, name, description }) => (
+                <Tournament to={`/${events}/${id}`} aria-label={name}>
+                  <TournamentName>
+                    <span>{name}</span>
+                    <div></div>
+                  </TournamentName>
+                  <TournamentInfo>{description}</TournamentInfo>
+                  <Icon icon="plus" />
+                </Tournament>
+              ))}
+            </Tournaments>
+            {!alternate && <Button to="/events" label="All Events" />}
+          </EventsContent>
+        </EventsContainer>
+      )}
+    </Transition>
+  </EventsWrapper>
+);
 
 const EventsWrapper = styled.section`
   align-items: center;
@@ -125,6 +306,15 @@ const EventsContent = styled.div`
   ${Title2} {
     margin-top: 40px;
     max-width: 564px;
+
+    ${props => props.alternate && css`
+      align-self: flex-end;
+      margin-top: 0;
+    `}
+  }
+
+  a {
+    margin: 60px auto 0;
   }
 
   @media (max-width: ${props => props.theme.tablet}px) {
@@ -146,14 +336,18 @@ const EventsContent = styled.div`
     ${Title2} {
       max-width: none;
     }
+
+    a {
+      margin: 45px auto 0;
+    }
   }
 `;
 
 const Tournaments = styled.div`
-  align-self: flex-end;
+  align-self: ${props => props.alternate ? 'flex-start' : 'flex-end'};
   display: grid;
   grid-row-gap: 20px;
-  margin-top: 20px;
+  margin: 20px 0 0;
   max-width: 624px;
   width: 100%;
 

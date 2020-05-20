@@ -4,7 +4,7 @@ export const navLinks = [
     label: 'About'
   },
   {
-    to: '/#events',
+    to: '/events',
     label: 'Events'
   }
 ];

@@ -4,8 +4,7 @@ import { BrowserRouter, Switch, Route, useLocation } from 'react-router-dom';
 import { Transition, TransitionGroup, config as transitionConfig } from 'react-transition-group';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import Header from 'components/Header';
-import { theme } from 'app/theme';
-import { usePrefersReducedMotion } from 'hooks';
+import { useLocalStorage, usePrefersReducedMotion } from 'hooks';
 import { initialState, reducer } from 'app/reducer';
 import { reflow } from 'utils/transition';
 import montserratLight from 'assets/fonts/montserrat-light.woff2';
@@ -15,6 +14,7 @@ import montserratSemiBold from 'assets/fonts/montserrat-semibold.woff2';
 import montserratBold from 'assets/fonts/montserrat-bold.woff2';
 
 const Home = lazy(() => import('pages/Home'));
+const Events = lazy(() => import('pages/Events'));
 const NotFound = lazy(() => import('pages/NotFound'));
 
 export const AppContext = createContext();
@@ -58,8 +58,10 @@ export const fontStyles = `
 `;
 
 function App() {
+  const [storedThemeId] = useLocalStorage('theme', 'light');
   const [state, dispatch] = useReducer(reducer, initialState);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const { currentTheme } = state;
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -73,9 +75,13 @@ function App() {
     window.history.scrollRestoration = 'manual';
   }, []);
 
+  useEffect(() => {
+    dispatch({ type: 'updateTheme', value: { themeId: storedThemeId } });
+  }, [storedThemeId]);
+
   return (
     <HelmetProvider>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={currentTheme}>
         <AppContext.Provider value={{ ...state, dispatch }}>
           <BrowserRouter>
             <AppRoutes />
@@ -121,6 +127,7 @@ function AppRoutes() {
                 <Suspense fallback={<Fragment />}>
                   <Switch location={location}>
                     <Route exact path="/" component={Home} />
+                    <Route path="/events" component={Events} />
                     <Route component={NotFound} />
                   </Switch>
                 </Suspense>

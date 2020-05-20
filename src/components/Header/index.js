@@ -42,7 +42,9 @@ const HeaderWrapper = styled.header`
   z-index: 1024;
 
   &, a {
-    color: ${props => props.theme.colorWhite};
+    color: ${props => props.theme.themeId === 'light'
+      ? props.theme.colorTitle
+      : props.theme.colorWhite};
   }
 
   @media (max-width: ${props => props.theme.mobile}px) {
@@ -62,7 +64,9 @@ const HeaderNav = styled.nav`
 `;
 
 const CTALink = styled.a`
-  color: ${props => props.theme.colorWhite};
+  color: ${props => props.theme.themeId === 'light'
+    ? props.theme.colorTitle
+    : props.theme.colorWhite};
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.15em;
@@ -72,7 +76,9 @@ const CTALink = styled.a`
   text-transform: uppercase;
 
   ::after {
-    background: ${props => props.theme.colorWhite};
+    background: ${props => props.theme.themeId === 'light'
+      ? props.theme.colorTitle
+      : props.theme.colorWhite};
     content: '';
     display: block;
     height: 1px;
@@ -97,7 +103,9 @@ const CTALink = styled.a`
 `;
 
 const Line = styled.div`
-  background: ${props => props.theme.colorTitle};
+  background: ${props => props.theme.themeId === 'light'
+    ? props.theme.colorWhite
+    : props.theme.colorTitle};
   height: 1px;
   margin-left: 5px;
   margin-top: 4px;
@@ -116,7 +124,9 @@ const Line = styled.div`
 
 const Hamburger = styled.button`
   align-items: center;
-  background: ${props => props.theme.colorWhite};
+  background: ${props => props.theme.themeId === 'light'
+    ? props.theme.colorTitle
+    : props.theme.colorWhite};
   border-radius: 50%;
   border: none;
   cursor: pointer;
