@@ -92,18 +92,24 @@ const GetStartedContent = styled.div`
     margin-top: 40px;
   }
 
-  ${Button} {
+  a {
     margin-top: 60px;
   }
 
+  @media (max-width: ${props => props.theme.tablet}px) {
+    ${Label} {
+      margin-left: -35px;
+    }
+  }
+
   @media (max-width: ${props => props.theme.mobile}px) {
-    padding-left: 0;
+    margin: 116px 0;
 
     ${Label} {
-      margin: 0;
+      margin-left: 0;
     }
 
-    ${Button} {
+    a {
       margin-top: 45px;
     }
   }

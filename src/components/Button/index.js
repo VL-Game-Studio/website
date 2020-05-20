@@ -56,7 +56,6 @@ const ButtonWrapper = styled.button`
   cursor: pointer;
   display: flex;
   height: 48px;
-  margin-top: 60px;
   outline: 0;
   padding: 0 24px;
 
@@ -102,7 +101,6 @@ const ButtonWrapper = styled.button`
 
   @media (max-width: ${props => props.theme.mobile}px) {
     font-size: 14px;
-    margin-top: 45px;
   }
 `;
 

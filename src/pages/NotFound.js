@@ -93,18 +93,27 @@ const NotFoundContent = styled.div`
     margin-top: 40px;
   }
 
-  ${Button} {
+  a {
     margin-top: 60px;
   }
 
+  @media (max-width: ${props => props.theme.tablet}px) {
+    padding-left: 35px;
+
+    ${Label} {
+      left: -35px;
+    }
+  }
+
   @media (max-width: ${props => props.theme.mobile}px) {
+    margin: 116px 0;
     padding-left: 0;
 
     ${Label} {
       margin: 0;
     }
 
-    ${Button} {
+    a {
       margin-top: 45px;
     }
   }

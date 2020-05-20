@@ -101,11 +101,15 @@ const IntroContent = styled.div`
     max-width: 530px;
   }
 
+  a {
+    margin-top: 60px;
+  }
+
   @media (max-width: ${props => props.theme.tablet}px) {
-    padding-left: 0;
+    padding-left: 35px;
 
     ${Label} {
-      left: 0;
+      left: -35px;
     }
   }
 
@@ -113,6 +117,11 @@ const IntroContent = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding-left: 0;
+
+    ${Label} {
+      left: 0;
+    }
 
     ${Title} {
       margin-top: 33px;
@@ -120,6 +129,10 @@ const IntroContent = styled.div`
 
     ${Title}, ${Paragraph} {
       max-width: none;
+    }
+
+    a {
+      margin-top: 45px;
     }
   }
 `;

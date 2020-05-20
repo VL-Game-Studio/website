@@ -90,28 +90,43 @@ const AboutContent = styled.div`
 
   ${Title2} {
     margin-top: 40px;
-    max-width: 564px;
+    width: 56%;
   }
 
   ${Paragraph} {
     letter-spacing: 0;
     margin-top: 30px;
-    max-width: 702px;
+    width: 70%;
   }
 
   ${Paragraph}:first-of-type {
     margin-top: 75px;
   }
 
+  @media (max-width: ${props => props.theme.laptop}px) {
+    ${Paragraph} {
+      width: 80%;
+    }
+  }
+
+  @media (max-width: ${props => props.theme.tablet}px) {
+    padding-left: 35px;
+
+    ${Label} {
+      left: -35px;
+    }
+
+    ${Title2}, ${Paragraph} {
+      width: 100%;
+    }
+  }
+
   @media (max-width: ${props => props.theme.mobile}px) {
+    margin: 116px 0;
     padding-left: 0;
 
     ${Label} {
       left: 0;
-    }
-
-    ${Title2}, ${Paragraph} {
-      max-width: none;
     }
   }
 `;

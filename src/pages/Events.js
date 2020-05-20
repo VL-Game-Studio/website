@@ -115,7 +115,16 @@ const EventsContent = styled.div`
     max-width: 564px;
   }
 
+  @media (max-width: ${props => props.theme.tablet}px) {
+    padding-left: 35px;
+
+    ${Label} {
+      left: -35px;
+    }
+  }
+
   @media (max-width: ${props => props.theme.mobile}px) {
+    margin: 116px 0;
     padding-left: 0;
 
     ${Label} {
