@@ -122,7 +122,7 @@ const AboutContent = styled.div`
   }
 
   @media (max-width: ${props => props.theme.mobile}px) {
-    margin: 116px 0;
+    margin: 96px 0;
     padding-left: 0;
 
     ${Label} {

@@ -1,16 +1,20 @@
 import React from 'react';
-import styled, { css } from 'styled-components/macro';
+import styled, { useTheme, css } from 'styled-components/macro';
 import { Transition } from 'react-transition-group';
 import { Link } from 'components/Link';
 import Icon from 'components/Icon';
 import { Paragraph } from 'components/Type';
 import Anchor from 'components/Anchor';
 import { AnimFade, rgba } from 'utils/style';
+import { useWindowSize } from 'hooks';
 import { reflow } from 'utils/transition';
 import { socials, navLinks } from 'data/nav';
 
 function Footer(props) {
   const { sectionRef, visible = true, ...rest } = props;
+  const { width } = useWindowSize();
+  const { mobile } = useTheme();
+  const isMobile = width <= mobile;
 
   return (
     <FooterWrapper
@@ -24,29 +28,31 @@ function Footer(props) {
       >
         {status => (
           <FooterContent status={status}>
-            <FooterLeft>
-              <Link
-                to={{ pathname: '/', hash: '#intro' }}
-                aria-label="Project Modern, Putting Players First"
-              >
-                <Icon icon="logo" />
-              </Link>
-              <Paragraph>Putting players first.</Paragraph>
-              <h4>&copy; {new Date().getFullYear()} Project Modern</h4>
-              <FooterSocials>
-                {socials?.map(({ label, href, icon }) => (
-                  <a
-                    key={label}
-                    aria-label={label}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    href={href}
-                  >
-                    <Icon icon={icon} />
-                  </a>
-                ))}
-              </FooterSocials>
-            </FooterLeft>
+            {!isMobile &&
+              <FooterLeft>
+                <Link
+                  to={{ pathname: '/', hash: '#intro' }}
+                  aria-label="Project Modern, Putting Players First"
+                >
+                  <Icon icon="logo" />
+                </Link>
+                <Paragraph>Putting players first.</Paragraph>
+                <h4>&copy; {new Date().getFullYear()} Project Modern</h4>
+                <FooterSocials>
+                  {socials?.map(({ label, href, icon }) => (
+                    <a
+                      key={label}
+                      aria-label={label}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      href={href}
+                    >
+                      <Icon icon={icon} />
+                    </a>
+                  ))}
+                </FooterSocials>
+              </FooterLeft>
+            }
             <FooterRight>
               <FooterLabel>We Can Help</FooterLabel>
               <FooterLinks>
@@ -102,10 +108,9 @@ const FooterContent = styled.div`
   }
 
   @media (max-width: ${props => props.theme.mobile}px) {
-    grid-gap: 0;
-    grid-row-gap: 85px;
-    grid-template-columns: 1fr;
+    display: block;
     max-width: 100%;
+    margin: 80px 0;
   }
 
   ${props => props.status === 'entering' && css`
@@ -169,12 +174,17 @@ const FooterRight = styled.div`
 `;
 
 const FooterLabel = styled.label`
+  color: ${props => props.theme.colorWhite};
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 2.1px;
   line-height: 28px;
   margin: 85px 0 30px;
   text-transform: uppercase;
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    margin: 65px 0 30px;
+  }
 
   :first-of-type {
     margin-top: 0;
@@ -196,9 +206,10 @@ const FooterLinks = styled.div`
 `;
 
 const FooterMenu = styled.ul`
-  padding: 0;
+  align-items: flex-start;
   display: flex;
   flex-direction: row;
+  padding: 0;
 
   a {
     color: ${props => rgba(props.theme.colorWhite, 0.6)};
@@ -215,6 +226,19 @@ const FooterMenu = styled.ul`
 
     :hover, :focus, :active {
       color: ${props => props.theme.colorWhite};
+    }
+  }
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    flex-direction: column;
+
+    a {
+      margin-left: 0;
+      margin-top: 20px;
+
+      :first-of-type {
+        margin-top: 0;
+      }
     }
   }
 `;

@@ -103,7 +103,7 @@ const GetStartedContent = styled.div`
   }
 
   @media (max-width: ${props => props.theme.mobile}px) {
-    margin: 116px 0;
+    margin: 96px 0;
 
     ${Label} {
       margin-left: 0;

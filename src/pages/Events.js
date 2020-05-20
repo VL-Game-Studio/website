@@ -197,7 +197,7 @@ const EventsHeroContent = styled.div`
   }
 
   @media (max-width: ${props => props.theme.mobile}px) {
-    margin: 116px 0;
+    margin: 96px 0;
     padding-left: 0;
 
     ${Label} {
@@ -326,7 +326,7 @@ const EventsContent = styled.div`
   }
 
   @media (max-width: ${props => props.theme.mobile}px) {
-    margin: 116px 0;
+    margin: 96px 0;
     padding-left: 0;
 
     ${Label} {
@@ -335,10 +335,14 @@ const EventsContent = styled.div`
 
     ${Title2} {
       max-width: none;
+
+      ${props => props.alternate && css`
+        align-self: flex-start;
+      `}
     }
 
     a {
-      margin: 45px auto 0;
+      margin: 45px 0 0;
     }
   }
 `;
@@ -360,6 +364,10 @@ const Tournaments = styled.div`
 
   @media (max-width: ${props => props.theme.mobile}px) {
     max-width: none;
+
+    ${props => !props.alternate && css`
+      align-self: flex-start;
+    `}
   }
 `;
 
