@@ -2,6 +2,8 @@ import React, { useState, useEffect, memo } from 'react';
 import styled, { css } from 'styled-components/macro';
 import { Transition } from 'react-transition-group';
 import { Label, Title2, Paragraph } from 'components/Type';
+import Icon from 'components/Icon';
+import { Link } from 'components/Link';
 import { AnimFade } from 'utils/style';
 import { reflow } from 'utils/transition';
 import prerender from 'utils/prerender';
@@ -49,9 +51,19 @@ function Events(props) {
             <EventsContent>
               <Label>Active Events</Label>
               <Title2 id={titleId}>New Tourmaments Every Day</Title2>
-              <EventsList>
+              <Tournaments>
                 {!events && <Paragraph>There aren't any active tournaments right now.</Paragraph>}
-              </EventsList>
+                {events?.map(({ id, name, description }) => (
+                  <Tournament to={`/${events}/${id}`} aria-label={name}>
+                    <TournamentName>
+                      <span>{name}</span>
+                      <div></div>
+                    </TournamentName>
+                    <TournamentInfo>{description}</TournamentInfo>
+                    <Icon icon="plus" />
+                  </Tournament>
+                ))}
+              </Tournaments>
             </EventsContent>
           </EventsContainer>
         )}
@@ -137,7 +149,7 @@ const EventsContent = styled.div`
   }
 `;
 
-const EventsList = styled.div`
+const Tournaments = styled.div`
   align-self: flex-end;
   display: grid;
   grid-row-gap: 20px;
@@ -145,8 +157,92 @@ const EventsList = styled.div`
   max-width: 624px;
   width: 100%;
 
+  svg {
+    color: ${props => props.theme.colorAccent};
+    position: absolute;
+    right: 0;
+    top: 50px;
+  }
+
   @media (max-width: ${props => props.theme.mobile}px) {
     max-width: none;
+  }
+`;
+
+const TournamentName = styled.h4`
+  align-self: flex-start;
+  color: ${props => props.theme.colorTitle};
+  flex: none;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 44px;
+  position: relative;
+
+  span {
+    position: relative;
+    z-index: 2;
+  }
+
+  div {
+    background-color: #eee;
+    bottom: 0;
+    height: 26px;
+    position: absolute;
+    right: -20px;
+    transform-origin: right;
+    transform: scaleX(0);
+    transition: transform 0.85s ${props => props.theme.ease2};
+    width: 100%;
+    z-index: 1;
+  }
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    font-size: 20px;
+    line-height: 26px;
+  }
+`;
+
+const Tournament = styled(Link)`
+  display: flex;
+  flex-direction: column;
+  height: 145px;
+  justify-content: center;
+  position: relative;
+  text-decoration: none;
+
+  ::after {
+    background-color: rgb(234, 234, 234);
+    bottom: 0;
+    content: '';
+    height: 1px;
+    left: 0;
+    position: absolute;
+    width: 100%;
+  }
+
+  :hover, :active, :focus {
+    ${TournamentName} div {
+      transform: scale(1);
+    }
+  }
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    height: 100px;
+  }
+`;
+
+const TournamentInfo = styled.p`
+  color: ${props => props.theme.colorText};
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  line-height: 36px;
+  margin-top: 10px;
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    font-size: 16px;
+    line-height: 26px;
   }
 `;
 

@@ -147,9 +147,14 @@ const FooterSocials = styled.div`
   a {
     color: ${props => rgba(props.theme.colorWhite, 0.6)};
     margin-left: 36px;
+    transition: color 0.4s ${props => props.theme.ease1};
 
     :first-of-type {
       margin-left: 0;
+    }
+
+    :hover, :focus, :active {
+      color: ${props => props.theme.colorWhite};
     }
   }
 
@@ -202,9 +207,14 @@ const FooterMenu = styled.ul`
     line-height: 32px;
     margin-left: 15px;
     text-decoration: none;
+    transition: color 0.4s ${props => props.theme.ease1};
 
     :first-of-type {
       margin-left: 0;
+    }
+
+    :hover, :focus, :active {
+      color: ${props => props.theme.colorWhite};
     }
   }
 `;

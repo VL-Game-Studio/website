@@ -40,8 +40,12 @@ const media = {
   mobileLS: `(max-width: 820px) and (max-height: 420px)`,
 };
 
+const easing = {
+  ease1: 'cubic-bezier(0.475, 0.425, 0, 0.995)',
+  ease2: 'cubic-bezier(0.835, -0.005, 0.06, 1)',
+}
+
 const base = {
-  bezierFastoutSlowin: 'cubic-bezier(0.475, 0.425, 0, 0.995)',
   clipPath: (size = 8) => `polygon(0 0, 100% 0, 100% calc(100% - ${size}px), calc(100% - ${size}px) 100%, 0 100%)`,
   fontStack: fontStack.join(', '),
   monoFontStack: monoFontStack.join(', '),
@@ -56,6 +60,7 @@ export const theme = {
   ...spacing,
   ...base,
   ...media,
+  ...easing,
   colorBackground: 'rgba(255, 255, 255, 1)',
   colorBackgroundSecondary: 'rgba(249, 249, 249, 1)',
   colorBackgroundDark: 'rgba(31, 30, 29, 1)',

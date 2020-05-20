@@ -5,6 +5,7 @@ import { ReactComponent as IconInstagram } from 'assets/icons/instagram.svg';
 import { ReactComponent as IconReddit } from 'assets/icons/reddit.svg';
 import { ReactComponent as IconTwitter } from 'assets/icons/twitter.svg';
 import { ReactComponent as IconGithub } from 'assets/icons/github.svg';
+import { ReactComponent as IconPlus } from 'assets/icons/plus.svg';
 
 const icons = {
   logo: IconLogo,
@@ -13,6 +14,7 @@ const icons = {
   reddit: IconReddit,
   twitter: IconTwitter,
   github: IconGithub,
+  plus: IconPlus,
 };
 
 const Icon = ({ icon, style, className }) => {

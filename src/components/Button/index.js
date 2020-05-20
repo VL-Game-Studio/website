@@ -72,7 +72,7 @@ const ButtonWrapper = styled.button`
     margin-left: 28px;
     opacity: 0.7;
     position: relative;
-    transition: margin 0.5s ${props => props.theme.bezierFastoutSlowin};
+    transition: margin 0.5s ${props => props.theme.ease1};
   }
 
   ::before {
@@ -84,7 +84,7 @@ const ButtonWrapper = styled.button`
     left: 0;
     position: absolute;
     top: 0;
-    transition: width 0.45s ${props => props.theme.bezierFastoutSlowin};
+    transition: width 0.45s ${props => props.theme.ease1};
     width: 48px;
     z-index: 1;
   }
