@@ -10,6 +10,12 @@ describe('events', () => {
     platform: 'MTGO'
   };
 
+  const testRegistration = {
+    player: '1234',
+    username: 'Test#1234',
+    deckID: 'testDeck'
+  };
+
   it('creates event', async () => {
     const res = await request(app)
       .post('/events')
@@ -48,6 +54,20 @@ describe('events', () => {
     Object.keys(testEvent).forEach(key => {
       expect(res.body).toHaveProperty(key);
       expect(res.body[key]).toEqual(testEvent[key]);
+    });
+  });
+
+  it('signs up for event', async () => {
+    const { id } = testEvent;
+
+    const res = await request(app)
+      .post(`/events/signup/${id}`)
+      .send(testRegistration);
+
+    expect(res.statusCode).toEqual(200);
+    Object.keys(testRegistration).forEach(key => {
+      expect(res.body).toHaveProperty(key);
+      expect(res.body[key]).toEqual(testRegistration[key]);
     });
   });
 

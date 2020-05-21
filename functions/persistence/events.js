@@ -10,12 +10,12 @@ const events = {
     return allEvents;
   },
   async fetch(id) {
-    const event = await admin.database()
+    const eventItem = await admin.database()
       .ref(`/events/${id}`)
       .once('value')
       .then(snap => snap.val());
 
-    return event;
+    return eventItem;
   },
   async create(props) {
     const id = await admin.database()
@@ -27,25 +27,37 @@ const events = {
       .ref(`/events/${id}`)
       .update({ id });
 
-    const event = await admin.database()
+    const eventItem = await admin.database()
       .ref(`/events/${id}`)
       .once('value')
       .then(snap => snap.val());
 
-    return event;
+    return eventItem;
+  },
+  async signup({ id, player, username, deckID }) {
+    await admin.database()
+      .ref(`/events/${id}/players/${player}`)
+      .set({ player, username, deckID });
+
+    const playerReceipt = await admin.database()
+      .ref(`/events/${id}/players/${player}`)
+      .once('value')
+      .then(snap => snap.val());
+
+    return playerReceipt;
   },
   async delete(id) {
-    const event = await admin.database()
+    const eventItem = await admin.database()
       .ref(`/events/${id}`)
       .once('value')
       .then(snap => snap.val());
-    if (!event) return false;
+    if (!eventItem) return false;
 
     await admin.database()
       .ref(`/events/${id}`)
       .remove();
 
-    return event;
+    return eventItem;
   },
 };
 

@@ -33,7 +33,7 @@ function Events(props) {
 
         const data = await response.json();
 
-        return data && setEvents(data);
+        return data && setEvents(Object.values(data));
       } catch (error) {
         return console.error(error.message);
       }
@@ -45,9 +45,9 @@ function Events(props) {
   if (!sectionRef) return (
     <Suspense fallback={<Fragment />}>
       <Switch>
-        <Route exact path="/events" component={EventsPage} />
-        <Route path="/signup" component={EventsSignup} />
-        <Route component={EventsListing} events={events} />
+        <Route exact path="/events" render={() => <EventsPage events={events} />} />
+        <Route path="/events/signup" component={EventsSignup} />
+        <Route render={() => <EventsListing events={events} />} />
       </Switch>
     </Suspense>
   );
@@ -74,6 +74,7 @@ function EventsSignup() {
   const sideboard = useFormInput('');
   const [submitting, setSubmitting] = useState();
   const [complete, setComplete] = useState();
+  useScrollRestore();
 
   const onSubmit = useCallback(async event => {
     event.preventDefault();
@@ -97,7 +98,7 @@ function EventsSignup() {
       });
 
       const data = await response.json();
-      if (response.status !== 200) throw new Error(data.error);
+      if (response.status !== 200) throw new Error(data?.error || response.statusText);
 
       setComplete(true);
       setSubmitting(false);
@@ -302,13 +303,14 @@ const FormTextArea = styled(TextArea)`
 `;
 
 function EventsPage(props) {
+  const { events } = props;
   const [visibleSections, setVisibleSections] = useState([]);
-  const events = useRef();
+  const eventsList = useRef();
   const getStarted = useRef();
   useScrollRestore();
 
   useEffect(() => {
-    const revealSections = [events, getStarted];
+    const revealSections = [eventsList, getStarted];
 
     const sectionObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
@@ -356,8 +358,9 @@ function EventsPage(props) {
         <EventsPanel
           alternate
           id="events"
-          sectionRef={events}
-          visible={visibleSections.includes(events.current)}
+          events={events}
+          sectionRef={eventsList}
+          visible={visibleSections.includes(eventsList.current)}
         />
         <GetStarted
           id="get-started"
@@ -481,7 +484,7 @@ const EventsPanel = ({
             <Tournaments alternate={alternate}>
               {!events && <Paragraph>There aren't any active events right now.</Paragraph>}
               {events?.map(({ id, name, description }) => (
-                <Tournament to={`/${events}/${id}`} aria-label={name}>
+                <Tournament to={`/events/${id}`} aria-label={name}>
                   <TournamentName>
                     <span>{name}</span>
                     <div></div>
@@ -656,8 +659,10 @@ const Tournament = styled(Link)`
   flex-direction: column;
   height: 145px;
   justify-content: center;
+  margin: 0!important;
   position: relative;
   text-decoration: none;
+  width: 100%;
 
   ::after {
     background-color: rgb(234, 234, 234);
@@ -701,6 +706,8 @@ function EventsListing(props) {
   const id = path.includes('/') ? path.replace('/', '') : path;
   const [visible, setVisible] = useState();
   const cta = useRef();
+  const event = events && events.filter(event => event.id === id)[0];
+  useScrollRestore();
 
   useEffect(() => {
     const sectionObserver = new IntersectionObserver((entries, observer) => {
@@ -714,15 +721,15 @@ function EventsListing(props) {
       });
     }, { rootMargin: '0px 0px -10% 0px' });
 
-    if(events && events[id]) sectionObserver.observe(cta.current);
+    if (event) sectionObserver.observe(cta.current);
 
     return function cleanUp() {
       sectionObserver.disconnect();
     };
-  }, [visible, events, id]);
+  }, [visible, event, id]);
 
-  if (!events || !events[id]) return <NotFound />;
-  const { name, description, ...rest } = events[id];
+  if (!event) return <NotFound />;
+  const { name, description, ...rest } = event;
 
   return (
     <Fragment>
@@ -740,11 +747,11 @@ function EventsListing(props) {
             <EventsInfoWrapper>
               <EventsInfoHeader status={status}>
                 <EventsInfoAside>
-                  {Object.values(rest)?.map(val => (
-                    <Tag key={val}>{val}></Tag>
+                  {Object.values(rest)?.map(val => val !== id && (
+                    <Tag key={val}>{val}</Tag>
                   ))}
                   <RelatedEvents>
-                    <h4>Related Events</h4>
+                    <h4>Recent Events</h4>
                     {events?.map(({ id, name }, index) => index < 4 && (
                       <Anchor
                         key={id}
