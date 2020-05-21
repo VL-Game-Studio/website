@@ -5,10 +5,11 @@ import { Link } from 'components/Link';
 import Icon from 'components/Icon';
 import { Paragraph } from 'components/Type';
 import Anchor from 'components/Anchor';
+import Socials from 'components/Socials';
 import { AnimFade, rgba } from 'utils/style';
 import { useWindowSize } from 'hooks';
 import { reflow } from 'utils/transition';
-import { socials, navLinks } from 'data/nav';
+import { navLinks } from 'data/nav';
 
 function Footer() {
   const { width } = useWindowSize();
@@ -55,19 +56,7 @@ function Footer() {
                 </Link>
                 <Paragraph>Putting players first.</Paragraph>
                 <h4>&copy; {new Date().getFullYear()} Project Modern</h4>
-                <FooterSocials>
-                  {socials?.map(({ label, href, icon }) => (
-                    <a
-                      key={label}
-                      aria-label={label}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      href={href}
-                    >
-                      <Icon icon={icon} />
-                    </a>
-                  ))}
-                </FooterSocials>
+                <FooterSocials dark />
               </FooterLeft>
             }
             <FooterRight>
@@ -160,25 +149,9 @@ const FooterLeft = styled.div`
   }
 `;
 
-const FooterSocials = styled.div`
-  align-items: center;
+const FooterSocials = styled(Socials)`
   bottom: 0;
-  display: flex;
   position: absolute;
-
-  a {
-    color: ${props => rgba(props.theme.colorWhite, 0.6)};
-    margin-left: 36px;
-    transition: color 0.4s ${props => props.theme.ease1};
-
-    :first-of-type {
-      margin-left: 0;
-    }
-
-    :hover, :focus, :active {
-      color: ${props => props.theme.colorWhite};
-    }
-  }
 
   @media (max-width: ${props => props.theme.mobile}px) {
     position: relative;

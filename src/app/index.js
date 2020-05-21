@@ -78,7 +78,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <AppContext.Provider value={{ ...state, dispatch }}>
           <BrowserRouter>
-            <AppRoutes />
+            <AppRoutes menuOpen={state.menuOpen} />
           </BrowserRouter>
         </AppContext.Provider>
       </ThemeProvider>
@@ -86,7 +86,7 @@ function App() {
   );
 }
 
-function AppRoutes() {
+function AppRoutes({ menuOpen }) {
   const location = useLocation();
   const { pathname } = location;
 
@@ -101,7 +101,7 @@ function AppRoutes() {
         <link rel="preload" href={montserratBold} as="font" crossorigin="" />
         <style>{fontStyles}</style>
       </Helmet>
-      <GlobalStyles />
+      <GlobalStyles menuOpen={menuOpen} />
       <SkipToMain href="#MainContent">Skip to main content</SkipToMain>
       <TransitionGroup
         component={AppMainContent}
@@ -145,6 +145,10 @@ export const GlobalStyles = createGlobalStyle`
     margin: 0;
     width: 100vw;
     overflow-x: hidden;
+
+    ${props => props.menuOpen && css`
+      overflow: hidden;
+    `}
   }
 
   *,
