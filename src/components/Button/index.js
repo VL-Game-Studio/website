@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import styled, { css } from 'styled-components/macro';
 import { Link } from 'components/Link';
 import Icon from 'components/Icon';
+import { rgba } from 'utils/style';
 
 const ButtonContent = ({ label, icon = 'arrowRight', ...rest }) => (
   <ButtonWrapper aria-label={label} {...rest}>
@@ -31,7 +32,9 @@ function Button(props) {
 }
 
 const linkStyles = css`
-  color: ${props => props.color || props.dark ? props.theme.colorWhite : props.theme.colorTitle};
+  color: ${props => props.accent || props.dark
+    ? props.theme.colorWhite
+    : props.theme.colorTitle};
   font-family: ${props => props.theme.fontStack};
   font-size: 12px;
   font-weight: 700;
@@ -76,7 +79,9 @@ const ButtonWrapper = styled.button`
   }
 
   ::before {
-    background: ${props => props.color || props.dark ? '#323135' : '#F2F2F2'};
+    background: ${props => props.dark
+      ? '#323135'
+      : rgba(props.theme.colorBlack, 0.05)};
     border-radius: 24px;
     content: '';
     display: block;
@@ -87,6 +92,10 @@ const ButtonWrapper = styled.button`
     transition: width 0.45s ${props => props.theme.ease1};
     width: 48px;
     z-index: 1;
+
+    ${props => props.accent && css`
+      background: ${props => rgba(props.theme.colorWhite, 0.2)};
+    `}
   }
 
   :focus, :hover, :active {

@@ -1,19 +1,15 @@
 import React, { useState, useEffect, useRef, Fragment } from 'react';
-import { useTheme } from 'styled-components/macro';
 import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import PageLayout from 'components/PageLayout';
 import Intro from 'pages/Intro';
 import About from 'pages/About';
 import Events from 'pages/Events';
 import GetStarted from 'pages/GetStarted';
-import Footer from 'components/Footer';
-import { useAppContext, usePrefersReducedMotion, useRouteTransition } from 'hooks';
+import { usePrefersReducedMotion, useRouteTransition } from 'hooks';
 
 export default function Home(props) {
   const { status } = useRouteTransition();
-  const { dispatch } = useAppContext();
-  const theme = useTheme();
-  const themeRef = useRef(theme);
   const { hash, state } = useLocation();
   const initHash = useRef(true);
   const [visibleSections, setVisibleSections] = useState([]);
@@ -21,30 +17,10 @@ export default function Home(props) {
   const about = useRef();
   const events = useRef();
   const getStarted = useRef();
-  const footer = useRef();
   const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
-    themeRef.current = theme;
-  }, [theme]);
-
-  useEffect(() => {
-    if (status === 'entered' || status === 'exiting') {
-      dispatch({
-        type: 'updateTheme',
-        value: { themeId: 'dark' },
-      });
-    }
-
-    return function cleanUp() {
-      if (status !== 'entered') {
-        dispatch({ type: 'updateTheme' });
-      }
-    };
-  }, [dispatch, status]);
-
-  useEffect(() => {
-    const revealSections = [intro, about, events, getStarted, footer];
+    const revealSections = [intro, about, events, getStarted];
 
     const sectionObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
@@ -131,29 +107,27 @@ export default function Home(props) {
           content: "Project Modern is a community-backed MTG format that prioritizes players over profits.",
         }]}
       />
-      <Intro
-        id="intro"
-        sectionRef={intro}
-      />
-      <About
-        id="about"
-        sectionRef={about}
-        visible={visibleSections.includes(about.current)}
-      />
-      <Events
-        id="events"
-        sectionRef={events}
-        visible={visibleSections.includes(events.current)}
-      />
-      <GetStarted
-        id="get-started"
-        sectionRef={getStarted}
-        visible={visibleSections.includes(getStarted.current)}
-      />
-      <Footer
-        sectionRef={footer}
-        visible={visibleSections.includes(footer.current)}
-      />
+      <PageLayout dark>
+        <Intro
+          id="intro"
+          sectionRef={intro}
+        />
+        <About
+          id="about"
+          sectionRef={about}
+          visible={visibleSections.includes(about.current)}
+        />
+        <Events
+          id="events"
+          sectionRef={events}
+          visible={visibleSections.includes(events.current)}
+        />
+        <GetStarted
+          id="get-started"
+          sectionRef={getStarted}
+          visible={visibleSections.includes(getStarted.current)}
+        />
+      </PageLayout>
     </Fragment>
   );
 }

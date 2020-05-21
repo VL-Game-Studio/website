@@ -1,65 +1,42 @@
-import React, { useRef, useEffect, Fragment, memo } from 'react';
-import styled, { useTheme, css } from 'styled-components/macro';
+import React, { Fragment, memo } from 'react';
+import styled, { css } from 'styled-components/macro';
 import { Helmet } from 'react-helmet-async';
 import { Transition } from 'react-transition-group';
 import { Label, Title } from 'components/Type';
 import Button from 'components/Button';
-import Footer from 'components/Footer';
+import PageLayout from 'components/PageLayout';
 import { AnimFade } from 'utils/style';
-import { useRouteTransition, useAppContext } from 'hooks';
 import { reflow } from 'utils/transition';
 
 function NotFound(props) {
-  const { status } = useRouteTransition();
-  const { dispatch } = useAppContext();
-  const theme = useTheme();
-  const themeRef = useRef(theme);
-
-  useEffect(() => {
-    themeRef.current = theme;
-  }, [theme]);
-
-  useEffect(() => {
-    if (status === 'entered' || status === 'exiting') {
-      dispatch({
-        type: 'updateTheme',
-        value: { themeId: 'dark' },
-      });
-    }
-
-    return function cleanUp() {
-      if (status !== 'entered') {
-        dispatch({ type: 'updateTheme' });
-      }
-    };
-  }, [dispatch, status]);
 
   return (
     <Fragment>
       <Helmet
-        title="404 Not Found - Project Modern"
+        title="Page Not Found - Project Modern"
       />
-      <NotFoundWrapper>
-        <Transition
-          appear
-          in={true}
-          timeout={0}
-          onEnter={reflow}
-        >
-          {status => (
-            <NotFoundContainer status={status}>
-              <NotFoundContent>
-                <div>
-                  <Label>Page Not Found</Label>
-                  <Title dark>404</Title>
-                </div>
-                <Button dark to="/" label="Go Back" />
-              </NotFoundContent>
-            </NotFoundContainer>
-          )}
-        </Transition>
-      </NotFoundWrapper>
-      <Footer />
+      <PageLayout dark>
+        <NotFoundWrapper>
+          <Transition
+            appear
+            in={true}
+            timeout={0}
+            onEnter={reflow}
+          >
+            {status => (
+              <NotFoundContainer status={status}>
+                <NotFoundContent>
+                  <div>
+                    <Label>Page Not Found</Label>
+                    <Title dark>Error 404</Title>
+                  </div>
+                  <Button dark to="/" label="Go Back" />
+                </NotFoundContent>
+              </NotFoundContainer>
+            )}
+          </Transition>
+        </NotFoundWrapper>
+      </PageLayout>
     </Fragment>
   );
 }
@@ -115,6 +92,7 @@ const NotFoundContent = styled.div`
 
   ${Title} {
     margin-top: 40px;
+    text-align: center;
   }
 
   a {

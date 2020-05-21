@@ -43,7 +43,7 @@ const media = {
 const easing = {
   ease1: 'cubic-bezier(0.475, 0.425, 0, 0.995)',
   ease2: 'cubic-bezier(0.835, -0.005, 0.06, 1)',
-}
+};
 
 const base = {
   clipPath: (size = 8) => `polygon(0 0, 100% 0, 100% calc(100% - ${size}px), calc(100% - ${size}px) 100%, 0 100%)`,

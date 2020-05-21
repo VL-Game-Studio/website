@@ -7,13 +7,14 @@ import { AnimFade } from 'utils/style';
 import { reflow } from 'utils/transition';
 
 function GetStarted(props) {
-  const { id, sectionRef, visible, ...rest } = props;
+  const { id, sectionRef, visible, accent, ...rest } = props;
   const titleId = `${id}-title`;
 
   return (
     <GetStartedWrapper
       ref={sectionRef}
       id={id}
+      accent={accent}
       aria-labelledby={titleId}
       tabIndex={-1}
       {...rest}
@@ -30,7 +31,7 @@ function GetStarted(props) {
                 <Label>Get Started</Label>
                 <Title2 id={titleId}>Ready to Play?</Title2>
               </div>
-              <Button href="https://discord.gg/mjtTnr8" label="Get Started" />
+              <Button accent={accent} href="https://discord.gg/mjtTnr8" label="Get Started" />
             </GetStartedContent>
           </GetStartedContainer>
         )}
@@ -48,6 +49,14 @@ const GetStartedWrapper = styled.section`
   @media (max-width: ${props => props.theme.mobile}px) {
     padding: 0 20px;
   }
+
+  ${props => props.accent && css`
+    background: ${props => props.theme.colorAccent};
+
+    &, * {
+      color: ${props => props.theme.colorWhite};
+    }
+  `}
 `;
 
 const GetStartedContainer = styled.div`

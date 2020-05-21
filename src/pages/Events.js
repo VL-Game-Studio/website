@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef, Fragment, memo } from 'react';
+import React, { useState, useEffect, useRef, Suspense, Fragment, memo } from 'react';
 import styled, { css } from 'styled-components/macro';
+import { Switch, Route, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Transition } from 'react-transition-group';
 import { Label, Title, Title2, Paragraph } from 'components/Type';
@@ -8,7 +9,8 @@ import { Link } from 'components/Link';
 import { AnimFade } from 'utils/style';
 import Button from 'components/Button';
 import GetStarted from 'pages/GetStarted';
-import Footer from 'components/Footer';
+import PageLayout from 'components/PageLayout';
+import NotFound from 'pages/NotFound';
 import { useScrollRestore } from 'hooks';
 import { reflow } from 'utils/transition';
 import prerender from 'utils/prerender';
@@ -38,7 +40,14 @@ function Events(props) {
     if (!prerender) fetchEvents();
   }, []);
 
-  if (!sectionRef) return <EventsPage />;
+  if (!sectionRef) return (
+    <Suspense fallback={<Fragment />}>
+      <Switch>
+        <Route exact path="/events" component={EventsPage} />
+        <Route component={EventsListing} events={events} />
+      </Switch>
+    </Suspense>
+  );
 
   return (
     <EventsPanel
@@ -52,15 +61,183 @@ function Events(props) {
   );
 }
 
+function EventsListing(props) {
+  const { events } = props;
+  const { pathname } = useLocation();
+  const path = pathname.replace('/events/', '');
+  const id = path.includes('/') ? path.replace('/', '') : path;
+  const [visible, setVisible] = useState();
+  const cta = useRef();
+
+  useEffect(() => {
+    const sectionObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const section = entry.target;
+          observer.unobserve(section);
+
+          return visible ? false : setVisible(true);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px' });
+
+    if(events && events[id]) sectionObserver.observe(cta.current);
+
+    return function cleanUp() {
+      sectionObserver.disconnect();
+    };
+  }, [visible, events, id]);
+
+  if (!events || !events[id]) return <NotFound />;
+  const { name, description, ...rest } = events[id];
+
+  return (
+    <Fragment>
+      <Helmet
+        title={`Event ${name} - Project Modern`}
+      />
+      <PageLayout>
+        <Transition
+          appear={!prerender}
+          in={!prerender}
+          timeout={3000}
+          onEnter={reflow}
+        >
+          {status => (
+            <EventsInfoWrapper>
+              <EventsInfoHeader status={status}>
+                <EventsInfoAside>
+                  {Object.values(rest)?.map(val => (
+                    <Tag key={val}>{val}></Tag>
+                  ))}
+                </EventsInfoAside>
+                <EventsInfo>
+                  <Title2>{name}</Title2>
+                  <Paragraph>{description}</Paragraph>
+                  <Button label="Signup" to={`/signup/${id}`} />
+                </EventsInfo>
+              </EventsInfoHeader>
+            </EventsInfoWrapper>
+          )}
+        </Transition>
+        <GetStarted
+          accent
+          sectionRef={cta}
+          visible={visible}
+        />
+      </PageLayout>
+    </Fragment>
+  );
+}
+
+const EventsInfoWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  padding: 0 50px;
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    padding: 0 20px;
+  }
+`;
+
+const EventsInfoHeader = styled.div`
+  display: flex;
+  margin: 180px auto;
+  max-width: 1200px;
+  opacity: 0;
+  width: 100%;
+
+  @media (max-width: ${props => props.theme.desktop}px) {
+    max-width: 1080px;
+  }
+
+  @media (max-width: ${props => props.theme.laptop}px) {
+    max-width: 960px;
+  }
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    flex-direction: column-reverse;
+    max-width: 100%;
+  }
+
+  ${props => props.status === 'entering' && css`
+    animation: ${css`${AnimFade} 0.6s ease 0.2s forwards`};
+  `}
+
+  ${props => props.status === 'entered' && css`
+    opacity: 1;
+  `}
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    margin: 96px auto;
+  }
+`;
+
+const EventsInfoAside = styled.div`
+  width: 30%;
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    margin-top: 10px;
+    width: 100%;
+  }
+`;
+
+const Tag = styled(Paragraph)`
+  align-items: center;
+  color: ${props => props.theme.colorTitle};
+  display: flex;
+  margin-top: 12px;
+
+  :first-of-type {
+    margin-top: 0;
+  }
+
+  ::before {
+    background-color: ${props => props.theme.colorAccent};
+    border-radius: 50%;
+    content: '';
+    display: inline-block;
+    height: 4px;
+    margin-right: 20px;
+    width: 4px;
+  }
+`;
+
+const EventsInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+
+  ${Paragraph} {
+    margin-top: 30px;
+
+    :first-of-type {
+      margin-top: 50px;
+    }
+  }
+
+  a {
+    justify-self: flex-end;
+    margin-top: 60px;
+  }
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    width: 100%;
+
+    a {
+      margin-top: 45px;
+    }
+  }
+`;
+
 function EventsPage(props) {
   const [visibleSections, setVisibleSections] = useState([]);
   const events = useRef();
   const getStarted = useRef();
-  const footer = useRef();
   useScrollRestore();
 
   useEffect(() => {
-    const revealSections = [events, getStarted, footer];
+    const revealSections = [events, getStarted];
 
     const sectionObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
@@ -87,38 +264,36 @@ function EventsPage(props) {
       <Helmet
         title="Events - Project Modern"
       />
-      <EventsHeroWrapper>
-        <Transition
-          appear={!prerender}
-          in={!prerender}
-          timeout={3000}
-          onEnter={reflow}
-        >
-          {status => (
-            <EventsHeroContainer status={status}>
-              <EventsHeroContent>
-                <Label>Events</Label>
-                <Title>Level up your skills with daily tournaments</Title>
-              </EventsHeroContent>
-            </EventsHeroContainer>
-          )}
-        </Transition>
-      </EventsHeroWrapper>
-      <EventsPanel
-        alternate
-        id="events"
-        sectionRef={events}
-        visible={visibleSections.includes(events.current)}
-      />
-      <GetStarted
-        id="get-started"
-        sectionRef={getStarted}
-        visible={visibleSections.includes(getStarted.current)}
-      />
-      <Footer
-        sectionRef={footer}
-        visible={visibleSections.includes(footer.current)}
-      />
+      <PageLayout>
+        <EventsHeroWrapper>
+          <Transition
+            appear={!prerender}
+            in={!prerender}
+            timeout={3000}
+            onEnter={reflow}
+          >
+            {status => (
+              <EventsHeroContainer status={status}>
+                <EventsHeroContent>
+                  <Label>Events</Label>
+                  <Title>Level up your skills with daily tournaments</Title>
+                </EventsHeroContent>
+              </EventsHeroContainer>
+            )}
+          </Transition>
+        </EventsHeroWrapper>
+        <EventsPanel
+          alternate
+          id="events"
+          sectionRef={events}
+          visible={visibleSections.includes(events.current)}
+        />
+        <GetStarted
+          id="get-started"
+          sectionRef={getStarted}
+          visible={visibleSections.includes(getStarted.current)}
+        />
+      </PageLayout>
     </Fragment>
   );
 }

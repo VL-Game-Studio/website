@@ -3,9 +3,9 @@ import styled, { createGlobalStyle, ThemeProvider, css } from 'styled-components
 import { BrowserRouter, Switch, Route, useLocation } from 'react-router-dom';
 import { Transition, TransitionGroup, config as transitionConfig } from 'react-transition-group';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
-import Header from 'components/Header';
-import { useLocalStorage, usePrefersReducedMotion } from 'hooks';
+import { usePrefersReducedMotion } from 'hooks';
 import { initialState, reducer } from 'app/reducer';
+import { theme } from 'app/theme';
 import { reflow } from 'utils/transition';
 import montserratLight from 'assets/fonts/montserrat-light.woff2';
 import montserratRegular from 'assets/fonts/montserrat-regular.woff2';
@@ -58,10 +58,8 @@ export const fontStyles = `
 `;
 
 function App() {
-  const [storedThemeId] = useLocalStorage('theme', 'light');
   const [state, dispatch] = useReducer(reducer, initialState);
   const prefersReducedMotion = usePrefersReducedMotion();
-  const { currentTheme } = state;
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -75,13 +73,9 @@ function App() {
     window.history.scrollRestoration = 'manual';
   }, []);
 
-  useEffect(() => {
-    dispatch({ type: 'updateTheme', value: { themeId: storedThemeId } });
-  }, [storedThemeId]);
-
   return (
     <HelmetProvider>
-      <ThemeProvider theme={currentTheme}>
+      <ThemeProvider theme={theme}>
         <AppContext.Provider value={{ ...state, dispatch }}>
           <BrowserRouter>
             <AppRoutes />
@@ -109,7 +103,6 @@ function AppRoutes() {
       </Helmet>
       <GlobalStyles />
       <SkipToMain href="#MainContent">Skip to main content</SkipToMain>
-      <Header location={location} />
       <TransitionGroup
         component={AppMainContent}
         tabIndex={-1}
@@ -146,7 +139,7 @@ export const GlobalStyles = createGlobalStyle`
     box-sizing: border-box;
     font-family: ${props => props.theme.fontStack};
     font-weight: 400;
-    background: ${props => props.theme.colorBackgroundDark};
+    background: ${props => props.theme.colorBackground};
     color: ${props => props.theme.colorText};
     border: 0;
     margin: 0;
@@ -180,7 +173,7 @@ export const GlobalStyles = createGlobalStyle`
 `;
 
 const AppMainContent = styled.main`
-  background: ${props => props.theme.colorBackgroundDark};
+  background: ${props => props.theme.colorBackground};
   display: grid;
   grid-template-columns: 100%;
   outline: none;

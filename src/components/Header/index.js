@@ -4,9 +4,10 @@ import { Link } from 'components/Link';
 import Icon from 'components/Icon';
 
 function Header(props) {
+  const { dark } = props;
 
   return (
-    <HeaderWrapper role="banner">
+    <HeaderWrapper role="banner" dark={dark}>
       <LogoLink
         to={{ pathname: '/', hash: '#intro' }}
         aria-label="Project Modern, Putting Players First"
@@ -14,8 +15,15 @@ function Header(props) {
         <Icon icon="logo" />
       </LogoLink>
       <HeaderNav>
-        <CTALink href="https://discord.gg/mjtTnr8" target="_blank" rel="noreferrer noopener">Get Started</CTALink>
-        <Hamburger>
+        <CTALink
+          dark={dark}
+          href="https://discord.gg/mjtTnr8"
+          target="_blank"
+          rel="noreferrer noopener"
+        >
+          Get Started
+        </CTALink>
+        <Hamburger dark={dark}>
           <Line />
           <Line />
           <Line />
@@ -42,9 +50,9 @@ const HeaderWrapper = styled.header`
   z-index: 1024;
 
   &, a {
-    color: ${props => props.theme.themeId === 'light'
-      ? props.theme.colorTitle
-      : props.theme.colorWhite};
+    color: ${props => props.dark
+      ? props.theme.colorWhite
+      : props.theme.colorTitle};
   }
 
   @media (max-width: ${props => props.theme.mobile}px) {
@@ -64,9 +72,9 @@ const HeaderNav = styled.nav`
 `;
 
 const CTALink = styled.a`
-  color: ${props => props.theme.themeId === 'light'
-    ? props.theme.colorTitle
-    : props.theme.colorWhite};
+  color: ${props => props.dark
+    ? props.theme.colorWhite
+    : props.theme.colorTitle};
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.15em;
@@ -76,9 +84,9 @@ const CTALink = styled.a`
   text-transform: uppercase;
 
   ::after {
-    background: ${props => props.theme.themeId === 'light'
-      ? props.theme.colorTitle
-      : props.theme.colorWhite};
+    background: ${props => props.dark
+      ? props.theme.colorWhite
+      : props.theme.colorTitle};
     content: '';
     display: block;
     height: 1px;
@@ -103,9 +111,6 @@ const CTALink = styled.a`
 `;
 
 const Line = styled.div`
-  background: ${props => props.theme.themeId === 'light'
-    ? props.theme.colorWhite
-    : props.theme.colorTitle};
   height: 1px;
   margin-left: 5px;
   margin-top: 4px;
@@ -124,9 +129,9 @@ const Line = styled.div`
 
 const Hamburger = styled.button`
   align-items: center;
-  background: ${props => props.theme.themeId === 'light'
-    ? props.theme.colorTitle
-    : props.theme.colorWhite};
+  background: ${props => props.dark
+    ? props.theme.colorWhite
+    : props.theme.colorTitle};
   border-radius: 50%;
   border: none;
   cursor: pointer;
@@ -137,6 +142,12 @@ const Hamburger = styled.button`
   outline: 0;
   position: relative;
   width: 40px;
+
+  ${Line} {
+    background: ${props => props.dark
+      ? props.theme.colorTitle
+      : props.theme.colorWhite};
+  }
 
   :hover, :active, :focus {
     ${Line}:nth-child(2) {

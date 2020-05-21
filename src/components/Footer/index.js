@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled, { useTheme, css } from 'styled-components/macro';
 import { Transition } from 'react-transition-group';
 import { Link } from 'components/Link';
@@ -10,17 +10,34 @@ import { useWindowSize } from 'hooks';
 import { reflow } from 'utils/transition';
 import { socials, navLinks } from 'data/nav';
 
-function Footer(props) {
-  const { sectionRef, visible = true, ...rest } = props;
+function Footer() {
   const { width } = useWindowSize();
   const { mobile } = useTheme();
   const isMobile = width <= mobile;
+  const [visible, setVisible] = useState();
+  const footer = useRef();
+
+  useEffect(() => {
+    const sectionObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const section = entry.target;
+          observer.unobserve(section);
+
+          return visible ? false : setVisible(true);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px' });
+
+    sectionObserver.observe(footer.current);
+
+    return function cleanUp() {
+      sectionObserver.disconnect();
+    };
+  }, [visible]);
 
   return (
-    <FooterWrapper
-      ref={sectionRef}
-      {...rest}
-    >
+    <FooterWrapper ref={footer}>
       <Transition
         in={visible}
         timeout={4000}
