@@ -315,6 +315,12 @@ const NavItem = styled(Link)`
       margin-left: 0;
       opacity: 1;
     }
+
+    @media (max-width: ${props => props.theme.mobile}px) {
+      h4, label {
+        margin-left: 0;
+      }
+    }
   }
 
   @media (max-width: ${props => props.theme.desktop}px) {
@@ -331,7 +337,7 @@ const NavItem = styled(Link)`
     font-size: 40px;
     line-height: 55px;
 
-    label {
+    span {
       display: none;
     }
   }
