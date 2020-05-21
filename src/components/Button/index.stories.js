@@ -10,8 +10,6 @@ export default {
 
 export const button = () => (
   <StoryContainer padding={30} gutter={30}>
-    <Button href="#" onClick={(e) => e.preventDefault()} label="Light Button" />
-    <Button dark href="#" onClick={(e) => e.preventDefault()} label="Dark Button" />
-    <Button accent href="#" onClick={(e) => e.preventDefault()} label="Accent Button" />
+    <Button href="#" onClick={(e) => e.preventDefault()} label="Button Link" />
   </StoryContainer>
 );

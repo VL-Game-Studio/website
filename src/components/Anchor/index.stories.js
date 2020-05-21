@@ -9,7 +9,7 @@ export default {
 };
 
 export const anchor = () => (
-  <StoryContainer padding={30} gutter={30} style={{ fontSize: 18, color: 'white' }}>
+  <StoryContainer padding={30} gutter={30} style={{ fontSize: 18 }}>
     <Anchor href="#" onClick={(e) => e.preventDefault()}>Anchor link</Anchor>
     <Anchor secondary href="#" onClick={(e) => e.preventDefault()}>Secondary link</Anchor>
   </StoryContainer>

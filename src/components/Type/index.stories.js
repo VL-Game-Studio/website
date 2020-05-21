@@ -16,13 +16,18 @@ export const label = () => (
 
 export const title = () => (
   <StoryContainer padding={30} gutter={30}>
-    <Title dark>Title One</Title>
-    <Title2 dark>Title Two</Title2>
+    <Title>Title One</Title>
+  </StoryContainer>
+);
+
+export const titleTwo = () => (
+  <StoryContainer padding={30} gutter={30}>
+    <Title2>Title Two</Title2>
   </StoryContainer>
 );
 
 export const paragraph = () => (
   <StoryContainer padding={30} gutter={30}>
-    <Paragraph dark>Paragraph Text</Paragraph>
+    <Paragraph>Paragraph Text</Paragraph>
   </StoryContainer>
 );
