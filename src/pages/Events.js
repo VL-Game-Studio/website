@@ -1,17 +1,19 @@
-import React, { useState, useEffect, useRef, Suspense, Fragment, memo } from 'react';
+import React, { useState, useEffect, useRef, Suspense, Fragment, useCallback, memo } from 'react';
 import styled, { css } from 'styled-components/macro';
 import { Switch, Route, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Transition } from 'react-transition-group';
 import { Label, Title, Title2, Paragraph } from 'components/Type';
-import Icon from 'components/Icon';
 import { Link } from 'components/Link';
-import { AnimFade } from 'utils/style';
+import Anchor from 'components/Anchor';
 import Button from 'components/Button';
+import Icon from 'components/Icon';
+import TextArea from 'components/TextArea';
 import GetStarted from 'pages/GetStarted';
 import PageLayout from 'components/PageLayout';
 import NotFound from 'pages/NotFound';
-import { useScrollRestore } from 'hooks';
+import { AnimFade } from 'utils/style';
+import { useScrollRestore, useFormInput } from 'hooks';
 import { reflow } from 'utils/transition';
 import prerender from 'utils/prerender';
 
@@ -44,6 +46,7 @@ function Events(props) {
     <Suspense fallback={<Fragment />}>
       <Switch>
         <Route exact path="/events" component={EventsPage} />
+        <Route path="/signup" component={EventsSignup} />
         <Route component={EventsListing} events={events} />
       </Switch>
     </Suspense>
@@ -61,76 +64,107 @@ function Events(props) {
   );
 }
 
-function EventsListing(props) {
-  const { events } = props;
+function EventsSignup() {
   const { pathname } = useLocation();
-  const path = pathname.replace('/events/', '');
-  const id = path.includes('/') ? path.replace('/', '') : path;
-  const [visible, setVisible] = useState();
-  const cta = useRef();
+  const path = pathname.includes('/events/signup/') && pathname.replace('/events/signup/', '');
+  const id = path && path.replace('/', '');
+  const username = useFormInput('');
+  const name = useFormInput('');
+  const mainboard = useFormInput('');
+  const sideboard = useFormInput('');
+  const [submitting, setSubmitting] = useState();
+  const [complete, setComplete] = useState();
 
-  useEffect(() => {
-    const sectionObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const section = entry.target;
-          observer.unobserve(section);
+  const onSubmit = useCallback(async event => {
+    event.preventDefault();
+    if (submitting) return;
 
-          return visible ? false : setVisible(true);
-        }
+    try {
+      setSubmitting(true);
+
+      const response = await fetch(`/functions/events/signup/${id}`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username.value,
+          name: name.value,
+          mainboard: mainboard.value,
+          sideboard: sideboard.value,
+        }),
       });
-    }, { rootMargin: '0px 0px -10% 0px' });
 
-    if(events && events[id]) sectionObserver.observe(cta.current);
+      const data = await response.json();
+      if (response.status !== 200) throw new Error(data.error);
 
-    return function cleanUp() {
-      sectionObserver.disconnect();
-    };
-  }, [visible, events, id]);
+      setComplete(true);
+      setSubmitting(false);
+    } catch (error) {
+      setSubmitting(false);
+      alert(error.message);
+    }
+  }, [id, username.value, name.value, mainboard.value, sideboard.value, submitting]);
 
-  if (!events || !events[id]) return <NotFound />;
-  const { name, description, ...rest } = events[id];
+  if (!id) return <NotFound />;
 
   return (
     <Fragment>
       <Helmet
-        title={`Event ${name} - Project Modern`}
+        title="Signup - Project Modern"
       />
       <PageLayout>
-        <Transition
-          appear={!prerender}
-          in={!prerender}
-          timeout={3000}
-          onEnter={reflow}
-        >
-          {status => (
-            <EventsInfoWrapper>
-              <EventsInfoHeader status={status}>
-                <EventsInfoAside>
-                  {Object.values(rest)?.map(val => (
-                    <Tag key={val}>{val}></Tag>
-                  ))}
-                </EventsInfoAside>
-                <EventsInfo>
-                  <Title2>{name}</Title2>
-                  <Paragraph>{description}</Paragraph>
-                  <Button label="Signup" to={`/signup/${id}`} />
-                </EventsInfo>
-              </EventsInfoHeader>
-            </EventsInfoWrapper>
-          )}
-        </Transition>
-        <GetStarted
-          accent
-          sectionRef={cta}
-          visible={visible}
-        />
+        <EventsSignupWrapper>
+          {!complete &&
+            <Transition
+              appear={!prerender}
+              in={!prerender}
+              timeout={3000}
+              onEnter={reflow}
+            >
+              {status => (
+                <EventsSignupContainer status={status}>
+                  <EventsSignupContent>
+                    <Title2>Complete your signup</Title2>
+                    <Form onSubmit={onSubmit}>
+                      <HalvedGrid>
+                        <FormInput {...username} placeholder="MTGO Username" required />
+                        <FormInput {...name} placeholder="Deck Name (Optional)" />
+                      </HalvedGrid>
+                      <FormLabel>Decklist</FormLabel>
+                      <FormTextArea {...mainboard} placeholder="Mainboard" required />
+                      <FormTextArea {...sideboard} placeholder="Sideboard" />
+                      <Button label="Submit" />
+                    </Form>
+                  </EventsSignupContent>
+                </EventsSignupContainer>
+              )}
+            </Transition>
+          }
+          {complete &&
+            <Transition
+              appear={!prerender}
+              in={!prerender}
+              timeout={3000}
+              onEnter={reflow}
+            >
+              {status => (
+                <EventsSignupContainer status={status}>
+                  <EventsSignupContent>
+                    <Title2>You're signed up!</Title2>
+                  </EventsSignupContent>
+                </EventsSignupContainer>
+              )}
+            </Transition>
+          }
+        </EventsSignupWrapper>
       </PageLayout>
     </Fragment>
   );
 }
 
-const EventsInfoWrapper = styled.div`
+const EventsSignupWrapper = styled.section`
   align-items: center;
   display: flex;
   padding: 0 50px;
@@ -140,9 +174,8 @@ const EventsInfoWrapper = styled.div`
   }
 `;
 
-const EventsInfoHeader = styled.div`
-  display: flex;
-  margin: 180px auto;
+const EventsSignupContainer = styled.section`
+  margin: 0 auto;
   max-width: 1200px;
   opacity: 0;
   width: 100%;
@@ -156,7 +189,6 @@ const EventsInfoHeader = styled.div`
   }
 
   @media (max-width: ${props => props.theme.mobile}px) {
-    flex-direction: column-reverse;
     max-width: 100%;
   }
 
@@ -167,67 +199,106 @@ const EventsInfoHeader = styled.div`
   ${props => props.status === 'entered' && css`
     opacity: 1;
   `}
-
-  @media (max-width: ${props => props.theme.mobile}px) {
-    margin: 96px auto;
-  }
 `;
 
-const EventsInfoAside = styled.div`
-  width: 30%;
-
-  @media (max-width: ${props => props.theme.mobile}px) {
-    margin-top: 10px;
-    width: 100%;
-  }
-`;
-
-const Tag = styled(Paragraph)`
-  align-items: center;
-  color: ${props => props.theme.colorTitle};
-  display: flex;
-  margin-top: 12px;
-
-  :first-of-type {
-    margin-top: 0;
-  }
-
-  ::before {
-    background-color: ${props => props.theme.colorAccent};
-    border-radius: 50%;
-    content: '';
-    display: inline-block;
-    height: 4px;
-    margin-right: 20px;
-    width: 4px;
-  }
-`;
-
-const EventsInfo = styled.div`
+const EventsSignupContent = styled.div`
+  align-items: flex-start;
   display: flex;
   flex-direction: column;
-  width: 70%;
+  margin: 140px 0;
 
-  ${Paragraph} {
-    margin-top: 30px;
-
-    :first-of-type {
-      margin-top: 50px;
-    }
+  ${Title2} {
+    margin-top: 40px;
+    width: 56%;
   }
 
-  a {
-    justify-self: flex-end;
-    margin-top: 60px;
+  @media (max-width: ${props => props.theme.tablet}px) {
+    ${Title2} {
+      width: 100%;
+    }
   }
 
   @media (max-width: ${props => props.theme.mobile}px) {
+    justify-content: center;
+    margin-top: 75px;
+  }
+`;
+
+const Form = styled.form`
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  margin-top: 100px;
+
+  button {
+    margin-top: 50px;
+  }
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    margin-top: 50px;
     width: 100%;
 
-    a {
-      margin-top: 45px;
+    button {
+      margin-top: 30px;
     }
   }
+`;
+
+const HalvedGrid = styled.div`
+  display: grid;
+  grid-gap: 40px;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const inputStyles = css`
+  background:
+    linear-gradient(${props => props.theme.colorBackgroundDarkSecondary}, ${props => props.theme.colorBackgroundDarkSecondary}) no-repeat 100% 100% / 0 1px,
+    linear-gradient(#bcbcbc, #bcbcbc) no-repeat 0 100% / 100% 1px;
+  border: none;
+  caret-color: ${props => props.theme.colorAccent};
+  font-family: inherit;
+  font-size: 100%;
+  height: 70px;
+  line-height: 1.15;
+  margin: 0;
+  padding: 26px 0;
+  transition: background-size 0.4s ${props => props.theme.ease1};
+  width: 100%;
+
+  &:focus {
+    background:
+      linear-gradient(${props => props.theme.colorBackgroundDarkSecondary}, ${props => props.theme.colorBackgroundDarkSecondary}) no-repeat 0 100% / 100% 1px,
+      linear-gradient(#bcbcbc, #bcbcbc) no-repeat 0 100% / 100% 1px;
+  }
+`;
+
+const FormInput = styled.input`
+  ${inputStyles}
+`;
+
+const FormLabel = styled.label`
+  color: ${props => props.theme.colorTitle};
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 36px;
+  margin: 60px 0 20px;
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    font-size: 14px;
+    line-height: 28px;
+  }
+`;
+
+const FormTextArea = styled(TextArea)`
+  ${inputStyles}
+  height: 140px;
+  margin-bottom: 20px;
 `;
 
 function EventsPage(props) {
@@ -620,6 +691,226 @@ const TournamentInfo = styled.p`
   @media (max-width: ${props => props.theme.mobile}px) {
     font-size: 16px;
     line-height: 26px;
+  }
+`;
+
+function EventsListing(props) {
+  const { events } = props;
+  const { pathname } = useLocation();
+  const path = pathname.replace('/events/', '');
+  const id = path.includes('/') ? path.replace('/', '') : path;
+  const [visible, setVisible] = useState();
+  const cta = useRef();
+
+  useEffect(() => {
+    const sectionObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const section = entry.target;
+          observer.unobserve(section);
+
+          return visible ? false : setVisible(true);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px' });
+
+    if(events && events[id]) sectionObserver.observe(cta.current);
+
+    return function cleanUp() {
+      sectionObserver.disconnect();
+    };
+  }, [visible, events, id]);
+
+  if (!events || !events[id]) return <NotFound />;
+  const { name, description, ...rest } = events[id];
+
+  return (
+    <Fragment>
+      <Helmet
+        title={`Event ${name} - Project Modern`}
+      />
+      <PageLayout>
+        <Transition
+          appear={!prerender}
+          in={!prerender}
+          timeout={3000}
+          onEnter={reflow}
+        >
+          {status => (
+            <EventsInfoWrapper>
+              <EventsInfoHeader status={status}>
+                <EventsInfoAside>
+                  {Object.values(rest)?.map(val => (
+                    <Tag key={val}>{val}></Tag>
+                  ))}
+                  <RelatedEvents>
+                    <h4>Related Events</h4>
+                    {events?.map(({ id, name }, index) => index < 4 && (
+                      <Anchor
+                        key={id}
+                        secondary
+                        as={Link}
+                        to={`/events/${id}`}
+                      >
+                        {name}
+                      </Anchor>
+                    ))}
+                  </RelatedEvents>
+                </EventsInfoAside>
+                <EventsInfo>
+                  <Title2>{name}</Title2>
+                  <Paragraph>{description}</Paragraph>
+                  <Button label="Signup" to={`/events/signup/${id}`} />
+                </EventsInfo>
+              </EventsInfoHeader>
+            </EventsInfoWrapper>
+          )}
+        </Transition>
+        <GetStarted
+          accent
+          sectionRef={cta}
+          visible={visible}
+        />
+      </PageLayout>
+    </Fragment>
+  );
+}
+
+const EventsInfoWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  padding: 0 50px;
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    padding: 0 20px;
+  }
+`;
+
+const EventsInfoHeader = styled.div`
+  display: flex;
+  margin: 180px auto;
+  max-width: 1200px;
+  opacity: 0;
+  width: 100%;
+
+  @media (max-width: ${props => props.theme.desktop}px) {
+    max-width: 1080px;
+  }
+
+  @media (max-width: ${props => props.theme.laptop}px) {
+    max-width: 960px;
+  }
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    flex-direction: column-reverse;
+    max-width: 100%;
+  }
+
+  ${props => props.status === 'entering' && css`
+    animation: ${css`${AnimFade} 0.6s ease 0.2s forwards`};
+  `}
+
+  ${props => props.status === 'entered' && css`
+    opacity: 1;
+  `}
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    margin: 96px auto;
+  }
+`;
+
+const EventsInfoAside = styled.div`
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    margin-top: 50px;
+    width: 100%;
+  }
+`;
+
+const Tag = styled(Paragraph)`
+  align-items: center;
+  color: ${props => props.theme.colorTitle};
+  display: flex;
+  margin-top: 12px;
+
+  :first-of-type {
+    margin-top: 0;
+  }
+
+  ::before {
+    background-color: ${props => props.theme.colorAccent};
+    border-radius: 50%;
+    content: '';
+    display: inline-block;
+    height: 4px;
+    margin-right: 20px;
+    width: 4px;
+  }
+`;
+
+const RelatedEvents = styled.div`
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  justify-self: flex-end;
+  margin-top: 250px;
+
+  h4 {
+    color: ${props => props.theme.colorTitle};
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 0.16em;
+    line-height: 28px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  a {
+    margin: 7px 0;
+  }
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    margin-top: 50px;
+
+    a {
+      margin-top: 17px;
+
+      :first-of-type {
+        margin-top: 0;
+      }
+    }
+  }
+`;
+
+const EventsInfo = styled.div`
+  display: grid;
+  flex-direction: column;
+  width: 70%;
+
+  ${Paragraph} {
+    margin-top: 30px;
+
+    :first-of-type {
+      margin-top: 50px;
+    }
+  }
+
+  a {
+    align-self: flex-end;
+    margin-top: 60px;
+    width: 0;
+  }
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    width: 100%;
+
+    a {
+      margin-top: 45px;
+    }
   }
 `;
 
