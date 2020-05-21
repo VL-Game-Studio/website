@@ -67,11 +67,11 @@ function Footer() {
               </FooterLinks>
               <FooterLabel>Sitemap</FooterLabel>
               <FooterMenu>
-                {navLinks?.map(({ to, label }) => (
+                {navLinks?.map(({ label, pathname, hash }) => (
                   <Link
                     key={label}
                     aria-label={label}
-                    to={to}
+                    to={{ pathname, hash }}
                   >
                     {label}
                   </Link>

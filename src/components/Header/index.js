@@ -1,7 +1,8 @@
-import React, { memo } from 'react';
+import React, { useState, memo } from 'react';
+import { useLocation } from 'react-router-dom';
 import styled, { useTheme } from 'styled-components/macro';
 import { Transition } from 'react-transition-group';
-import { Link } from 'components/Link';
+import { Link, NavLink } from 'components/Link';
 import Icon from 'components/Icon';
 import NavToggle from './NavToggle';
 import Anchor from 'components/Anchor';
@@ -14,12 +15,22 @@ import { navLinks } from 'data/nav';
 function Header(props) {
   const { dark } = props;
   const { menuOpen, dispatch } = useAppContext();
+  const [hashKey, setHashKey] = useState();
+  const location = useLocation();
   const { mobile, colorAccent } = useTheme();
   const { width } = useWindowSize();
   const isMobile = width <= mobile;
   const isDark = menuOpen ? !dark : dark;
 
-  const onClick = () => dispatch({ type: 'toggleMenu' });
+  const handleNavClick = () => {
+    setHashKey(Math.random().toString(32).substr(2, 8));
+    if (menuOpen) dispatch({ type: 'toggleMenu' });
+  };
+
+  const isMatch = ({ match, hash = '' }) => {
+    if (!match) return false;
+    return `${match.url}${hash}` === `${location.pathname}${location.hash}`;
+  };
 
   return (
     <HeaderWrapper role="banner" dark={isDark}>
@@ -52,11 +63,14 @@ function Header(props) {
                 <PrimaryNav dark={isDark}>
                   <NavLabel>Menu</NavLabel>
                   <NavMenu>
-                    {navLinks?.map(({ to, label }, index) => (
+                    {navLinks?.map(({ label, pathname, hash }, index) => (
                       <NavItem
-                        to={to}
+                        exact
+                        isActive={match => isMatch({ match, hash })}
+                        onClick={handleNavClick}
+                        key={label}
+                        to={{ pathname, hash, state: hashKey }}
                         aria-label={label}
-                        onClick={onClick}
                       >
                         <h4>{label}</h4>
                         <label>{label}</label>
@@ -260,7 +274,7 @@ const NavMenu = styled.ul`
   }
 `;
 
-const NavItem = styled(Link)`
+const NavItem = styled(NavLink)`
   font-size: 75px;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -302,7 +316,10 @@ const NavItem = styled(Link)`
     z-index: 1;
   }
 
-  :hover, :active, :focus {
+  &:hover,
+  &:active,
+  &:focus,
+  &.active {
     h4 {
       clip-path: inset(0 100% 0 0);
     }
