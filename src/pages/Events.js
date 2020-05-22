@@ -602,6 +602,7 @@ const Tournaments = styled.div`
   grid-row-gap: 20px;
   margin: 20px 0 0;
   max-width: 624px;
+  padding-right: 12px;
   width: 100%;
 
   svg {
