@@ -757,7 +757,7 @@ function EventsListing(props) {
     }
     : {
       onClick: handleRedirect,
-      href: config?.redirect
+      href: config.redirect
     }
 
   return (
@@ -776,7 +776,7 @@ function EventsListing(props) {
             <EventsInfoWrapper>
               <EventsInfoHeader status={status}>
                 <EventsInfoAside>
-                  {Object.values(rest)?.map(val => val !== id && (
+                  {Object.values(rest)?.map(val => (val !== id && val !== event.players) && (
                     <Tag key={val}>{val}</Tag>
                   ))}
                   {isMobile && <Button style={{ marginTop: '50px' }} label="Signup" {...buttonProps} />}

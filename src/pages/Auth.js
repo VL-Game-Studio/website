@@ -12,7 +12,7 @@ export default function Auth(props) {
   useEffect(() => {
     async function authorize() {
       try {
-        const credentials = btoa(`${config?.clientID}:${config?.secret}`);
+        const credentials = btoa(`${config.clientID}:${config.secret}`);
         const response = await fetch(`https://discordapp.com/api/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=https%3A%2F%2Fprojectmodern.gg%2Fauth`, {
           method: 'POST',
           headers: {
