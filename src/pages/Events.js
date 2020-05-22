@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, Suspense, Fragment, useCallback, memo } from 'react';
-import styled, { css } from 'styled-components/macro';
+import styled, { css, useTheme } from 'styled-components/macro';
 import { Switch, Route, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Transition } from 'react-transition-group';
@@ -13,7 +13,7 @@ import GetStarted from 'pages/GetStarted';
 import PageLayout from 'components/PageLayout';
 import NotFound from 'pages/NotFound';
 import { AnimFade } from 'utils/style';
-import { useScrollRestore, useFormInput } from 'hooks';
+import { useScrollRestore, useFormInput, useWindowSize } from 'hooks';
 import { reflow } from 'utils/transition';
 import prerender from 'utils/prerender';
 
@@ -708,6 +708,9 @@ function EventsListing(props) {
   const [visible, setVisible] = useState();
   const cta = useRef();
   const event = events && events.filter(event => event.id === id)[0];
+  const { width } = useWindowSize();
+  const { mobile } = useTheme();
+  const isMobile = width <= mobile;
   useScrollRestore();
 
   useEffect(() => {
@@ -751,6 +754,7 @@ function EventsListing(props) {
                   {Object.values(rest)?.map(val => val !== id && (
                     <Tag key={val}>{val}</Tag>
                   ))}
+                  {isMobile && <Button style={{ marginTop: '50px' }} label="Signup" to={`/events/signup/${id}`} />}
                   <RelatedEvents>
                     <h4>Recent Events</h4>
                     {events?.map(({ id, name }, index) => index < 4 && (
@@ -768,7 +772,7 @@ function EventsListing(props) {
                 <EventsInfo>
                   <Title2>{name}</Title2>
                   <Paragraph>{description}</Paragraph>
-                  <Button label="Signup" to={`/events/signup/${id}`} />
+                  {!isMobile && <Button label="Signup" to={`/events/signup/${id}`} />}
                 </EventsInfo>
               </EventsInfoHeader>
             </EventsInfoWrapper>
