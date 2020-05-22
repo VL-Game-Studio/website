@@ -31,7 +31,7 @@ function Intro(props) {
               <Label>Project Modern</Label>
               <Title dark id={titleId}>A community-run format that puts players first</Title>
               <Paragraph dark>Project Modern is a community-backed MTG format that prioritizes players over profits.</Paragraph>
-              <Button dark href="https://discord.gg/mjtTnr8" label="Get Started" />
+              <Button dark href="https://discord.gg/mjtTnr8" target="_blank" label="Get Started" />
             </IntroContent>
           </IntroContainer>
         )}

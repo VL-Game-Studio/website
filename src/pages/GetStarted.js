@@ -31,7 +31,7 @@ function GetStarted(props) {
                 <Label>Get Started</Label>
                 <Title2 id={titleId}>Ready to Play?</Title2>
               </div>
-              <Button accent={accent} href="https://discord.gg/mjtTnr8" label="Get Started" />
+              <Button accent={accent} href="https://discord.gg/mjtTnr8" target="_blank" label="Get Started" />
             </GetStartedContent>
           </GetStartedContainer>
         )}

@@ -12,13 +12,13 @@ const ButtonContent = ({ label, icon = 'arrowRight', ...rest }) => (
 );
 
 function Button(props) {
-  const { href, to, ...rest } = props;
+  const { href, target, to, ...rest } = props;
 
   return (
     <Fragment>
       {(!href && !to) && <ButtonContent {...rest} />}
       {href &&
-        <AnchorLink href={href}>
+        <AnchorLink href={href} target={target}>
           <ButtonContent {...rest} />
         </AnchorLink>
       }
@@ -45,10 +45,9 @@ const linkStyles = css`
   text-transform: uppercase;
 `;
 
-const AnchorLink = styled.a.attrs({
-  target: '_blank',
-  rel: 'noreferrer noopener',
-})`
+const AnchorLink = styled.a.attrs(({ target, rel }) => ({
+  rel: rel || target === '_blank' ? 'noreferrer noopener' : null,
+}))`
   ${linkStyles}
 `;
 

@@ -3,7 +3,7 @@ import styled, { createGlobalStyle, ThemeProvider, css } from 'styled-components
 import { BrowserRouter, Switch, Route, useLocation } from 'react-router-dom';
 import { Transition, TransitionGroup, config as transitionConfig } from 'react-transition-group';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
-import { usePrefersReducedMotion } from 'hooks';
+import { useLocalStorage, usePrefersReducedMotion } from 'hooks';
 import { initialState, reducer } from 'app/reducer';
 import { theme } from 'app/theme';
 import { reflow } from 'utils/transition';
@@ -15,6 +15,7 @@ import montserratBold from 'assets/fonts/montserrat-bold.woff2';
 
 const Home = lazy(() => import('pages/Home'));
 const Events = lazy(() => import('pages/Events'));
+const Auth = lazy(() => import('pages/Auth'));
 const NotFound = lazy(() => import('pages/NotFound'));
 
 export const AppContext = createContext();
@@ -58,8 +59,11 @@ export const fontStyles = `
 `;
 
 function App() {
+  const [storedUser] = useLocalStorage('user', null);
+  const [storedRedirect] = useLocalStorage('redirect', null);
   const [state, dispatch] = useReducer(reducer, initialState);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const { menuOpen } = state;
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -73,12 +77,20 @@ function App() {
     window.history.scrollRestoration = 'manual';
   }, []);
 
+  useEffect(() => {
+    dispatch({ type: 'setUser', value: storedUser });
+  }, [storedUser]);
+
+  useEffect(() => {
+    dispatch({ type: 'setRedirect', value: storedRedirect });
+  }, [storedRedirect]);
+
   return (
     <HelmetProvider>
       <ThemeProvider theme={theme}>
         <AppContext.Provider value={{ ...state, dispatch }}>
           <BrowserRouter>
-            <AppRoutes menuOpen={state.menuOpen} />
+            <AppRoutes menuOpen={menuOpen} />
           </BrowserRouter>
         </AppContext.Provider>
       </ThemeProvider>
@@ -121,6 +133,7 @@ function AppRoutes({ menuOpen }) {
                   <Switch location={location}>
                     <Route exact path="/" component={Home} />
                     <Route path="/events" component={Events} />
+                    <Route path="/auth" component={Auth} />
                     <Route component={NotFound} />
                   </Switch>
                 </Suspense>

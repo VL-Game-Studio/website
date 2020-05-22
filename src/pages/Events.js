@@ -13,9 +13,10 @@ import GetStarted from 'pages/GetStarted';
 import PageLayout from 'components/PageLayout';
 import NotFound from 'pages/NotFound';
 import { AnimFade } from 'utils/style';
-import { useScrollRestore, useFormInput, useWindowSize } from 'hooks';
+import { useScrollRestore, useFormInput, useWindowSize, useAppContext } from 'hooks';
 import { reflow } from 'utils/transition';
 import prerender from 'utils/prerender';
+import config from 'config';
 
 function Events(props) {
   const { id, sectionRef, visible, ...rest } = props;
@@ -74,7 +75,12 @@ function EventsSignup() {
   const sideboard = useFormInput('');
   const [submitting, setSubmitting] = useState();
   const [complete, setComplete] = useState();
+  const { user, dispatch } = useAppContext();
   useScrollRestore();
+
+  useEffect(() => {
+    dispatch({ type: 'setRedirect', value: null });
+  }, [dispatch]);
 
   const onSubmit = useCallback(async event => {
     event.preventDefault();
@@ -90,6 +96,7 @@ function EventsSignup() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          player: user?.id,
           username: username.value,
           name: name.value,
           mainboard: mainboard.value,
@@ -106,7 +113,7 @@ function EventsSignup() {
       setSubmitting(false);
       alert(error.message);
     }
-  }, [id, username.value, name.value, mainboard.value, sideboard.value, submitting]);
+  }, [id, user, username.value, name.value, mainboard.value, sideboard.value, submitting]);
 
   if (!id) return <NotFound />;
 
@@ -484,7 +491,11 @@ const EventsPanel = ({
             <Tournaments alternate={alternate}>
               {!events && <Paragraph>There aren't any active events right now.</Paragraph>}
               {events?.map(({ id, name, description }) => (
-                <Tournament to={`/events/${id}`} aria-label={name}>
+                <Tournament
+                  key={id}
+                  to={`/events/${id}`}
+                  aria-label={name}
+                >
                   <TournamentName>
                     <span>{name}</span>
                     <div></div>
@@ -711,6 +722,7 @@ function EventsListing(props) {
   const { width } = useWindowSize();
   const { mobile } = useTheme();
   const isMobile = width <= mobile;
+  const { user, dispatch } = useAppContext();
   useScrollRestore();
 
   useEffect(() => {
@@ -735,6 +747,19 @@ function EventsListing(props) {
   if (!event) return <NotFound />;
   const { name, description, ...rest } = event;
 
+  const handleRedirect = () => {
+    dispatch({ type: 'setRedirect', value: `/events/signup/${id}` });
+  };
+
+  const buttonProps = user
+    ? {
+      to: `/events/signup/${id}`
+    }
+    : {
+      onClick: handleRedirect,
+      href: config?.redirect
+    }
+
   return (
     <Fragment>
       <Helmet
@@ -754,13 +779,13 @@ function EventsListing(props) {
                   {Object.values(rest)?.map(val => val !== id && (
                     <Tag key={val}>{val}</Tag>
                   ))}
-                  {isMobile && <Button style={{ marginTop: '50px' }} label="Signup" to={`/events/signup/${id}`} />}
+                  {isMobile && <Button style={{ marginTop: '50px' }} label="Signup" {...buttonProps} />}
                   <RelatedEvents>
                     <h4>Recent Events</h4>
                     {events?.map(({ id, name }, index) => index < 4 && (
                       <Anchor
                         key={id}
-                        secondary
+                        secondar={1}
                         as={Link}
                         to={`/events/${id}`}
                       >
@@ -772,7 +797,7 @@ function EventsListing(props) {
                 <EventsInfo>
                   <Title2>{name}</Title2>
                   <Paragraph>{description}</Paragraph>
-                  {!isMobile && <Button label="Signup" to={`/events/signup/${id}`} />}
+                  {!isMobile && <Button label="Signup" {...buttonProps} />}
                 </EventsInfo>
               </EventsInfoHeader>
             </EventsInfoWrapper>
