@@ -37,7 +37,7 @@ const events = {
   async signup({ id, player, username, deckID }) {
     await admin.database()
       .ref(`/events/${id}/players/${player}`)
-      .set({ player, username, deckID });
+      .set({ id, player, username, deckID });
 
     const playerReceipt = await admin.database()
       .ref(`/events/${id}/players/${player}`)
