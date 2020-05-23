@@ -1,4 +1,4 @@
-import React, { Fragment, memo } from 'react';
+import React, { Fragment } from 'react';
 import styled, { css } from 'styled-components/macro';
 import { Helmet } from 'react-helmet-async';
 import { Transition } from 'react-transition-group';
@@ -121,4 +121,4 @@ const NotFoundContent = styled.div`
   }
 `;
 
-export default memo(NotFound);
+export default NotFound;
