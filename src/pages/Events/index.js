@@ -1,10 +1,11 @@
-import React, { useState, useEffect, Suspense, Fragment } from 'react';
+import React, { lazy, useState, useEffect, Suspense, Fragment } from 'react';
 import { Switch, Route } from 'react-router-dom';
-import AllEvents from './AllEvents';
-import EventSignup from './EventSignup';
-import EventInfo from './EventInfo';
 import EventsPanel from './EventsPanel';
 import prerender from 'utils/prerender';
+
+const AllEvents = lazy(() => import('./AllEvents'));
+const EventSignup = lazy(() => import('./EventSignup'));
+const EventInfo = lazy(() => import('./EventInfo'));
 
 function Events(props) {
   const { id, sectionRef, visible, ...rest } = props;
@@ -31,7 +32,7 @@ function Events(props) {
     if (!prerender) fetchEvents();
   }, []);
 
-  if (!sectionRef) return (
+  if (events && !sectionRef) return (
     <Suspense fallback={<Fragment />}>
       <Switch>
         <Route exact path="/events" render={() => <AllEvents events={events} />} />
