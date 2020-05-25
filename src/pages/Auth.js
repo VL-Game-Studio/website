@@ -43,7 +43,7 @@ export default function Auth(props) {
     if (!user && code) authorize();
   }, [code, dispatch, props.history, redirect, user]);
 
-  if (!code) return <Redirect to="/" />;
+  if (!code || (user && !redirect)) return <Redirect to="/" />;
 
   return <Helmet title="Redirecting - Project Modern" />;
 }
