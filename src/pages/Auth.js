@@ -7,7 +7,7 @@ import config from 'config';
 export default function Auth(props) {
   const { search } = useLocation();
   const code = search.includes('?code=') && search.split('?code=')[1];
-  const { redirect, dispatch } = useAppContext();
+  const { user, redirect, dispatch } = useAppContext();
 
   useEffect(() => {
     async function authorize() {
@@ -36,13 +36,12 @@ export default function Auth(props) {
         return props.history.push(redirect || '/');
       } catch (error) {
         console.error(error.message);
-        alert(error.message);
         return props.history.push('/');
       }
     }
 
-    if (code) authorize();
-  }, [code, dispatch, props.history, redirect]);
+    if (!user && code) authorize();
+  }, [code, dispatch, props.history, redirect, user]);
 
   if (!code) return <Redirect to="/" />;
 

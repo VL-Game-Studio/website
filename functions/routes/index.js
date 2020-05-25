@@ -1,9 +1,9 @@
 const { Router } = require('express');
 const decklists = require('./decklists');
+const events = require('./events');
 const leagues = require('./leagues');
 const players = require('./players');
 const results = require('./results');
-const events = require('./events');
 
 const router = new Router();
 

@@ -105,7 +105,7 @@ function AppRoutes({ menuOpen }) {
   return (
     <Fragment>
       <Helmet>
-        <link rel="canonical" href={`https://videre.live${pathname}`} />
+        <link rel="canonical" href={`https://projectmodern.gg${pathname}`} />
         <link rel="preload" href={montserratLight} as="font" crossorigin="" />
         <link rel="preload" href={montserratRegular} as="font" crossorigin="" />
         <link rel="preload" href={montserratMedium} as="font" crossorigin="" />
