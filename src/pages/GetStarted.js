@@ -118,6 +118,10 @@ const GetStartedContent = styled.div`
       margin-left: 0;
     }
 
+    ${Title2} {
+      margin-top: 20px;
+    }
+
     a {
       margin-top: 45px;
     }

@@ -115,6 +115,10 @@ const NotFoundContent = styled.div`
       margin: 0;
     }
 
+    ${Title} {
+      margin-top: 30px;
+    }
+
     a {
       margin-top: 45px;
     }

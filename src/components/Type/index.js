@@ -45,4 +45,9 @@ export const Paragraph = styled.p`
   letter-spacing: 0.03em;
   line-height: 36px;
   color: ${props => props.dark ? props.theme.colorWhite : props.theme.colorText};
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    font-size: 16px;
+    line-height: 32px;
+  }
 `;

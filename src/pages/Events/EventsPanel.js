@@ -140,10 +140,12 @@ const EventsContent = styled.div`
     }
 
     ${Title2} {
+      margin-top: 20px;
       max-width: none;
 
       ${props => props.alternate && css`
         align-self: flex-start;
+        margin-top: 0;
       `}
     }
 

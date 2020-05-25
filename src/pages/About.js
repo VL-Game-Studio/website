@@ -97,10 +97,10 @@ const AboutContent = styled.div`
     letter-spacing: 0;
     margin-top: 30px;
     width: 70%;
-  }
 
-  ${Paragraph}:first-of-type {
-    margin-top: 75px;
+    :first-of-type {
+      margin-top: 75px;
+    }
   }
 
   @media (max-width: ${props => props.theme.laptop}px) {
@@ -127,6 +127,16 @@ const AboutContent = styled.div`
 
     ${Label} {
       left: 0;
+    }
+
+    ${Title2} {
+      margin-top: 20px;
+    }
+
+    ${Paragraph} {
+      &, :first-of-type {
+        margin-top: 20px;
+      }
     }
   }
 `;

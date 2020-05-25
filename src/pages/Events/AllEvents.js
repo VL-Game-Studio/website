@@ -161,6 +161,10 @@ const EventsHeroContent = styled.div`
     ${Label} {
       left: 0;
     }
+
+    ${Title} {
+      margin-top: 33px;
+    }
   }
 `;
 
