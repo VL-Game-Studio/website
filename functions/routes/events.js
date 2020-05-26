@@ -19,10 +19,10 @@ router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const eventItem = await events.fetch(id);
-    if (!eventItem) return res.status(404).json({ message: `An event could not be found for: ${id}.` });
+    const activeEvent = await events.fetch(id);
+    if (!activeEvent) return res.status(404).json({ message: `An event could not be found for: ${id}.` });
 
-    return res.status(200).json(eventItem);
+    return res.status(200).json(activeEvent);
   } catch (error) {
     console.error(`GET /events/${id} >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while fetching event: ${id}.` });
@@ -37,9 +37,9 @@ router.post('/', async (req, res) => {
   if (!date) return res.status(400).json({ error: 'Date is a required field.' });
 
   try {
-    const eventItem = await events.create({ name, platform, time, date, ...rest });
+    const activeEvent = await events.create({ name, platform, time, date, ...rest });
 
-    return res.status(200).json(eventItem);
+    return res.status(200).json(activeEvent);
   } catch (error) {
     console.error(`POST /events/ ({ name: ${name}, platform: ${platform}, time: ${time}, date: ${date} }) >> ${error.stack}`);
     return res.status(500).json({ error: 'An error occured while creating event.' });
@@ -54,8 +54,8 @@ router.post('/signup/:id', async (req, res) => {
   if (!deckID && !mainboard) return res.status(400).json({ error: 'Deck is a required field, passed to either mainboard and sideboard or as a deckID.' });
 
   try {
-    const eventItem = await events.fetch(id);
-    if (!eventItem) return res.status(404).json({ message: `An event could not be found for: ${id}.` });
+    const activeEvent = await events.fetch(id);
+    if (!activeEvent) return res.status(404).json({ message: `An event could not be found for: ${id}.` });
 
     if (deckID) {
       const playerReceipt = await events.signup({ id, player, username, deckID });
@@ -79,8 +79,8 @@ router.get('/pair/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const eventItem = await events.get(id);
-    if (!eventItem) return res.status(404).json({ message: `An event could not be found for: ${id}.` });
+    const activeEvent = await events.get(id);
+    if (!activeEvent) return res.status(404).json({ message: `An event could not be found for: ${id}.` });
 
     const pairings = await events.pair(id);
 
@@ -91,14 +91,30 @@ router.get('/pair/:id', async (req, res) => {
   }
 });
 
+router.post('/report/:id/:playerID', async (req, res) => {
+  const { id, playerID } = req.params;
+  const { result } = req.body;
+  if (!result) return res.status(400).json({ error: 'Result is a required field.' });
+
+  try {
+    const activeEvent = await events.report({ id, playerID, result });
+    if (!activeEvent) return res.status(400).json({ error: `You are currently playing in event: ${id}.` });
+
+    return res.status(200).json(activeEvent);
+  } catch (error) {
+    console.error(`POST /events/report/${id}/${playerID} ({ result: ${result} }) >> ${error.stack}`);
+    return res.status(500).json({ error: `An error occured while processing event result for player: ${playerID} in event: ${id}.` });
+  }
+});
+
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const eventItem = await events.delete(id);
-    if (!eventItem) return res.status(404).json({ message: `An event could not be found for: ${id}.` });
+    const activeEvent = await events.delete(id);
+    if (!activeEvent) return res.status(404).json({ message: `An event could not be found for: ${id}.` });
 
-    return res.status(200).json(eventItem);
+    return res.status(200).json(activeEvent);
   } catch (error) {
     console.error(`DELETE /events/${id} >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while deleting event: ${id}.` });

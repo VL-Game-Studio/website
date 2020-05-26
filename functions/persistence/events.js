@@ -48,7 +48,7 @@ const events = {
   },
   async pair(id) {
     const players = await admin.database()
-      .ref(`events/${id}/players`)
+      .ref(`/events/${id}/players`)
       .once('value')
       .then(snap => Object.values(snap.val()).sort((a, b) => b.points - a.points));
 
@@ -109,6 +109,39 @@ const events = {
     });
 
     return pairings;
+  },
+  async report({ id, playerID, result }) {
+    const player = await admin.database()
+      .ref(`/events/${id}/players/${playerID}`)
+      .once('value')
+      .then(snap => snap.val());
+    if (!player) return false;
+
+    const { points = 0, matches = [], opponents = [] } = player;
+    const [wins, losses, ties] = result.split('-');
+
+    const matchHistory = [
+      ...Object.values(matches),
+      {
+        round: Object.values(matches).length + 1,
+        record: `${wins}-${losses}-${ties}`,
+        opponent: Object.values(opponents)[Object.values(opponents).length - 1],
+      },
+    ];
+
+    await admin.database()
+      .ref(`/events/${id}/players/${playerID}`)
+      .update({
+        points: parseInt(points) + ((parseInt(wins) === 2 ? 3 : parseInt(wins) === 1 ? 1 : 0) + parseInt(ties)),
+        matches: matchHistory,
+      });
+
+    const activeEvent = await admin.database()
+      .ref(`/events/${id}`)
+      .once('value')
+      .then(snap => snap.val());
+
+    return activeEvent;
   },
   async delete(id) {
     const eventItem = await admin.database()
