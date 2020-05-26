@@ -11,7 +11,7 @@ Path | Method | Parameters | Description
    /events/ | POST | `name` `description` `time` `date` `platform` | Creates an event, returning an event object.
    /events/signup/:id | POST | `name` `username` `deckID` or `mainboard` `sideboard` | Generates and assigns a decklist to a player, adding player to the player queue, returning a player receipt.
    /events/pair/:id | GET | *none* | Generates and returns pairings, assigning player 1 and player 2 for later results.
-   /events/report/:id | POST | `record` | Updates match history and generates performance track from record.
+   /events/report/:id/:playerID | POST | `record` | Updates match history and generates performance track from record.
    /events/:id | DELETE | *none* | Fetches and deletes an event by id, returning an object.
 
 ### Decklists Methods
