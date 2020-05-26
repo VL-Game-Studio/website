@@ -8,7 +8,9 @@ Path | Method | Parameters | Description
 --- | --- | --- | ---
    /events/ | GET | *none* | Fetches all events, returning an object.
    /events/:id | GET | *none* | Fetches a single event by id, returning an object.
+   /events/pair/:id | GET | *none* | Generates and returns pairings, assigning player 1 and player 2 for later results.
    /events/ | POST | `name` `description` `time` `date` `platform` | Creates an event, returning an event object.
+   /events/signup/:id | POST | `name` `username` `deckID` or `mainboard` `sideboard` | Generates and assigns a decklist to a player, adding player to the player queue, returning a player receipt.
    /events/:id | DELETE | *none* | Fetches and deletes an event by id, returning an object.
 
 ### Decklists Methods
@@ -19,7 +21,6 @@ Path | Method | Parameters | Description
    /decklists/:id | GET | *none* | Fetches a single decklist by id, returning an object.
    /decklists/ | POST | `name (optional)` `author` `mainboard` `sideboard` | Validates mainboard and sideboard and creates decklist object and adds to registry, returning an object.
    /decklists/:id | POST | `name (optional)` `author` `mainboard` `sideboard` | Validates mainboard and sideboard and adds to registry or throws error on infractions, returning an object.
-   /decklists/signup/:id | POST | `name` `username` `deckID` or `mainboard` `sideboard` | Generates and assigns a decklist to a player, adding player to the player queue, returning a player receipt.
    /decklists/:id | DELETE | *none* | Fetches and deletes a decklist by id, returning an object.
 
 ## Private Methods

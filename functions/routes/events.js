@@ -75,6 +75,22 @@ router.post('/signup/:id', async (req, res) => {
   }
 });
 
+router.get('/pair/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const eventItem = await events.get(id);
+    if (!eventItem) return res.status(404).json({ message: `An event could not be found for: ${id}.` });
+
+    const pairings = await events.pair(id);
+
+    return res.status(200).json(pairings);
+  } catch (error) {
+    console.error(`POST /events/pair/${id} >> ${error.stack}`);
+    return res.status(500).json({ error: `An error occured generating pairings for event: ${id}.` });
+  }
+});
+
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
