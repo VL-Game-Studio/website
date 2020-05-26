@@ -10,7 +10,7 @@ const EventInfo = lazy(() => import('./EventInfo'));
 function Events(props) {
   const { id, sectionRef, visible, ...rest } = props;
   const titleId = `${id}-title`;
-  const [events, setEvents] = useState();
+  const [events, setEvents] = useState([]);
 
   useEffect(() => {
     async function fetchEvents() {

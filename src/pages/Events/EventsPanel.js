@@ -35,8 +35,8 @@ const EventsPanel = ({
             {!alternate && <Label>Active Events</Label>}
             <Title2 id={titleId}>{alternate ? 'Active Events' : 'New Tourmaments Every Day'}</Title2>
             <Tournaments alternate={alternate}>
-              {!events && <Paragraph>There aren't any active events right now.</Paragraph>}
-              {events?.map(({ id, name, description }) => (
+              {(!events || events.length === 0) && <Paragraph>There aren't any active events right now.</Paragraph>}
+              {events.length > 0 && events?.map(({ id, name, description }) => (
                 <Tournament
                   key={id}
                   to={`/events/${id}`}
