@@ -50,63 +50,62 @@ const events = {
     const players = await admin.database()
       .ref(`events/${id}/players`)
       .once('value')
-      .then(snap => Object.values(snap.val()).sort((a, b) => a - b));
+      .then(snap => Object.values(snap.val()).sort((a, b) => b.points - a.points));
 
     const updatePlayer = async (playerID, props) => await admin.database()
       .ref(`/events/${id}/players/${playerID}`)
       .update(props);
 
-    for (let player in players) {
+    const pairings = [];
+    const pairedPlayers = [];
+
+    players.forEach(player => {
       // Calculate points ceiling
       const maxDiff = (Object.values(player.matches).length + 1) * 3;
       const [opponent] = players
-        // Remove player from opponent selection
-        .filter(opp => opp.id && opp.id !== player.id)
+      // Remove player from opponent selection
+      .filter(opp => opp.id && opp.id !== player.id)
 
-        // Check if opponent has played before
-        .filter(({ opponents = [] }) => !Object.values(opponents).includes(player))
+      // Check if opponent has played before
+      .filter(({ opponents = [] }) => !Object.values(opponents).includes(player))
 
-        // Check if opponent isn't already paired or playing
-        .filter(({ matches = [], opponents = [] }) =>
-          Object.values(opponents).length === Object.values(matches).length &&
-          Object.values(matches).length === Object.values(player.matches).length
-        )
+      // Check if opponent isn't already paired or playing
+      .filter(({ matches = [], opponents = [] }) =>
+        Object.values(opponents).length === Object.values(matches).length &&
+        Object.values(matches).length === Object.values(player.matches).length
+      )
 
-        // Pair within point ceiling
-        .filter(({ points = 0 }) => Math.abs(points - player.points) <= maxDiff);
+      // Pair within point ceiling
+      .filter(({ points = 0 }) => Math.abs(points - player.points) <= maxDiff);
 
-      // Append pairing or bye to player's opponent history
-      updatePlayer(player.id, {
-        opponents: player.opponents
-          ? [...player.opponents, opponent || 'bye']
-          : [opponent || 'bye']
-      });
+      // Verify players aren't already paired and mark them as paired
+    	if (!pairedPlayers.includes(player)) {
+    		players.forEach((entry, index) => {
+    			if (entry === player) {
+            updatePlayer(player.id, {
+              opponents: player.opponents
+                ? [...player.opponents, opponent || 'bye']
+                : [opponent || 'bye']
+            });
 
-      if (opponent) {
-        // Append pairing or bye to opponents's opponent history
-        updatePlayer(opponent.id, {
-          opponents: opponent.opponents
-            ? [...opponent.opponents, player]
-            : [player]
-        });
-      }
-    }
+    				pairedPlayers.push(player);
+    			} else if (opponent && entry === opponent) {
+            updatePlayer(opponent.id, {
+              opponents: opponent.opponents
+                ? [...opponent.opponents, player]
+                : [player]
+            });
 
-    // Generate pairings, assigning player1 and player2 to later results
-    const pairedPlayers = await admin.database()
-      .ref(`events/${id}/players`)
-      .once('value')
-      .then(snap => Object.values(snap.val()).sort((a, b) => a - b));
+    				pairedPlayers.push(opponent);
+    			}
+    		});
 
-    const pairings = [];
-
-    pairedPlayers.forEach(player => {
-      if (pairings.filter(({ player1, player2 }) => ![player1, player2].includes(player))) {
-        return {
+        // Generate pairing
+    		pairings.push({
           player1: player,
-          player2: player.opponents.pop(),
-        };
-      }
+          player2: opponent || 'bye',
+        });
+    	}
     });
 
     return pairings;
