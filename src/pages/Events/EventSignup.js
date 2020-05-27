@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useCallback, memo } from 'react';
+import React, { useState, Fragment, useCallback } from 'react';
 import styled, { css } from 'styled-components/macro';
 import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
@@ -16,7 +16,7 @@ import prerender from 'utils/prerender';
 function EventSignup() {
   const { pathname } = useLocation();
   const id = pathname.replace('/events/signup/', '').replace('/', '');
-  const { user, dispatch } = useAppContext();
+  const { user } = useAppContext();
   const username = useFormInput('');
   const name = useFormInput('');
   const mainboard = useFormInput('');
@@ -24,10 +24,6 @@ function EventSignup() {
   const [submitting, setSubmitting] = useState();
   const [complete, setComplete] = useState();
   useScrollRestore();
-
-  useEffect(() => {
-    dispatch({ type: 'setRedirect', value: null });
-  }, [dispatch]);
 
   const onSubmit = useCallback(async event => {
     event.preventDefault();
@@ -256,4 +252,4 @@ const FormTextArea = styled(TextArea)`
   margin-bottom: 20px;
 `;
 
-export default memo(EventSignup);
+export default EventSignup;

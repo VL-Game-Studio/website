@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Fragment, memo } from 'react';
+import React, { useState, useEffect, useRef, Fragment } from 'react';
 import styled, { css, useTheme } from 'styled-components/macro';
 import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
@@ -62,7 +62,7 @@ function EventInfo(props) {
     : {
       onClick: handleRedirect,
       href: config.redirect
-    }
+    };
 
   return (
     <Fragment>
@@ -255,4 +255,4 @@ const EventsInfo = styled.div`
   }
 `;
 
-export default memo(EventInfo);
+export default EventInfo;
