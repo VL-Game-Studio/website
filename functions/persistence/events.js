@@ -61,10 +61,6 @@ const events = {
     const pairings = [];
     const pairedPlayers = [];
 
-    const updatePlayer = async (playerID, props) => await admin.database()
-      .ref(`/events/${id}/players/${playerID}`)
-      .update(props);
-
     sortedPlayers.forEach(player => {
       // Set player defaults
       player.matches = player.matches || [];
@@ -91,16 +87,10 @@ const events = {
 
       // Verify players aren't already paired and mark them as paired
     	if (!pairedPlayers.includes(player)) {
-    		sortedPlayers.forEach((entry, index) => {
+    		sortedPlayers.forEach(async (entry, index) => {
     			if (entry === player) {
             pairedPlayers.push(player);
             sortedPlayers[index].opponents.push(opponent ? opponent.id : 'bye');
-
-            updatePlayer(player.id, {
-              opponents: player.opponents
-                ? [...player.opponents, opponent || 'bye']
-                : [opponent || 'bye']
-            });
     			} else if (opponent && entry === opponent) {
             pairedPlayers.push(opponent);
             const oppIndex = sortedPlayers.indexOf(opponent);
@@ -110,12 +100,6 @@ const events = {
             } else {
               sortedPlayers[oppIndex].opponents = [player.id];
             }
-
-            updatePlayer(opponent.id, {
-              opponents: opponent.opponents
-                ? [...opponent.opponents, player.id]
-                : [player.id]
-            });
     			}
     		});
 
@@ -126,6 +110,14 @@ const events = {
         });
     	}
     });
+
+    const droppedPlayers = players.filter(({ dropped }) => dropped);
+    const updatedPlayers = {};
+    sortedPlayers.concat(droppedPlayers).forEach(player => updatedPlayers[player.id] = player);
+
+    await admin.database()
+      .ref(`/events/${id}`)
+      .update({ players: updatedPlayers });
 
     return pairings;
   },
@@ -138,13 +130,15 @@ const events = {
 
     const { points = 0, matches = [], opponents = [] } = player;
     const [wins, losses, ties] = result.split('-');
+    const opponentID = Object.values(opponents).length > 0 && Object.values(opponents).pop();
+    if (!opponentID) throw Error('You are not in an active match.');
 
     const matchHistory = [
       ...Object.values(matches),
       {
         round: Object.values(matches).length + 1,
         record: `${wins}-${losses}-${ties}`,
-        opponent: Object.values(opponents)[Object.values(opponents).length - 1],
+        opponent: opponentID,
       },
     ];
 
@@ -153,6 +147,28 @@ const events = {
       .update({
         points: parseInt(points) + ((parseInt(wins) === 2 ? 3 : parseInt(wins) === 1 ? 1 : 0) + parseInt(ties)),
         matches: matchHistory,
+      });
+
+    const opponent = await admin.database()
+      .ref(`/events/${id}/players/${opponentID}`)
+      .once('value')
+      .then(snap => snap.val());
+
+    const { matches: oppMatches = [], points: oppPoints = 0 } = opponent;
+    const opponentMatchHistory = [
+      ...Object.values(oppMatches),
+      {
+        round: Object.values(oppMatches).length + 1,
+        record: `${losses}-${wins}-${ties}`,
+        opponent: playerID,
+      }
+    ];
+
+    await admin.database()
+      .ref(`/events/${id}/players/${opponentID}`)
+      .update({
+        points: parseInt(oppPoints) + ((parseInt(losses) === 2 ? 3 : parseInt(losses) === 1 ? 1 : 0) + parseInt(ties)),
+        matches: opponentMatchHistory,
       });
 
     const activeEvent = await admin.database()

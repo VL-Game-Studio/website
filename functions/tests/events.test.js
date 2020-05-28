@@ -97,6 +97,7 @@ describe('events', () => {
       .send(testRegistration);
 
     expect(res.statusCode).toEqual(200);
+    testRegistration.id = res.body.id;
     Object.keys(testRegistration).forEach(key => {
       expect(res.body).toHaveProperty(key);
       expect(res.body[key]).toEqual(testRegistration[key]);
@@ -129,6 +130,21 @@ describe('events', () => {
       { player1: '3', player2: '4' },
       { player1: '5', player2: 'bye' }
     ]);
+  });
+
+  it('reports match result', async () => {
+    const { id } = testEvent;
+    const playerID = 1;
+
+    const res = await request(app)
+      .post(`/events/report/${id}/${playerID}`)
+      .send({ result: '2-0-0' });
+
+    expect(res.statusCode).toEqual(200);
+
+    const opponent = res.body.players[playerID].opponents.pop();
+    expect(res.body.players[playerID].points).toEqual(3);
+    expect(res.body.players[opponent].points).toEqual(0);
   });
 
   it('deletes event', async () => {
