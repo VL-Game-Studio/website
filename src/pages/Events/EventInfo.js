@@ -82,31 +82,38 @@ function EventInfo(props) {
           {status => (
             <EventsInfoWrapper>
               <EventsInfoHeader status={status}>
+                <EventsInfo>
+                  <Title2>{name}</Title2>
+                  <Paragraph>{description}</Paragraph>
+                  {!isMobile && <Button label="Signup" {...buttonProps} />}
+                </EventsInfo>
                 <EventsInfoAside>
-                  <Tag>
-                    <label>Date:</label>
-                    {new Date(day).toLocaleDateString('default', {
-                      weekday: 'long',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </Tag>
-                  <Tag>
-                    <label>Time:</label>
-                    {time}
-                  </Tag>
-                  <Tag>
-                    <label>Platform:</label>
-                    {platform}
-                  </Tag>
-                  <Tag>
-                    <label>Players:</label>
-                    {Object.values(players).length}
-                  </Tag>
+                  <div>
+                    <Tag>
+                      <label>Date:</label>
+                      {new Date(day).toLocaleDateString('default', {
+                        weekday: 'long',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </Tag>
+                    <Tag>
+                      <label>Time:</label>
+                      {time}
+                    </Tag>
+                    <Tag>
+                      <label>Platform:</label>
+                      {platform}
+                    </Tag>
+                    <Tag>
+                      <label>Players:</label>
+                      {Object.values(players).length}
+                    </Tag>
+                  </div>
                   {isMobile && <Button style={{ marginTop: '50px' }} label="Signup" {...buttonProps} />}
                   <RelatedEvents>
-                    <h4>Recent Events</h4>
-                    {events?.map(({ id, name }, index) => index < 4 && (
+                    <h4>Other Events</h4>
+                    {events?.filter(e => e.id !== id).map(({ id, name }, index) => index < 4 && (
                       <Anchor
                         key={id}
                         secondary={1}
@@ -118,11 +125,6 @@ function EventInfo(props) {
                     ))}
                   </RelatedEvents>
                 </EventsInfoAside>
-                <EventsInfo>
-                  <Title2>{name}</Title2>
-                  <Paragraph>{description}</Paragraph>
-                  {!isMobile && <Button label="Signup" {...buttonProps} />}
-                </EventsInfo>
               </EventsInfoHeader>
             </EventsInfoWrapper>
           )}
@@ -163,8 +165,8 @@ const EventsInfoHeader = styled.div`
   }
 
   @media (max-width: ${props => props.theme.tablet}px) {
-    flex-direction: column-reverse;
     max-width: 100%;
+    flex-direction: column;
   }
 
   @media (max-width: ${props => props.theme.mobile}px) {
@@ -181,12 +183,13 @@ const EventsInfoHeader = styled.div`
 `;
 
 const EventsInfoAside = styled.div`
-  align-items: flex-start;
+  align-items: flex-end;
   display: flex;
   flex-direction: column;
   width: 30%;
 
   @media (max-width: ${props => props.theme.tablet}px) {
+    align-items: flex-start;
     margin-top: 50px;
     width: 100%;
   }
