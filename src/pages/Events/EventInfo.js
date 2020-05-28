@@ -61,7 +61,7 @@ function EventInfo(props) {
     }
     : {
       onClick: handleRedirect,
-      href: config.redirect
+      href: `https://discord.com/api/oauth2/authorize?client_id=${config.clientID}&redirect_uri=${encodeURI(config.redirect)}&response_type=code&scope=identify`
     };
 
   return (

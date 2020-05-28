@@ -60,4 +60,4 @@ typings/
 build/
 build-storybook/
 .firebase
-src/config.json
+src/config.js

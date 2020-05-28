@@ -1,5 +1,0 @@
-{
-  "clientID": "discordClientID",
-  "secret": "discordClientSecret",
-  "redirect": "DiscordoAuthRedirectURL"
-}
