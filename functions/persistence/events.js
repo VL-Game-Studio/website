@@ -37,7 +37,7 @@ const events = {
   async signup({ id, player, username, deckID }) {
     await admin.database()
       .ref(`/events/${id}/players/${player}`)
-      .set({ id, player, username, deckID });
+      .set({ id: player, player, username, deckID });
 
     const playerReceipt = await admin.database()
       .ref(`/events/${id}/players/${player}`)
@@ -46,25 +46,36 @@ const events = {
 
     return playerReceipt;
   },
-  async pair(id) {
+  async pairings(id) {
     const players = await admin.database()
       .ref(`/events/${id}/players`)
       .once('value')
-      .then(snap => Object.values(snap.val()).sort((a, b) => b.points - a.points));
+      .then(snap => Object.values(snap.val()));
+    if (players.length < 2) return null;
+
+    // Remove dropped players and sort by points (descending order)
+    const sortedPlayers = players
+      .filter(({ dropped }) => !dropped)
+      .sort((a, b) => b.points - a.points);
+
+    const pairings = [];
+    const pairedPlayers = [];
 
     const updatePlayer = async (playerID, props) => await admin.database()
       .ref(`/events/${id}/players/${playerID}`)
       .update(props);
 
-    const pairings = [];
-    const pairedPlayers = [];
+    sortedPlayers.forEach(player => {
+      // Set player defaults
+      player.matches = player.matches || [];
+      player.points = player.points || 0;
+      player.opponents = player.opponents || [];
 
-    players.forEach(player => {
       // Calculate points ceiling
       const maxDiff = (Object.values(player.matches).length + 1) * 3;
-      const [opponent] = players
+      const [opponent] = sortedPlayers
       // Remove player from opponent selection
-      .filter(opp => opp.id && opp.id !== player.id)
+      .filter(({ id }) => id !== player.id)
 
       // Check if opponent has played before
       .filter(({ opponents = [] }) => !Object.values(opponents).includes(player))
@@ -80,30 +91,38 @@ const events = {
 
       // Verify players aren't already paired and mark them as paired
     	if (!pairedPlayers.includes(player)) {
-    		players.forEach((entry, index) => {
+    		sortedPlayers.forEach((entry, index) => {
     			if (entry === player) {
+            pairedPlayers.push(player);
+            sortedPlayers[index].opponents.push(opponent ? opponent.id : 'bye');
+
             updatePlayer(player.id, {
               opponents: player.opponents
                 ? [...player.opponents, opponent || 'bye']
                 : [opponent || 'bye']
             });
-
-    				pairedPlayers.push(player);
     			} else if (opponent && entry === opponent) {
+            pairedPlayers.push(opponent);
+            const oppIndex = sortedPlayers.indexOf(opponent);
+
+            if (sortedPlayers[oppIndex].opponents) {
+              sortedPlayers[oppIndex].opponents.push(player.id);
+            } else {
+              sortedPlayers[oppIndex].opponents = [player.id];
+            }
+
             updatePlayer(opponent.id, {
               opponents: opponent.opponents
-                ? [...opponent.opponents, player]
-                : [player]
+                ? [...opponent.opponents, player.id]
+                : [player.id]
             });
-
-    				pairedPlayers.push(opponent);
     			}
     		});
 
         // Generate pairing
     		pairings.push({
-          player1: player,
-          player2: opponent || 'bye',
+          player1: player.id,
+          player2: opponent ? opponent.id : 'bye',
         });
     	}
     });
@@ -142,6 +161,24 @@ const events = {
       .then(snap => snap.val());
 
     return activeEvent;
+  },
+  async drop({ id, playerID }) {
+    const playerExists = await admin.database()
+      .ref(`/events/${id}/players/${playerID}`)
+      .once('value')
+      .then(snap => snap.val());
+    if (!playerExists) return false;
+
+    await admin.database()
+      .ref(`/events/${id}/players/${playerID}`)
+      .update({ dropped: true });
+
+    const player = await admin.database()
+      .ref(`/events/${id}/players/${playerID}`)
+      .once('value')
+      .then(snap => snap.val());
+
+    return player;
   },
   async delete(id) {
     const eventItem = await admin.database()

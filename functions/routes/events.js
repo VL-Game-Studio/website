@@ -75,18 +75,19 @@ router.post('/signup/:id', async (req, res) => {
   }
 });
 
-router.get('/pair/:id', async (req, res) => {
+router.get('/pairings/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const activeEvent = await events.get(id);
-    if (!activeEvent) return res.status(404).json({ message: `An event could not be found for: ${id}.` });
+    const activeEvent = await events.fetch(id);
+    if (!activeEvent) return res.status(404).json({ error: `An event could not be found for: ${id}.` });
 
-    const pairings = await events.pair(id);
+    const pairings = await events.pairings(id);
+    if (!pairings) return res.status(409).json({ error: 'There are not enough players to generate pairings.' });
 
     return res.status(200).json(pairings);
   } catch (error) {
-    console.error(`POST /events/pair/${id} >> ${error.stack}`);
+    console.error(`POST /events/pairings/${id} >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured generating pairings for event: ${id}.` });
   }
 });
@@ -98,12 +99,26 @@ router.post('/report/:id/:playerID', async (req, res) => {
 
   try {
     const activeEvent = await events.report({ id, playerID, result });
-    if (!activeEvent) return res.status(400).json({ error: `You are currently playing in event: ${id}.` });
+    if (!activeEvent) return res.status(400).json({ error: `You are not currently playing in event: ${id}.` });
 
     return res.status(200).json(activeEvent);
   } catch (error) {
     console.error(`POST /events/report/${id}/${playerID} ({ result: ${result} }) >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while processing event result for player: ${playerID} in event: ${id}.` });
+  }
+});
+
+router.get('/drop/:id/:playerID', async (req, res) => {
+  const { id, playerID } = req.params;
+
+  try {
+    const activeEvent = await events.drop({ id, playerID });
+    if (!activeEvent) return res.status(400).json({ error: `You are not currently playing in event: ${id}.` });
+
+    return res.status(200).json(activeEvent);
+  } catch (error) {
+    console.error(`GET /events/drop/${id}/${playerID} >> ${error.stack}`);
+    return res.status(500).json({ error: `An error occured while dropping player: ${playerID} in event: ${id}.` });
   }
 });
 
