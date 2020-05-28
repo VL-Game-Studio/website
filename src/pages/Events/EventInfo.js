@@ -49,7 +49,10 @@ function EventInfo(props) {
   }, [visible, event, id]);
 
   if (!event) return <NotFound />;
-  const { name, description, ...rest } = event;
+  const { name, description, date, time, platform, players = [] } = event;
+
+  let day = new Date(date);
+  day = new Date(day.getTime() + day.getTimezoneOffset() * 60000);
 
   const handleRedirect = () => {
     dispatch({ type: 'setRedirect', value: `/events/signup/${id}` });
@@ -80,16 +83,33 @@ function EventInfo(props) {
             <EventsInfoWrapper>
               <EventsInfoHeader status={status}>
                 <EventsInfoAside>
-                  {Object.values(rest)?.map(val => (val !== id && val !== event.players) && (
-                    <Tag key={val}>{val}</Tag>
-                  ))}
+                  <Tag>
+                    <label>Date:</label>
+                    {new Date(day).toLocaleDateString('default', {
+                      weekday: 'long',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </Tag>
+                  <Tag>
+                    <label>Time:</label>
+                    {time}
+                  </Tag>
+                  <Tag>
+                    <label>Platform:</label>
+                    {platform}
+                  </Tag>
+                  <Tag>
+                    <label>Players:</label>
+                    {Object.values(players).length}
+                  </Tag>
                   {isMobile && <Button style={{ marginTop: '50px' }} label="Signup" {...buttonProps} />}
                   <RelatedEvents>
                     <h4>Recent Events</h4>
                     {events?.map(({ id, name }, index) => index < 4 && (
                       <Anchor
                         key={id}
-                        secondar={1}
+                        secondary={1}
                         as={Link}
                         to={`/events/${id}`}
                       >
@@ -142,9 +162,13 @@ const EventsInfoHeader = styled.div`
     max-width: 960px;
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${props => props.theme.tablet}px) {
     flex-direction: column-reverse;
     max-width: 100%;
+  }
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    margin: 96px auto;
   }
 
   ${props => props.status === 'entering' && css`
@@ -154,10 +178,6 @@ const EventsInfoHeader = styled.div`
   ${props => props.status === 'entered' && css`
     opacity: 1;
   `}
-
-  @media (max-width: ${props => props.theme.mobile}px) {
-    margin: 96px auto;
-  }
 `;
 
 const EventsInfoAside = styled.div`
@@ -166,7 +186,7 @@ const EventsInfoAside = styled.div`
   flex-direction: column;
   width: 30%;
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${props => props.theme.tablet}px) {
     margin-top: 50px;
     width: 100%;
   }
@@ -191,6 +211,11 @@ const Tag = styled(Paragraph)`
     margin-right: 20px;
     width: 4px;
   }
+
+  label {
+    font-weight: 600;
+    margin-right: 10px;
+  }
 `;
 
 const RelatedEvents = styled.div`
@@ -214,7 +239,7 @@ const RelatedEvents = styled.div`
     margin: 7px 0;
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${props => props.theme.tablet}px) {
     margin-top: 50px;
 
     a {
@@ -246,7 +271,7 @@ const EventsInfo = styled.div`
     width: 0;
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${props => props.theme.tablet}px) {
     width: 100%;
 
     a {
