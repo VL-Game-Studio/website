@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Fragment } from 'react';
 import styled, { css } from 'styled-components/macro';
 import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
@@ -27,10 +27,17 @@ function EventSignup() {
   const [complete, setComplete] = useState();
   useScrollRestore();
 
-  const handleSignout = event => {
+  const handleSignout = useCallback(event => {
     dispatch({ type: 'setUser', value: null });
     dispatch({ type: 'setRedirect', value: `/events/signup/${id}` });
-  };
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    if (!user) {
+      handleSignout();
+      window.location = `https://discord.com/api/oauth2/authorize?client_id=${config.clientID}&redirect_uri=${encodeURI(config.redirect)}&response_type=code&scope=identify`;
+    }
+  }, [user, handleSignout]);
 
   const onSubmit = useCallback(async event => {
     event.preventDefault();
@@ -66,6 +73,7 @@ function EventSignup() {
   }, [id, user, username.value, name.value, mainboard.value, sideboard.value, submitting]);
 
   if (!id) return <NotFound />;
+
 
   return (
     <Fragment>
