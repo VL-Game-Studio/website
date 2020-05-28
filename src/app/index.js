@@ -16,6 +16,7 @@ import montserratBold from 'assets/fonts/montserrat-bold.woff2';
 const Home = lazy(() => import('pages/Home'));
 const Events = lazy(() => import('pages/Events'));
 const Auth = lazy(() => import('pages/Auth'));
+//const Blog = lazy(() => import('pages/Blog'));
 const NotFound = lazy(() => import('pages/NotFound'));
 
 export const AppContext = createContext();
@@ -134,6 +135,7 @@ function AppRoutes({ menuOpen }) {
                     <Route exact path="/" component={Home} />
                     <Route path="/events" component={Events} />
                     <Route path="/auth" component={Auth} />
+                    {/* <Route blog="/blog" component={Blog} /> */}
                     <Route component={NotFound} />
                   </Switch>
                 </Suspense>

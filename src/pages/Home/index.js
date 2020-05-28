@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import PageLayout from 'components/PageLayout';
-import Intro from 'pages/Intro';
-import About from 'pages/About';
+import Intro from './Intro';
+import About from './About';
 import Events from 'pages/Events';
 import GetStarted from 'pages/GetStarted';
 import { usePrefersReducedMotion, useRouteTransition } from 'hooks';
 
-export default function Home(props) {
+function Home(props) {
   const { status } = useRouteTransition();
   const { hash, state } = useLocation();
   const initHash = useRef(true);
@@ -131,3 +131,5 @@ export default function Home(props) {
     </Fragment>
   );
 }
+
+export default Home;

@@ -22,6 +22,7 @@
     "stylelint-processor-styled-components": "^1.10.0"
   },
   "dependencies": {
+    "@mdx-js/react": "^1.6.4",
     "eslint-plugin-promise": "^4.2.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -61,5 +62,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://videre.live"
+  "proxy": "https://projectmodern.gg"
 }
