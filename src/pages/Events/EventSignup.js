@@ -6,17 +6,19 @@ import { Transition } from 'react-transition-group';
 import { Title2 } from 'components/Type';
 import Button from 'components/Button';
 import TextArea from 'components/TextArea';
+import Anchor from 'components/Anchor';
 import PageLayout from 'components/PageLayout';
 import NotFound from 'pages/NotFound';
 import { AnimFade } from 'utils/style';
 import { useScrollRestore, useFormInput, useAppContext } from 'hooks';
 import { reflow } from 'utils/transition';
 import prerender from 'utils/prerender';
+import config from 'config';
 
 function EventSignup() {
   const { pathname } = useLocation();
   const id = pathname.replace('/events/signup/', '').replace('/', '');
-  const { user } = useAppContext();
+  const { user, dispatch } = useAppContext();
   const username = useFormInput('');
   const name = useFormInput('');
   const mainboard = useFormInput('');
@@ -24,6 +26,11 @@ function EventSignup() {
   const [submitting, setSubmitting] = useState();
   const [complete, setComplete] = useState();
   useScrollRestore();
+
+  const handleSignout = event => {
+    dispatch({ type: 'setUser', value: null });
+    dispatch({ type: 'setRedirect', value: `/events/signup/${id}` });
+  };
 
   const onSubmit = useCallback(async event => {
     event.preventDefault();
@@ -86,7 +93,12 @@ function EventSignup() {
                       <FormLabel>Decklist</FormLabel>
                       <FormTextArea {...mainboard} placeholder="Mainboard" required />
                       <FormTextArea {...sideboard} placeholder="Sideboard" />
-                      <Button label="Submit" />
+                      <SubmitGrid>
+                        <Button label="Submit" />
+                        {user &&
+                          <Comment>Signed in as {user.username}#{user.discriminator}. <Anchor secondary href={`https://discord.com/api/oauth2/authorize?client_id=${config.clientID}&redirect_uri=${encodeURI(config.redirect)}&response_type=code&scope=identify`} onClick={handleSignout}>Not you?</Anchor></Comment>
+                        }
+                      </SubmitGrid>
                     </Form>
                   </EventsSignupContent>
                 </EventsSignupContainer>
@@ -181,17 +193,9 @@ const Form = styled.form`
   flex-direction: column;
   margin-top: 100px;
 
-  button {
-    margin-top: 50px;
-  }
-
   @media (max-width: ${props => props.theme.mobile}px) {
     margin-top: 50px;
     width: 100%;
-
-    button {
-      margin-top: 30px;
-    }
   }
 `;
 
@@ -250,6 +254,30 @@ const FormTextArea = styled(TextArea)`
   ${inputStyles}
   height: 140px;
   margin-bottom: 20px;
+`;
+
+const SubmitGrid = styled(HalvedGrid)`
+  grid-template-columns: 175px auto;
+  margin-top: 50px;
+
+  @media (max-width: ${props => props.theme.mobile}px) {
+    margin-top: 30px;
+    display: block;
+  }
+`;
+
+const Comment = styled.p`
+  &, a {
+    color: ${props => props.theme.colorText};
+    font-size: 16px;
+    letter-spacing: 0.05em;
+    line-height: 48px;
+
+    @media (max-width: ${props => props.theme.mobile}px) {
+      line-height: 26px;
+      margin-top: 20px;
+    }
+  }
 `;
 
 export default EventSignup;
