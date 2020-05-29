@@ -1,158 +1,71 @@
 import React, { memo } from 'react';
 import styled, { css } from 'styled-components/macro';
-import { Transition } from 'react-transition-group';
-import { Label, Title2, Paragraph } from 'components/Type';
+import { Title2, Paragraph } from 'components/Type';
 import { Link } from 'components/Link';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
-import { AnimFade } from 'utils/style';
-import { reflow } from 'utils/transition';
+import Hero from 'pages/Hero';
 
 const EventsPanel = ({
-  id,
-  titleId,
-  sectionRef,
-  visible,
-  events,
   alternate,
+  label = 'Active Events',
+  title = 'New Tournaments Every Day',
+  altText = 'There aren\'t any active events right now.',
+  events,
   ...rest
 }) => (
-  <EventsWrapper
-    ref={sectionRef}
-    id={id}
-    aria-labelledby={titleId}
-    tabIndex={-1}
+  <EventsHero
+    alternate={alternate}
+    label={!alternate && label}
+    title2={title}
     {...rest}
   >
-    <Transition
-      in={visible}
-      timeout={4000}
-      onEnter={reflow}
-    >
-      {status => (
-        <EventsContainer status={status}>
-          <EventsContent alternate={alternate}>
-            {!alternate && <Label>Active Events</Label>}
-            <Title2 id={titleId}>{alternate ? 'Active Events' : 'New Tourmaments Every Day'}</Title2>
-            <Tournaments alternate={alternate}>
-              {(!events || events.length === 0) && <Paragraph>There aren't any active events right now.</Paragraph>}
-              {events.length > 0 && events?.map(({ id, name, description }) => (
-                <Tournament
-                  key={id}
-                  to={`/events/${id}`}
-                  aria-label={name}
-                >
-                  <TournamentName>
-                    <span>{name}</span>
-                    <div></div>
-                  </TournamentName>
-                  <TournamentInfo>{description}</TournamentInfo>
-                  <Icon icon="plus" />
-                </Tournament>
-              ))}
-            </Tournaments>
-            {!alternate && <Button to="/events" label="All Events" />}
-          </EventsContent>
-        </EventsContainer>
-      )}
-    </Transition>
-  </EventsWrapper>
+    <Tournaments alternate={alternate}>
+      {(!events || events.length === 0) && <Paragraph>{altText}</Paragraph>}
+      {events.length > 0 && events?.map(({ id, name, description }) => (
+        <Tournament
+          key={id}
+          to={`/events/${id}`}
+          aria-label={name}
+        >
+          <TournamentName>
+            <span>{name}</span>
+            <div></div>
+          </TournamentName>
+          <TournamentInfo>{description}</TournamentInfo>
+          <Icon icon="plus" />
+        </Tournament>
+      ))}
+    </Tournaments>
+    {!alternate && <Button to="/events" label="All Events" />}
+  </EventsHero>
 );
 
-const EventsWrapper = styled.section`
-  align-items: center;
+const EventsHero = styled(Hero)`
+  display: flex;
   background: ${props => props.theme.colorBackgroundSecondary};
-  display: flex;
-  padding: 0 50px;
-
-  @media (max-width: ${props => props.theme.mobile}px) {
-    padding: 0 20px;
-  }
-`;
-
-const EventsContainer = styled.div`
-  margin: 0 auto;
-  max-width: 1200px;
-  opacity: 0;
-  width: 100%;
-
-  @media (max-width: ${props => props.theme.desktop}px) {
-    max-width: 1080px;
-  }
-
-  @media (max-width: ${props => props.theme.laptop}px) {
-    max-width: 960px;
-  }
-
-  @media (max-width: ${props => props.theme.mobile}px) {
-    max-width: 100%;
-  }
-
-  ${props => props.status === 'entering' && css`
-    animation: ${css`${AnimFade} 0.6s ease 0.2s forwards`};
-  `}
-
-  ${props => props.status === 'entered' && css`
-    opacity: 1;
-  `}
-`;
-
-const EventsContent = styled.div`
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  margin: 180px 0;
-  padding-left: 50px;
-
-  ${Label} {
-    left: -50px;
-    position: relative;
-  }
 
   ${Title2} {
-    margin-top: 40px;
     max-width: 564px;
-
-    ${props => props.alternate && css`
-      align-self: flex-end;
-      margin-top: 0;
-    `}
+    width: auto;
   }
 
   a {
     margin: 60px auto 0;
   }
 
-  @media (max-width: ${props => props.theme.tablet}px) {
-    padding-left: 35px;
-
-    ${Label} {
-      left: -35px;
-    }
-  }
-
   @media (max-width: ${props => props.theme.mobile}px) {
-    margin: 96px 0;
-    padding-left: 0;
-
-    ${Label} {
-      left: 0;
-    }
-
     ${Title2} {
-      margin-top: 20px;
       max-width: none;
-
-      ${props => props.alternate && css`
-        align-self: flex-start;
-        margin-top: 0;
-      `}
-    }
-
-    a {
-      margin: 45px 0 0;
     }
   }
+
+  ${props => props.alternate && css`
+    ${Title2} {
+      align-self: flex-end;
+      margin-top: 0;
+    }
+  `}
 `;
 
 const Tournaments = styled.div`
@@ -172,11 +85,8 @@ const Tournaments = styled.div`
   }
 
   @media (max-width: ${props => props.theme.mobile}px) {
+    align-self: flex-start;
     max-width: none;
-
-    ${props => !props.alternate && css`
-      align-self: flex-start;
-    `}
   }
 `;
 

@@ -1,16 +1,17 @@
-import React, { useState, useEffect, useRef, Fragment, memo } from 'react';
+import React, { useState, useRef, useEffect, Fragment, memo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import PageLayout from 'components/PageLayout';
 import Hero from 'pages/Hero';
-import Events from '.';
+import Events from 'pages/Events';
 import GetStarted from 'pages/GetStarted';
 import { useScrollRestore } from 'hooks';
+import prerender from 'utils/prerender';
 
-function AllEvents(props) {
-  const { events } = props;
+function Metagame() {
   const [visibleSections, setVisibleSections] = useState([]);
   const eventsList = useRef();
   const getStarted = useRef();
+  const [events, setEvents] = useState([]);
   useScrollRestore();
 
   useEffect(() => {
@@ -36,20 +37,41 @@ function AllEvents(props) {
     };
   }, [visibleSections]);
 
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const response = await fetch('/functions/events', {
+          method: 'GET',
+          mode: 'cors',
+        });
+        if (response.status !== 200) return false;
+
+        const data = await response.json();
+
+        return data && setEvents(Object.values(data).filter(({ date }) => new Date(date) < new Date()));
+      } catch (error) {
+        return console.error(error.message);
+      }
+    }
+
+    if (!prerender) fetchEvents();
+  }, []);
+
   return (
     <Fragment>
       <Helmet
-        title="Events - Project Modern"
+        title="Metagame - Project Modern"
       />
       <PageLayout>
         <Hero
-          label="Events"
-          title="Level up your skills with daily tournaments"
+          label="Metagame"
+          title="Recent Events and Metagame"
         />
         <Events
           alternate
           id="events"
-          title="Active Events"
+          title="Recent Events"
+          altText="There aren't any recent events right now."
           events={events}
           sectionRef={eventsList}
           visible={visibleSections.includes(eventsList.current)}
@@ -64,4 +86,4 @@ function AllEvents(props) {
   );
 }
 
-export default memo(AllEvents);
+export default memo(Metagame);

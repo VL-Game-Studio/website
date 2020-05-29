@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/macro';
 import Icon from 'components/Icon';
-import { rgba } from 'utils/style'
+import { rgba } from 'utils/style';
 import { socials } from 'data/nav';
 
 function Socials(props) {

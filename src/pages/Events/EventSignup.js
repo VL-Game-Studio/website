@@ -183,6 +183,12 @@ const EventsSignupContent = styled.div`
     width: 56%;
   }
 
+  @media (max-width: ${props => props.theme.laptop}px) {
+    ${Title2} {
+      width: 70%;
+    }
+  }
+
   @media (max-width: ${props => props.theme.tablet}px) {
     ${Title2} {
       width: 100%;
