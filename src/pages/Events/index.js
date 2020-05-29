@@ -23,7 +23,7 @@ function Events(props) {
 
         const data = await response.json();
 
-        return data && setEvents(Object.values(data));
+        return data && setEvents(Object.values(data).filter(({ date }) => new Date(date) > new Date()));
       } catch (error) {
         return console.error(error.message);
       }
