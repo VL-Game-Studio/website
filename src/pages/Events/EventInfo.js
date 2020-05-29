@@ -82,12 +82,12 @@ function EventInfo(props) {
           {status => (
             <EventsInfoWrapper>
               <EventsInfoHeader status={status}>
-                <EventsInfo>
+                <InfoPanel>
                   <Title2>{name}</Title2>
                   <Paragraph>{description}</Paragraph>
                   {!isMobile && <Button label="Signup" {...buttonProps} />}
-                </EventsInfo>
-                <EventsInfoAside>
+                </InfoPanel>
+                <InfoPanel>
                   <div>
                     <Tag>
                       <label>Date:</label>
@@ -124,7 +124,7 @@ function EventInfo(props) {
                       </Anchor>
                     ))}
                   </RelatedEvents>
-                </EventsInfoAside>
+                </InfoPanel>
               </EventsInfoHeader>
             </EventsInfoWrapper>
           )}
@@ -150,7 +150,8 @@ const EventsInfoWrapper = styled.div`
 `;
 
 const EventsInfoHeader = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
   margin: 180px auto;
   max-width: 1200px;
   opacity: 0;
@@ -165,8 +166,8 @@ const EventsInfoHeader = styled.div`
   }
 
   @media (max-width: ${props => props.theme.tablet}px) {
+    grid-template-columns: 1fr;
     max-width: 100%;
-    flex-direction: column;
   }
 
   @media (max-width: ${props => props.theme.mobile}px) {
@@ -182,16 +183,41 @@ const EventsInfoHeader = styled.div`
   `}
 `;
 
-const EventsInfoAside = styled.div`
-  align-items: flex-end;
+const InfoPanel = styled.div`
+  align-items: flex-start;
   display: flex;
   flex-direction: column;
-  width: 30%;
+  position: relative;
+
+  :first-of-type {
+    ${Paragraph} {
+      margin-top: 30px;
+
+      :first-of-type {
+        margin-top: 50px;
+      }
+    }
+
+    a {
+      bottom: 0;
+      margin-top: 60px;
+      position: absolute;
+      width: 0;
+    }
+  }
 
   @media (max-width: ${props => props.theme.tablet}px) {
-    align-items: flex-start;
-    margin-top: 50px;
     width: 100%;
+    margin-top: 50px;
+
+    :first-of-type {
+      margin-top: 0;
+
+      a {
+        margin-top: 45px;
+        position: relative;
+      }
+    }
   }
 `;
 
@@ -251,34 +277,6 @@ const RelatedEvents = styled.div`
       :first-of-type {
         margin-top: 0;
       }
-    }
-  }
-`;
-
-const EventsInfo = styled.div`
-  display: grid;
-  flex-direction: column;
-  width: 70%;
-
-  ${Paragraph} {
-    margin-top: 30px;
-
-    :first-of-type {
-      margin-top: 50px;
-    }
-  }
-
-  a {
-    align-self: flex-end;
-    margin-top: 60px;
-    width: 0;
-  }
-
-  @media (max-width: ${props => props.theme.tablet}px) {
-    width: 100%;
-
-    a {
-      margin-top: 45px;
     }
   }
 `;

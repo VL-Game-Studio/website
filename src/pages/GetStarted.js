@@ -4,6 +4,7 @@ import Hero from 'pages/Hero';
 const GetStarted = ({ accent, ...rest }) => (
   <Hero
     center
+    accent={accent}
     label="Get Started"
     title2="Ready to Play?"
     button={{

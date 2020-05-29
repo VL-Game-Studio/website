@@ -74,7 +74,6 @@ const Tournaments = styled.div`
   grid-row-gap: 20px;
   margin: 20px 0 0;
   max-width: 624px;
-  padding-right: 12px;
   width: 100%;
 
   svg {
@@ -86,7 +85,12 @@ const Tournaments = styled.div`
 
   @media (max-width: ${props => props.theme.mobile}px) {
     align-self: flex-start;
+    margin-top: 35px;
     max-width: none;
+
+    svg {
+      top: 30px;
+    }
   }
 `;
 
@@ -130,6 +134,7 @@ const Tournament = styled(Link)`
   height: 145px;
   justify-content: center;
   margin: 0!important;
+  padding-right: 12px;
   position: relative;
   text-decoration: none;
   width: 100%;

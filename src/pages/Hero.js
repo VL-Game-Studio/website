@@ -11,6 +11,7 @@ import prerender from 'utils/prerender';
 function Hero({
   children,
   dark,
+  accent,
   center,
   id,
   sectionRef,
@@ -32,6 +33,7 @@ function Hero({
   return (
     <HeroWrapper
       dark={dark}
+      accent={accent}
       ref={sectionRef}
       id={id}
       aria-labelledby={titleId}
@@ -74,6 +76,14 @@ const HeroWrapper = styled.section`
   @media (max-width: ${props => props.theme.mobile}px) {
     padding: 0 20px;
   }
+
+  ${props => props.accent && css`
+    background: ${props => props.theme.colorAccent};
+
+    ${Label}, ${Title}, ${Title2}, ${Paragraph} {
+      color: ${props => props.theme.colorWhite};
+    }
+  `}
 `;
 
 const HeroContainer = styled.div`
@@ -178,7 +188,9 @@ const HeroContent = styled.div`
     }
 
     ${Title2}, ${Paragraph} {
-      margin-top: 20px;
+      &, :first-of-type {
+        margin-top: 20px;
+      }
     }
 
     a {
