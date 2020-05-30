@@ -122,6 +122,20 @@ router.get('/drop/:id/:playerID', async (req, res) => {
   }
 });
 
+router.get('/fire/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const activeEvent = await events.fire(id);
+    if (!activeEvent) return res.status(404).json({ error: `An event could not be found for: ${id}.` });
+
+    return res.status(200).json(activeEvent);
+  } catch (error) {
+    console.error(`POST /events/fire/${id} >> ${error.stack}`);
+    return res.status(500).json({ error: `An error occured while firing event: ${id}.` });
+  }
+});
+
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 

@@ -23,7 +23,7 @@ function Events(props) {
 
         const data = await response.json();
 
-        return data && setEvents(Object.values(data).filter(({ date }) => new Date(date) > new Date()));
+        return setEvents(Object.values(data).filter(({ fired }) => !fired));
       } catch (error) {
         return console.error(error.message);
       }

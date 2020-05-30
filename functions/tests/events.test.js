@@ -118,6 +118,16 @@ describe('events', () => {
     });
   });
 
+  it('fires event', async () => {
+    const { id } = testEvent;
+
+    const res = await request(app)
+      .get(`/events/fire/${id}`);
+
+    expect(res.statusCode).toEqual(200);
+    testEvent.fired = true;
+  });
+
   it('generates pairings', async () => {
     const { id } = testEvent;
 

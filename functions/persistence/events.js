@@ -35,6 +35,13 @@ const events = {
     return eventItem;
   },
   async signup({ id, player, username, deckID }) {
+    const activeEvent = await admin.database()
+      .ref(`/events/${id}`)
+      .once('value')
+      .then(snap => snap.val());
+    if (!activeEvent) throw new Error(`Event: ${id} does not exist.`);
+    if (activeEvent.fired) throw new Error(`Event: ${id} has already fired.`);
+
     await admin.database()
       .ref(`/events/${id}/players/${player}`)
       .set({ id: player, player, username, deckID });
@@ -47,11 +54,16 @@ const events = {
     return playerReceipt;
   },
   async pairings(id) {
-    const players = await admin.database()
-      .ref(`/events/${id}/players`)
+    const activeEvent = await admin.database()
+      .ref(`/events/${id}`)
       .once('value')
-      .then(snap => Object.values(snap.val()));
-    if (players.length < 2) return null;
+      .then(snap => snap.val());
+    if (!activeEvent) throw new Error(`Event: ${id} does not exist.`);
+
+    const { fired, players = [] } = activeEvent;
+    if (!fired) throw new Error(`Event: ${id} has not fired.`);
+
+    if (Object.values(players).length < 2) return null;
 
     // Remove dropped players and sort by points (descending order)
     const sortedPlayers = players
@@ -111,7 +123,7 @@ const events = {
     	}
     });
 
-    const droppedPlayers = players.filter(({ dropped }) => dropped);
+    const droppedPlayers = Object.values(players).filter(({ dropped }) => dropped);
     const updatedPlayers = {};
     sortedPlayers.concat(droppedPlayers).forEach(player => updatedPlayers[player.id] = player);
 
@@ -170,6 +182,24 @@ const events = {
         points: parseInt(oppPoints) + ((parseInt(losses) === 2 ? 3 : parseInt(losses) === 1 ? 1 : 0) + parseInt(ties)),
         matches: opponentMatchHistory,
       });
+
+    const activeEvent = await admin.database()
+      .ref(`/events/${id}`)
+      .once('value')
+      .then(snap => snap.val());
+
+    return activeEvent;
+  },
+  async fire(id) {
+    const eventExists = await admin.database()
+      .ref(`/events/${id}`)
+      .once('value')
+      .then(snap => snap.val());
+    if (!eventExists) return false;
+
+    await admin.database()
+      .ref(`/events/${id}`)
+      .update({ fired: true });
 
     const activeEvent = await admin.database()
       .ref(`/events/${id}`)

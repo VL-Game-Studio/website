@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, Fragment, memo } from 'react';
+import React, { useState, useRef, useEffect, Fragment } from 'react';
 import { Helmet } from 'react-helmet-async';
 import PageLayout from 'components/PageLayout';
 import Hero from 'pages/Hero';
@@ -48,7 +48,7 @@ function Metagame() {
 
         const data = await response.json();
 
-        return data && setEvents(Object.values(data).filter(({ date }) => new Date(date) < new Date()));
+        return setEvents(Object.values(data).filter(({ fired }) => fired));
       } catch (error) {
         return console.error(error.message);
       }
@@ -86,4 +86,4 @@ function Metagame() {
   );
 }
 
-export default memo(Metagame);
+export default Metagame;
