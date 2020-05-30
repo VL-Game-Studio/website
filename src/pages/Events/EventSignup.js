@@ -35,7 +35,7 @@ function EventSignup() {
   useEffect(() => {
     if (!user) {
       handleSignout();
-      window.location = `https://discord.com/api/oauth2/authorize?client_id=${config.clientID}&redirect_uri=${encodeURI(config.redirect)}&response_type=code&scope=identify`;
+      window.location = `https://discord.com/api/oauth2/authorize?client_id=${config.clientID}&redirect_uri=${config.redirect}&response_type=code&scope=identify`;
     }
   }, [user, handleSignout]);
 
