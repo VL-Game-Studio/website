@@ -140,25 +140,24 @@ const events = {
       .then(snap => snap.val());
     if (!player) return false;
 
-    const { points = 0, matches = [], opponents = [] } = player;
+    const { opponents = [], points = 0, matches = [] } = player;
     const [wins, losses, ties] = result.split('-');
+
     const opponentID = Object.values(opponents).length > 0 && Object.values(opponents).pop();
     if (!opponentID) throw Error('You are not in an active match.');
-
-    const matchHistory = [
-      ...Object.values(matches),
-      {
-        round: Object.values(matches).length + 1,
-        record: `${wins}-${losses}-${ties}`,
-        opponent: opponentID,
-      },
-    ];
 
     await admin.database()
       .ref(`/events/${id}/players/${playerID}`)
       .update({
-        points: parseInt(points) + ((parseInt(wins) === 2 ? 3 : parseInt(wins) === 1 ? 1 : 0) + parseInt(ties)),
-        matches: matchHistory,
+        points: parseInt(points) + ((parseInt(wins) === 2 ? 3 : parseInt(wins) === 1 ? 1 : 0) + parseInt(ties))
+      });
+
+    await admin.database()
+      .ref(`/events/${id}/players/${playerID}/matches/${opponents.length}`)
+      .set({
+        round: Object.values(opponents).length + 1,
+        record: `${wins}-${losses}-${ties}`,
+        opponent: opponentID,
       });
 
     const opponent = await admin.database()
@@ -166,21 +165,20 @@ const events = {
       .once('value')
       .then(snap => snap.val());
 
-    const { matches: oppMatches = [], points: oppPoints = 0 } = opponent;
-    const opponentMatchHistory = [
-      ...Object.values(oppMatches),
-      {
-        round: Object.values(oppMatches).length + 1,
-        record: `${losses}-${wins}-${ties}`,
-        opponent: playerID,
-      }
-    ];
+    const { points: oppPoints = 0, opponents: oppOpponents, matches: oppMatches = [] } = opponent;
 
     await admin.database()
       .ref(`/events/${id}/players/${opponentID}`)
       .update({
         points: parseInt(oppPoints) + ((parseInt(losses) === 2 ? 3 : parseInt(losses) === 1 ? 1 : 0) + parseInt(ties)),
-        matches: opponentMatchHistory,
+      });
+
+    await admin.database()
+      .ref(`/events/${id}/players/${opponentID}/matches/${oppOpponents.length}`)
+      .set({
+        round: Object.values(oppMatches).length + 1,
+        record: `${losses}-${wins}-${ties}`,
+        opponent: playerID,
       });
 
     const activeEvent = await admin.database()
