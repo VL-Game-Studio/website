@@ -65,6 +65,22 @@ const events = {
 
     if (Object.values(players).length < 2) return null;
 
+    // Calculate players' points
+    players.map(player => {
+      let wins = 0, ties = 0;
+
+      if (player.matches) {
+        Object.values(player.matches).forEach(({ result }) => {
+          const stats = result.split('-');
+
+          wins += parseInt(stats[0]);
+          ties += parseInt(stats[2]);
+        });
+      }
+
+      return player.points = (parseInt(wins) === 2 ? 3 : parseInt(wins) === 1 ? 1 : 0) + parseInt(ties);
+    });
+
     // Remove dropped players and sort by points (descending order)
     const sortedPlayers = players
       .filter(({ dropped }) => !dropped)
@@ -125,7 +141,7 @@ const events = {
 
     const droppedPlayers = Object.values(players).filter(({ dropped }) => dropped);
     const updatedPlayers = {};
-    sortedPlayers.concat(droppedPlayers).forEach(player => updatedPlayers[player.id] = player);
+    sortedPlayers.concat(droppedPlayers).map(({ points, ...player }) => player).forEach(player => updatedPlayers[player.id] = player);
 
     await admin.database()
       .ref(`/events/${id}`)
@@ -140,22 +156,16 @@ const events = {
       .then(snap => snap.val());
     if (!player) return false;
 
-    const { opponents = [], points = 0, matches = [] } = player;
+    const { opponents = [], matches = [] } = player;
     const [wins, losses, ties] = result.split('-');
 
     const opponentID = Object.values(opponents).length > 0 && Object.values(opponents).pop();
     if (!opponentID) throw Error('You are not in an active match.');
 
     await admin.database()
-      .ref(`/events/${id}/players/${playerID}`)
-      .update({
-        points: parseInt(points) + ((parseInt(wins) === 2 ? 3 : parseInt(wins) === 1 ? 1 : 0) + parseInt(ties))
-      });
-
-    await admin.database()
       .ref(`/events/${id}/players/${playerID}/matches/${opponents.length}`)
       .set({
-        round: Object.values(opponents).length + 1,
+        round: Object.values(opponents).length,
         record: `${wins}-${losses}-${ties}`,
         opponent: opponentID,
       });
@@ -165,18 +175,12 @@ const events = {
       .once('value')
       .then(snap => snap.val());
 
-    const { points: oppPoints = 0, opponents: oppOpponents, matches: oppMatches = [] } = opponent;
-
-    await admin.database()
-      .ref(`/events/${id}/players/${opponentID}`)
-      .update({
-        points: parseInt(oppPoints) + ((parseInt(losses) === 2 ? 3 : parseInt(losses) === 1 ? 1 : 0) + parseInt(ties)),
-      });
+    const { opponents: oppOpponents, matches: oppMatches = [] } = opponent;
 
     await admin.database()
       .ref(`/events/${id}/players/${opponentID}/matches/${oppOpponents.length}`)
       .set({
-        round: Object.values(oppMatches).length + 1,
+        round: Object.values(oppMatches).length,
         record: `${losses}-${wins}-${ties}`,
         opponent: playerID,
       });

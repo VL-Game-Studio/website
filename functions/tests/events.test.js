@@ -152,9 +152,9 @@ describe('events', () => {
 
     expect(res.statusCode).toEqual(200);
 
-    const opponent = res.body.players[playerID].opponents.pop();
-    expect(res.body.players[playerID].points).toEqual(3);
-    expect(res.body.players[opponent].points).toEqual(0);
+    const opponentID = res.body.players[playerID].opponents.pop();
+    expect(res.body.players[playerID].matches['1'].record).toEqual('2-0-0');
+    expect(res.body.players[opponentID].matches['1'].record).toEqual('0-2-0');
   });
 
   it('deletes event', async () => {
