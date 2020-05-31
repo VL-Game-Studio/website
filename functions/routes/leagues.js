@@ -30,15 +30,13 @@ router.get('/:id', async (req, res) => {
 
 router.post('/:id', async (req, res) => {
   const { id } = req.params;
-  const { deckID, format, platform, ...rest } = req.body;
+  const { deckID, platform, ...rest } = req.body;
   if (!deckID) return res.status(400).json({ error: 'DeckID is a required field.' });
-  if (!format) return res.status(400).json({ error: 'Format is a required field.' });
   if (!platform) return res.status(400).json({ error: 'Platform is a required field.' });
 
   try {
     const league = await leagues.create({
       id,
-      format,
       platform,
       deckID,
       ...rest
@@ -47,7 +45,7 @@ router.post('/:id', async (req, res) => {
 
     return res.status(201).json(league);
   } catch (error) {
-    console.error(`POST /leagues/${id} ({ deckID: ${deckID}, rest: ${rest} }) >> ${error.stack}`);
+    console.error(`POST /leagues/${id} ({ deckID: ${deckID}, platform: ${platform} }) >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while creating league entry for: ${id}.` });
   }
 });
@@ -56,6 +54,9 @@ router.get('/pair/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
+    const leagueExists = await leagues.fetch(id);
+    if (!leagueExists) return res.status(404).json({ error: 'You are currently not in a league.' });
+
     const opponent = await leagues.pair(id);
     if (!opponent) return res.status(409).json({ error: `Could not find player to pair with: ${id}.` });
 
@@ -72,10 +73,13 @@ router.post('/report/:id', async (req, res) => {
   if (!result) return res.status(400).json({ error: 'Result is a required field.' });
 
   try {
-    const league = await leagues.report({ id, result });
-    if (!league) return res.status(400).json({ error: 'You are currently not in a league.' });
+    const leagueExists = await leagues.fetch(id);
+    if (!leagueExists) return res.status(404).json({ error: 'You are currently not in a league.' });
 
-    return res.status(200).json(league);
+    const report = await leagues.report({ id, result });
+    if (!report) return res.status(403).json({ error: 'You have not yet been paired for your league.' });
+
+    return res.status(200).json(report);
   } catch (error) {
     console.error(`POST /leagues/report/${id} ({ result: ${result} }) >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while processing league result for player: ${id}.` });

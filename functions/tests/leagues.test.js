@@ -3,34 +3,10 @@ const app = require('.');
 
 describe('Leagues', () => {
   const testLeague = {
-    id: '123',
-    format: 'modern',
-    platform: 'mtgo',
-    deckID: 'TestDeck',
-    points: 9,
-    matches: [
-      {
-        round: 1,
-        record: '2-0-0',
-        opponent: 'Opponent #1'
-      },
-      {
-        round: 2,
-        record: '2-0-0',
-        opponent: 'Opponent #2'
-      },
-      {
-        round: 3,
-        record: '2-0-0',
-        opponent: 'Opponent #3'
-      },
-    ],
-    opponents: [
-      'Opponent #1',
-      'Opponent #2',
-      'Opponent #3',
-      'Opponent #4',
-    ],
+    id: '1',
+    username: 'TestPlayer',
+    platform: 'testPlatform',
+    deckID: 'TestDeck'
   };
 
   it('creates league', async () => {
@@ -73,6 +49,19 @@ describe('Leagues', () => {
     });
   });
 
+  it('gets next pairing', async () => {
+    const { id, ...rest } = testLeague;
+
+    await request(app)
+      .post(`/leagues/2`)
+      .send(rest);
+
+    const res = await request(app)
+      .get(`/leagues/pair/${id}`);
+
+    expect(res.statusCode).toEqual(200);
+  });
+
   it('reports league match result', async () => {
     const { id } = testLeague;
 
@@ -82,20 +71,10 @@ describe('Leagues', () => {
 
     expect(res.statusCode).toEqual(200);
     testLeague.matches = res.body.matches;
-    testLeague.points = res.body.points;
     Object.keys(testLeague).forEach(key => {
       expect(res.body).toHaveProperty(key);
       expect(res.body[key]).toEqual(testLeague[key]);
     });
-  });
-
-  it('gets next pairing', async () => {
-    const { id } = testLeague;
-
-    const res = await request(app)
-      .get(`/leagues/pair/${id}`);
-
-    expect(res.statusCode).toEqual(409);
   });
 
   it('deletes league', async () => {
@@ -103,6 +82,9 @@ describe('Leagues', () => {
 
     const res = await request(app)
       .delete(`/leagues/${id}`);
+
+    await request(app)
+      .delete('/leagues/2');
 
     expect(res.statusCode).toEqual(200);
     Object.keys(testLeague).forEach(key => {

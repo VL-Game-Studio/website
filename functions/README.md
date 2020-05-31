@@ -31,9 +31,9 @@ Path | Method | Parameters | Description
 
 Path | Method | Parameters | Description
 --- | --- | --- | ---
-   /leagues/ | GET | *none* | Fetches all league entries for every format and platform, returning an object.
+   /leagues/ | GET | *none* | Fetches all league entries, returning an object.
    /leagues/:id | GET | *none* | Fetches a single league entry by id, returning an object.
-   /leagues/:id | POST | `id` `format` `platform` `deckID` | Creates or updates a league entry with player id, format, platform, and deckid, returning an object.
+   /leagues/:id | POST | `id` `platform` `deckID` | Creates or updates a league entry with player id, platform, and deckID, returning an object.
    /leagues/pair/:id | GET | *none* | Generates and binds next league pairing.
    /leagues/report/:id | POST | `record` | Updates match history and generates performance track from record.
    /leagues/:id | DELETE | *none* | Fetches and deletes a league entry by id, returning an object.
