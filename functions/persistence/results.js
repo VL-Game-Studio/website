@@ -17,27 +17,12 @@ const results = {
 
     return result;
   },
-  async update({ id, ...rest }) {
-    await admin.database()
-      .ref(`/results/${id}`)
-      .update(rest);
-
-    const result = await admin.database()
-      .ref(`/results/${id}`)
-      .once('value')
-      .then(snap => snap.val());
-
-    return result;
-  },
-  async create(props) {
-    const id = await admin.database()
-      .ref('/results')
-      .push(props)
-      .then(({ key }) => key);
+  async set(props) {
+    const { id } = props;
 
     await admin.database()
       .ref(`/results/${id}`)
-      .update({ id });
+      .set(props);
 
     const result = await admin.database()
       .ref(`/results/${id}`)

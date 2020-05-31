@@ -54,6 +54,5 @@ Path | Method | Parameters | Description
 --- | --- | --- | ---
    /results/ | GET | *none* | Fetches all results, returning an object.
    /results/:id | GET | *none* | Fetches a single result by id, returning an object.
-   /results/ | POST | `id` `deckID` `matches` | Creates a result with player id, deckid, and match history, returning an object.
-   /results/:id | POST | `id` `deckID` `matches` | Updates a result with player id, deckid, and match history, returning an object.
+   /results/:id | POST | `id` `deckID` `matches` | Creates or updates a result with player id, deckid, and match history, returning an object.
    /results/:id | DELETE | *none* | Fetches and deletes a result by id, returning an object.

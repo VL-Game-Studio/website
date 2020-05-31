@@ -3,6 +3,7 @@ const app = require('.');
 
 describe('Results', () => {
   const testResult = {
+    id: 'test123',
     deckID: 'TestDeck',
     matches: [
       {
@@ -34,27 +35,11 @@ describe('Results', () => {
   };
 
   it('creates result', async () => {
-    const res = await request(app)
-      .post('/results')
-      .send(testResult);
-
-    expect(res.statusCode).toEqual(200);
-    Object.keys(testResult).forEach(key => {
-      expect(res.body).toHaveProperty(key);
-      expect(res.body[key]).toEqual(testResult[key]);
-    });
-
-    testResult.id = res.body.id;
-  });
-
-  it('updates result', async () => {
-    testResult.deckID = 'TestDeck#2';
-
-    const { id, ...rest } = testResult;
+    const { id } = testResult;
 
     const res = await request(app)
       .post(`/results/${id}`)
-      .send(rest);
+      .send(testResult);
 
     expect(res.statusCode).toEqual(200);
     Object.keys(testResult).forEach(key => {
@@ -97,9 +82,5 @@ describe('Results', () => {
       .delete(`/results/${id}`);
 
     expect(res.statusCode).toEqual(200);
-    Object.keys(testResult).forEach(key => {
-      expect(res.body).toHaveProperty(key);
-      expect(res.body[key]).toEqual(testResult[key]);
-    });
   });
 });
