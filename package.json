@@ -23,7 +23,9 @@
   },
   "dependencies": {
     "@mdx-js/react": "^1.6.4",
+    "babel-loader": "^8.1.0",
     "eslint-plugin-promise": "^4.2.1",
+    "mdx-loader": "^3.0.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-helmet-async": "^1.0.6",

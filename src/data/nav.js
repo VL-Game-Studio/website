@@ -12,6 +12,10 @@ export const navLinks = [
   {
     pathname: '/events',
     label: 'Events'
+  },
+  {
+    pathname: '/blog',
+    label: 'Blog'
   }
 ];
 

@@ -46,6 +46,20 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.post('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const activeEvent = await events.update({ ...req.body, id });
+    if (!activeEvent) return res.status(404).json({ message: `An event could not be found for: ${id}.` });
+
+    return res.status(200).json(activeEvent);
+  } catch (error) {
+    console.error(`POST /events/${id} >> ${error.stack}`);
+    return res.status(500).json({ error: `An error occured while updating event: ${id}.` });
+  }
+});
+
 router.post('/signup/:id', async (req, res) => {
   const { id } = req.params;
 

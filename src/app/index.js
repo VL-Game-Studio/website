@@ -17,8 +17,8 @@ const Home = lazy(() => import('pages/Home'));
 const Events = lazy(() => import('pages/Events'));
 const Auth = lazy(() => import('pages/Auth'));
 const Decks = lazy(() => import('pages/Decks'));
-//const Metagame = lazy(() => import('pages/Metagame'));
-//const Blog = lazy(() => import('pages/Blog'));
+const Metagame = lazy(() => import('pages/Metagame'));
+const Blog = lazy(() => import('pages/Blog'));
 const NotFound = lazy(() => import('pages/NotFound'));
 
 export const AppContext = createContext();
@@ -138,8 +138,8 @@ function AppRoutes({ menuOpen }) {
                     <Route path="/events" component={Events} />
                     <Route path="/auth" component={Auth} />
                     <Route path="/decks" component={Decks} />
-                    {/* <Route path="/metagame" component={Metagame} /> */}
-                    {/* <Route blog="/blog" component={Blog} /> */}
+                    <Route path="/metagame" component={Metagame} />
+                    <Route blog="/blog" component={Blog} />
                     <Route component={NotFound} />
                   </Switch>
                 </Suspense>

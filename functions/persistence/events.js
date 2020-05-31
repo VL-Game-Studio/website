@@ -66,7 +66,7 @@ const events = {
     if (Object.values(players).length < 2) return null;
 
     // Calculate players' points
-    players.map(player => {
+    Object.values(players).map(player => {
       let wins = 0, ties = 0;
 
       if (player.matches) {
@@ -82,7 +82,7 @@ const events = {
     });
 
     // Remove dropped players and sort by points (descending order)
-    const sortedPlayers = players
+    const sortedPlayers = Object.values(players)
       .filter(({ dropped }) => !dropped)
       .sort((a, b) => b.points - a.points);
 
@@ -227,6 +227,24 @@ const events = {
       .then(snap => snap.val());
 
     return player;
+  },
+  async update({ id, ...props }) {
+    const activeEvent = await admin.database()
+      .ref(`/events/${id}`)
+      .once('value')
+      .then(snap => snap.val());
+    if (!activeEvent) return false;
+
+    await admin.database()
+      .ref(`/events/${id}`)
+      .update(props);
+
+    const eventReceipt = await admin.database()
+      .ref(`/events/${id}`)
+      .once('value')
+      .then(snap => snap.val());
+
+    return eventReceipt;
   },
   async delete(id) {
     const eventItem = await admin.database()

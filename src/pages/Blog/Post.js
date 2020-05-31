@@ -1,14 +1,12 @@
-import React, { useRef } from 'react';
+import React, { Fragment } from 'react';
 import styled, { keyframes } from 'styled-components/macro';
 import { MDXProvider } from '@mdx-js/react';
 import { Transition } from 'react-transition-group';
 import { Helmet } from 'react-helmet-async';
-import { Title, Title2, Paragraph } from 'components/Type';
-import Icon from 'components/Icon';
+import { Title2, Paragraph } from 'components/Type';
 import ProgressiveImage from 'components/ProgressiveImage';
 import Anchor from 'components/Anchor';
-import Footer from 'components/Footer';
-import { AnimFade, rgba } from 'utils/style';
+import { AnimFade } from 'utils/style';
 import { useScrollRestore } from 'hooks';
 import { reflow } from 'utils/transition';
 import prerender from 'utils/prerender';
@@ -25,21 +23,10 @@ function PostWrapper({
   readTime,
   ...rest
 }) {
-  const contentRef = useRef();
   useScrollRestore();
 
-  const handleScrollIndicatorClick = event => {
-    event.preventDefault();
-
-    window.scrollTo({
-      top: contentRef.current.offsetTop,
-      left: 0,
-      behavior: 'smooth',
-    });
-  };
-
   return (
-    <PostArticle {...rest}>
+    <Fragment>
       <Helmet
         title={`Blog | ${title}`}
         meta={[{
@@ -47,61 +34,54 @@ function PostWrapper({
           content: description,
         }]}
       />
-      <PostHeader>
-        <PostHeaderText>
-          <Transition
-            appear
-            in={!prerender}
-            timeout={400}
-            onEnter={reflow}
-          >
-            {status => (
-              <PostDate>
-                <PostDateText status={status}>
-                  {new Date(date).toLocaleDateString('default', {
-                    year: 'numeric',
-                    month: 'long',
-                  })}
-                </PostDateText>
-              </PostDate>
-            )}
-          </Transition>
-          <PostTitle aria-label={title}>
-            {title.split(' ').map((word, index) => (
-              <PostTitleWordWrapper key={`${word}-${index}`}>
-                <PostTitleWord index={index}>
-                  {word}
-                  {index !== title.split(' ').length - 1 ? '\u00a0' : ''}
-                </PostTitleWord>
-              </PostTitleWordWrapper>
-            ))}
-          </PostTitle>
-          <PostBannerArrow
-            href="#postContent"
-            aria-label="Scroll to post content"
-            onClick={handleScrollIndicatorClick}
-          >
-            <Icon icon="arrowRight" />
-          </PostBannerArrow>
-          <PostBannerReadTime>{readTime}</PostBannerReadTime>
-        </PostHeaderText>
-        <PostBanner>
-          {(banner || bannerVideo) &&
-            <PostBannerImage
-              reveal
-              srcSet={banner}
-              videoSrc={bannerVideo}
-              placeholder={bannerPlaceholder}
-              alt={bannerAlt}
-            />
-          }
-        </PostBanner>
-      </PostHeader>
-      <PostContentWrapper id="postContent" ref={contentRef}>
-        <PostContent>{children}</PostContent>
-      </PostContentWrapper>
-      <Footer />
-    </PostArticle>
+      <PostArticle {...rest}>
+        <PostHeader>
+          <PostHeaderText>
+            <Transition
+              appear
+              in={!prerender}
+              timeout={400}
+              onEnter={reflow}
+            >
+              {status => (
+                <PostDate>
+                  <PostDateText status={status}>
+                    {new Date(date).toLocaleDateString('default', {
+                      year: 'numeric',
+                      month: 'long',
+                    })}
+                  </PostDateText>
+                </PostDate>
+              )}
+            </Transition>
+            <PostTitle aria-label={title}>
+              {title.split(' ').map((word, index) => (
+                <PostTitleWordWrapper key={`${word}-${index}`}>
+                  <PostTitleWord index={index}>
+                    {word}
+                    {index !== title.split(' ').length - 1 ? '\u00a0' : ''}
+                  </PostTitleWord>
+                </PostTitleWordWrapper>
+              ))}
+            </PostTitle>
+          </PostHeaderText>
+          <PostBanner>
+            {(banner || bannerVideo) &&
+              <PostBannerImage
+                reveal
+                srcSet={banner ? require(`articles/assets/${banner}`) : undefined}
+                videoSrc={bannerVideo ? require(`articles/assets/${bannerVideo}`) : undefined}
+                placeholder={bannerPlaceholder ? require(`articles/assets/${bannerPlaceholder}`) : undefined}
+                alt={bannerAlt}
+              />
+            }
+          </PostBanner>
+        </PostHeader>
+        <PostContentWrapper id="postContent">
+          <PostContent>{!prerender && children}</PostContent>
+        </PostContentWrapper>
+      </PostArticle>
+    </Fragment>
   );
 }
 
@@ -268,83 +248,6 @@ const PostBannerImage = styled(ProgressiveImage)`
   }
 `;
 
-const AnimMobileScrollIndicator = keyframes`
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-  100% {
-    transform: translateY(0);
-  }
-`;
-
-const PostBannerArrow = styled.a`
-  position: absolute;
-  bottom: 0;
-  left: -10px;
-  padding: 20px;
-  animation-name: ${AnimFade};
-  animation-timing-function: ${props => props.theme.ease1};
-  animation-duration: 0.6s;
-  animation-fill-mode: forwards;
-  animation-delay: 1s;
-  opacity: 0;
-
-  @media (prefers-reduced-motion: reduce) {
-    opacity: 1;
-  }
-
-  svg {
-    stroke: ${props => rgba(props.theme.colorText, 0.5)};
-    animation-name: ${AnimMobileScrollIndicator};
-    animation-duration: 1.5s;
-    animation-iteration-count: infinite;
-    transition-timing-function: cubic-bezier(0.8, 0.1, 0.27, 1);
-  }
-
-  @media (max-width: ${props => props.theme.tablet}px) {
-    left: -20px;
-  }
-
-  @media (max-width: ${props => props.theme.mobile}px) {
-    position: relative;
-    margin-top: 20px;
-    align-self: flex-start;
-  }
-`;
-
-const PostBannerReadTime = styled.div`
-  color: ${props => rgba(props.theme.colorText, 0.8)};
-  font-size: 16px;
-  position: absolute;
-  bottom: 10px;
-  right: 0;
-  padding: 20px 0;
-  display: grid;
-  align-items: center;
-  grid-template-columns: 60px 1fr;
-  grid-gap: 10px;
-  animation-name: ${AnimFade};
-  animation-timing-function: ${props => props.theme.ease1};
-  animation-duration: 0.6s;
-  animation-fill-mode: forwards;
-  animation-delay: 1s;
-  opacity: 0;
-
-  @media (prefers-reduced-motion: reduce) {
-    opacity: 1;
-  }
-
-  &::before {
-    content: '';
-    height: 2px;
-    background: ${props => rgba(props.theme.colorText, 0.4)};
-    display: block;
-  }
-`;
-
 const PostContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -353,7 +256,7 @@ const PostContentWrapper = styled.div`
 const PostContent = styled.div`
   width: 100%;
   align-self: center;
-  margin-top: 120px;
+  margin: 75px 0;
   animation-name: ${AnimFade};
   animation-timing-function: ${props => props.theme.ease1};
   animation-duration: 1.2s;
@@ -363,8 +266,32 @@ const PostContent = styled.div`
   display: grid;
   grid-template-columns: 1fr 100px 800px 100px 1fr;
 
-  ${Title}, ${Title2}, ${Paragraph} {
+  ${Title2}, ${Paragraph} {
     grid-column: 3;
+  }
+
+  ${Title2} {
+    font-size: 24px;
+  }
+
+  ul, li {
+    grid-column: 3;
+  }
+
+  ul {
+    padding: 30px 20px;
+  }
+
+  li {
+    margin-top: 12px;
+    font-size: 20px;
+    line-height: 36px;
+    letter-spacing: 0.03em;
+    font-weight: 400;
+  }
+
+  ${Paragraph} + ${Paragraph} {
+    margin-top: 30px;
   }
 
   & > pre {
@@ -377,22 +304,21 @@ const PostContent = styled.div`
 
   @media (max-width: 1320px) {
     grid-template-columns: 1fr 80px 740px 80px 1fr;
-    margin-top: 80px;
+    margin: 60px 0;
   }
 
   @media (max-width: ${props => props.theme.laptop}px) {
     grid-template-columns: 1fr 60px 680px 60px 1fr;
-    margin-top: 80px;
+    margin: 50px 0;
   }
 
   @media (max-width: 1096px) {
     grid-template-columns: 1fr 50px 660px 50px 1fr;
-    margin-top: 80px;
+    margin: 30px 0;
   }
 
   @media (max-width: ${props => props.theme.tablet}px) {
     grid-template-columns: 100%;
-    margin-top: 70px;
 
     & > pre {
       grid-column: 1;
@@ -400,7 +326,19 @@ const PostContent = styled.div`
   }
 
   @media (max-width: ${props => props.theme.mobile}px) {
-    margin-top: 60px;
+    margin: 20px 0;
+
+    ${Title2} {
+      font-size: 18px;
+    }
+
+    ${Paragraph} + ${Paragraph} {
+      margin-top: 20px;
+    }
+
+    li {
+      font-size: 16px;
+    }
   }
 `;
 
@@ -420,11 +358,10 @@ const Image = styled.img`
 
 const components = {
   wrapper: PostWrapper,
-  h1: Title,
   h2: Title2,
   p: Paragraph,
   img: props => <Image {...props} />,
-  a: props => <Anchor target="_blank" {...props} />,
+  a: props => <Anchor target="_blank" rel="noreferrer noopener" {...props} />,
 };
 
 function Post({ children }) {

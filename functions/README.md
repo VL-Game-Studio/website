@@ -8,6 +8,7 @@ Path | Method | Parameters | Description
 --- | --- | --- | ---
    /events/ | GET | *none* | Fetches all events, returning an object.
    /events/:id | GET | *none* | Fetches a single event by id, returning an object.
+   /events/:id | POST | `name` `description` `time` `date` `platform` | Updates a single event by id, returning an object.
    /events/ | POST | `name` `description` `time` `date` `platform` | Creates an event, returning an event object.
    /events/signup/:id | POST | `name` `username` `deckID` or `mainboard` `sideboard` | Generates and assigns a decklist to a player, adding player to the player queue, returning a player receipt.
    /events/fire/:id | GET | *none* | Fires an event to lockdown signup and enable pairings and other in-game actions.
