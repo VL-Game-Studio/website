@@ -10,20 +10,20 @@ export const navLinks = [
     label: 'About'
   },
   {
+    pathname: '/blog',
+    label: 'Blog'
+  },
+  {
     pathname: '/events',
     label: 'Events'
   },
-  {
-    pathname: '/blog',
-    label: 'Blog'
-  }
 ];
 
 export const socials = [
   {
-    href: '',
-    icon: 'instagram',
-    label: 'Instagram'
+    href: 'https://discord.gg/mjtTnr8',
+    icon: 'discord',
+    label: 'Discord'
   },
   {
     href: 'https://reddit.com/r/ProjectModern',

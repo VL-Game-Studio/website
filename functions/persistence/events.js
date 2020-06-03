@@ -17,15 +17,24 @@ const events = {
 
     return eventItem;
   },
-  async create(props) {
-    const id = await admin.database()
-      .ref('/events')
-      .push(props)
-      .then(({ key }) => key);
+  async create({ name, time, platform, ...rest }) {
+    const id = Date.parse(new Date(time));
+
+    const eventExists = await admin.database()
+      .ref(`/events/${id}`)
+      .once('value')
+      .then(snap => snap.val());
+    if (eventExists) return false;
 
     await admin.database()
       .ref(`/events/${id}`)
-      .update({ id });
+      .set({
+        id,
+        name,
+        time,
+        platform: platform ? platform.toUpperCase() : null,
+        ...rest
+      });
 
     const eventItem = await admin.database()
       .ref(`/events/${id}`)
@@ -34,20 +43,28 @@ const events = {
 
     return eventItem;
   },
-  async signup({ id, player, username, deckID }) {
+  async signup({ id: eventID, player: playerID, username, name, mainboard, sideboard = [] }) {
     const activeEvent = await admin.database()
-      .ref(`/events/${id}`)
+      .ref(`/events/${eventID}`)
       .once('value')
       .then(snap => snap.val());
-    if (!activeEvent) throw new Error(`Event: ${id} does not exist.`);
-    if (activeEvent.fired) throw new Error(`Event: ${id} has already fired.`);
+    if (!activeEvent) throw new Error(`Event: ${eventID} does not exist.`);
+    if (activeEvent.fired) throw new Error(`Event: ${eventID} has already fired.`);
 
     await admin.database()
-      .ref(`/events/${id}/players/${player}`)
-      .set({ id: player, player, username, deckID });
+      .ref(`/events/${eventID}/players/${playerID}`)
+      .set({
+        id: playerID,
+        username: activeEvent.platform === 'PAPER' ? null : username,
+        deck: {
+          name,
+          mainboard,
+          sideboard,
+        },
+      });
 
     const playerReceipt = await admin.database()
-      .ref(`/events/${id}/players/${player}`)
+      .ref(`/events/${eventID}/players/${playerID}`)
       .once('value')
       .then(snap => snap.val());
 

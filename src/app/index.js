@@ -15,10 +15,10 @@ import montserratBold from 'assets/fonts/montserrat-bold.woff2';
 
 const Home = lazy(() => import('pages/Home'));
 const Events = lazy(() => import('pages/Events'));
-const Auth = lazy(() => import('pages/Auth'));
-const Decks = lazy(() => import('pages/Decks'));
-const Metagame = lazy(() => import('pages/Metagame'));
 const Blog = lazy(() => import('pages/Blog'));
+const Auth = lazy(() => import('pages/Auth'));
+//const Metagame = lazy(() => import('pages/Metagame'));
+//const Decks = lazy(() => import('pages/Decks'));
 const NotFound = lazy(() => import('pages/NotFound'));
 
 export const AppContext = createContext();
@@ -62,6 +62,7 @@ export const fontStyles = `
 `;
 
 function App() {
+  const [storedEvents] = useLocalStorage('events', null);
   const [storedUser] = useLocalStorage('user', null);
   const [storedRedirect] = useLocalStorage('redirect', null);
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -79,6 +80,10 @@ function App() {
   useEffect(() => {
     window.history.scrollRestoration = 'manual';
   }, []);
+
+  useEffect(() => {
+    dispatch({ type: 'setEvents', value: storedEvents });
+  }, [storedEvents]);
 
   useEffect(() => {
     dispatch({ type: 'setUser', value: storedUser });
@@ -136,10 +141,10 @@ function AppRoutes({ menuOpen }) {
                   <Switch location={location}>
                     <Route exact path="/" component={Home} />
                     <Route path="/events" component={Events} />
+                    <Route path="/blog" component={Blog} />
                     <Route path="/auth" component={Auth} />
-                    <Route path="/decks" component={Decks} />
-                    <Route path="/metagame" component={Metagame} />
-                    <Route blog="/blog" component={Blog} />
+                    {/* <Route path="/metagame" component={Metagame} /> */}
+                    {/* <Route path="/decks" component={Decks} /> */}
                     <Route component={NotFound} />
                   </Switch>
                 </Suspense>

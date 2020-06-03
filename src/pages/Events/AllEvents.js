@@ -4,10 +4,10 @@ import PageLayout from 'components/PageLayout';
 import Hero from 'pages/Hero';
 import Events from '.';
 import GetStarted from 'pages/GetStarted';
-import { useScrollRestore } from 'hooks';
+import { useAppContext, useScrollRestore } from 'hooks';
 
-function AllEvents(props) {
-  const { events } = props;
+function AllEvents() {
+  const { events } = useAppContext();;
   const [visibleSections, setVisibleSections] = useState([]);
   const eventsList = useRef();
   const getStarted = useRef();

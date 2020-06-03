@@ -8,8 +8,8 @@ const GetStarted = ({ accent, ...rest }) => (
     label="Get Started"
     title2="Ready to Play?"
     button={{
-      accent,
-      href: "https://discord.gg/mjtTnr8",
+      accent: accent,
+      href: 'https://discord.gg/mjtTnr8',
       target: '_blank',
       label: 'Get Started',
     }}

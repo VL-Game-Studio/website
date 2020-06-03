@@ -1,16 +1,18 @@
-import React, { lazy, useState, useEffect, Suspense, Fragment } from 'react';
+import React, { lazy, useEffect, Suspense, Fragment } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import EventsPanel from './EventsPanel';
+import { useAppContext } from 'hooks';
 import prerender from 'utils/prerender';
 
 const AllEvents = lazy(() => import('./AllEvents'));
 const EventSignup = lazy(() => import('./EventSignup'));
 const EventInfo = lazy(() => import('./EventInfo'));
+const NotFound = lazy(() => import('pages/NotFound'));
 
 function Events(props) {
   const { id, sectionRef, visible, ...rest } = props;
   const titleId = `${id}-title`;
-  const [events, setEvents] = useState([]);
+  const { dispatch, events } = useAppContext();
 
   useEffect(() => {
     async function fetchEvents() {
@@ -23,21 +25,26 @@ function Events(props) {
 
         const data = await response.json();
 
-        return setEvents(Object.values(data).filter(({ fired }) => !fired));
+        return dispatch({
+          type: 'setEvents',
+          value: Object.values(data).filter(({ fired }) => !fired),
+        });
       } catch (error) {
+        dispatch({ type: 'setEvents', value: false });
         return console.error(error.message);
       }
     }
 
     if (!prerender) fetchEvents();
-  }, []);
+  }, [dispatch]);
 
-  if (events && !sectionRef) return (
+  if (!sectionRef) return (
     <Suspense fallback={<Fragment />}>
       <Switch>
-        <Route exact path="/events" render={() => <AllEvents events={events} />} />
-        <Route path="/events/signup" component={EventSignup} />
-        <Route render={() => <EventInfo events={events} />} />
+        <Route exact path="/events" component={AllEvents} />
+        <Route path="/events/signup/:eventID" component={EventSignup} />
+        <Route path="/events/:eventID" component={EventInfo} />
+        <NotFound />
       </Switch>
     </Suspense>
   );

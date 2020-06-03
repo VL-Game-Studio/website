@@ -20,7 +20,7 @@ router.get('/:id', async (req, res) => {
 
   try {
     const activeEvent = await events.fetch(id);
-    if (!activeEvent) return res.status(404).json({ message: `An event could not be found for: ${id}.` });
+    if (!activeEvent) return res.status(404).json({ error: `An event could not be found for: ${id}.` });
 
     return res.status(200).json(activeEvent);
   } catch (error) {
@@ -30,18 +30,17 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const { name, platform, time, date, ...rest } = req.body;
+  const { name, time, ...rest } = req.body;
   if (!name) return res.status(400).json({ error: 'Name is a required field.' });
-  if (!platform) return res.status(400).json({ error: 'Platform is a required field.' });
   if (!time) return res.status(400).json({ error: 'Time is a required field.' });
-  if (!date) return res.status(400).json({ error: 'Date is a required field.' });
 
   try {
-    const activeEvent = await events.create({ name, platform, time, date, ...rest });
+    const activeEvent = await events.create({ name, time, ...rest });
+    if (!activeEvent) return res.status(403).json({ error: 'An event is already scheduled at that time.' });
 
     return res.status(200).json(activeEvent);
   } catch (error) {
-    console.error(`POST /events/ ({ name: ${name}, platform: ${platform}, time: ${time}, date: ${date} }) >> ${error.stack}`);
+    console.error(`POST /events/ ({ name: ${name}, time: ${time} }) >> ${error.stack}`);
     return res.status(500).json({ error: 'An error occured while creating event.' });
   }
 });
@@ -51,7 +50,7 @@ router.post('/:id', async (req, res) => {
 
   try {
     const activeEvent = await events.update({ ...req.body, id });
-    if (!activeEvent) return res.status(404).json({ message: `An event could not be found for: ${id}.` });
+    if (!activeEvent) return res.status(404).json({ error: `An event could not be found for: ${id}.` });
 
     return res.status(200).json(activeEvent);
   } catch (error) {
@@ -62,29 +61,20 @@ router.post('/:id', async (req, res) => {
 
 router.post('/signup/:id', async (req, res) => {
   const { id } = req.params;
-
-  const { player, username, deckID, mainboard, sideboard, ...rest } = req.body;
+  const { player, username, mainboard, sideboard, name = '' } = req.body;
   if (!player) return res.status(400).json({ error: 'Player is a required field.' });
-  if (!deckID && !mainboard) return res.status(400).json({ error: 'Deck is a required field, passed to either mainboard and sideboard or as a deckID.' });
+  if (!mainboard) return res.status(400).json({ error: 'Deck is a required field, passed to mainboard and sideboard.' });
 
   try {
     const activeEvent = await events.fetch(id);
     if (!activeEvent) return res.status(404).json({ message: `An event could not be found for: ${id}.` });
 
-    if (deckID) {
-      const playerReceipt = await events.signup({ id, player, username, deckID });
+    const deck = validateDecklist(mainboard, sideboard);
+    const playerReceipt = await events.signup({ id, player, username, name, ...deck });
 
-      return res.status(200).json(playerReceipt);
-    } else {
-      const deck = validateDecklist(mainboard, sideboard);
-      const { id: deckID } = await decklists.create({ author: player, ...deck, ...rest });
-
-      const playerReceipt = await events.signup({ id, player, username, deckID });
-
-      return res.status(200).json(playerReceipt);
-    }
+    return res.status(200).json(playerReceipt);
   } catch (error) {
-    console.error(`POST /events/ ({ player: ${player}, username: ${username}, deckID, ${deckID}, mainboard: ${mainboard}, sideboard: ${sideboard} }) >> ${error.stack}`);
+    console.error(`POST /events/ ({ player: ${player}, username: ${username}, name: ${name}, mainboard: ${mainboard}, sideboard: ${sideboard} }) >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while signing up for event: ${id}.` });
   }
 });

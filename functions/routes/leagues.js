@@ -1,5 +1,6 @@
 const { Router } = require('express');
-const { leagues } = require('../persistence');
+const { leagues, decklists } = require('../persistence');
+const { validateDecklist } = require('../utils');
 
 const router = new Router();
 
@@ -30,27 +31,19 @@ router.get('/:id', async (req, res) => {
 
 router.post('/:id', async (req, res) => {
   const { id } = req.params;
-  const { deckID, platform, ...rest } = req.body;
-  if (!deckID) return res.status(400).json({ error: 'DeckID is a required field.' });
-  if (!platform) return res.status(400).json({ error: 'Platform is a required field.' });
 
   try {
-    const league = await leagues.create({
-      id,
-      platform,
-      deckID,
-      ...rest
-    });
+    const league = await leagues.create({ id, ...req.body });
     if (!league) return res.status(400).json({ error: `Player: ${id} is already in a league.` });
 
     return res.status(201).json(league);
   } catch (error) {
-    console.error(`POST /leagues/${id} ({ deckID: ${deckID}, platform: ${platform} }) >> ${error.stack}`);
+    console.error(`POST /leagues/${id} ({ body: ${req.body} }) >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while creating league entry for: ${id}.` });
   }
 });
 
-router.get('/pair/:id', async (req, res) => {
+router.get('/queue/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -62,7 +55,23 @@ router.get('/pair/:id', async (req, res) => {
 
     return res.status(200).json(opponent);
   } catch (error) {
-    console.error(`GET /leagues/pair/${id} >> ${error.stack}`);
+    console.error(`GET /leagues/queue/${id} >> ${error.stack}`);
+    return res.status(500).json({ error: `An error occured while pairing player: ${id}.` });
+  }
+});
+
+router.get('/queue/cancel/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const leagueExists = await leagues.fetch(id);
+    if (!leagueExists) return res.status(404).json({ error: 'You are currently not in a league.' });
+
+    const league = await leagues.cancelPair(id);
+
+    return res.status(200).json(league);
+  } catch (error) {
+    console.error(`GET /leagues/queue/${id} >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while pairing player: ${id}.` });
   }
 });

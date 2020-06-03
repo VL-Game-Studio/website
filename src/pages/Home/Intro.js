@@ -9,7 +9,11 @@ const Intro = (props) => (
     label="Project Modern"
     title="A community-run format that puts players first"
     paragraph="Project Modern is a community-backed MTG format that prioritizes players over profits."
-    button={{ href: 'https://discord.gg/mjtTnr8', target: '_blank', label: 'Get Started' }}
+    button={{
+      href: 'https://discord.gg/mjtTnr8',
+      target: '_blank',
+      label: 'Get Started',
+    }}
     {...props}
   />
 );

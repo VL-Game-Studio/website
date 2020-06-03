@@ -17,6 +17,23 @@ const results = {
 
     return result;
   },
+  async create(props) {
+    const id = await admin.database()
+      .ref('/results')
+      .push(props)
+      .then(({ key }) => key);
+
+    await admin.database()
+      .ref(`/results/${id}`)
+      .update({ id });
+
+    const decklist = await admin.database()
+      .ref(`/results/${id}`)
+      .once('value')
+      .then(snap => snap.val());
+
+    return decklist;
+  },
   async set(props) {
     const { id } = props;
 

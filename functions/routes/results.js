@@ -28,16 +28,29 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/:id', async (req, res) => {
-  const { id } = req.params;
-  const { deckID, matches } = req.body;
+router.post('/', async (req, res) => {
+  const { matches, ...rest } = req.body;
 
   try {
-    const result = await results.set({ id, deckID, matches });
+    const result = await results.create({ matches, ...rest });
 
     return res.status(200).json(result);
   } catch (error) {
-    console.error(`POST /results/${id} ({ deckID: ${deckID}, matches: ${matches} }) >> ${error.stack}`);
+    console.error(`POST /results ({ matches: ${matches} }) >> ${error.stack}`);
+    return res.status(500).json({ error: `An error occured while creating result.` });
+  }
+});
+
+router.post('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { matches, ...rest } = req.body;
+
+  try {
+    const result = await results.set({ id, matches, ...rest });
+
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error(`POST /results/${id} ({ matches: ${matches} }) >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while updating result: ${id}.` });
   }
 });

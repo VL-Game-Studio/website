@@ -1,5 +1,4 @@
 const admin = require('firebase-admin');
-const { results } = require('./results');
 
 const leagues = {
   async fetchAll() {
@@ -18,16 +17,24 @@ const leagues = {
 
     return league;
   },
-  async create({ id, platform, ...props }) {
+  async create({ id, platforms, ...props }) {
     const leagueExists = await admin.database()
       .ref(`/leagues/${id}`)
       .once('value')
       .then(snap => snap.val());
     if (leagueExists) return false;
 
+    const platformPreferences = {};
+
+    if (platforms) {
+      platforms.forEach((platform, index) => {
+        platformPreferences[index] = platform;
+      });
+    }
+
     await admin.database()
       .ref(`/leagues/${id}`)
-      .set({ id, platform, ...props });
+      .set({ id, platforms: platformPreferences, ...props });
 
     const league = await admin.database()
       .ref(`/leagues/${id}`)
@@ -51,10 +58,12 @@ const leagues = {
 
       if (player.matches) {
         Object.values(player.matches).forEach(({ result }) => {
-          const stats = result.split('-');
+          if (result && result.includes('-')) {
+            const stats = result.split('-');
 
-          wins += parseInt(stats[0]);
-          ties += parseInt(stats[2]);
+            wins += parseInt(stats[0]);
+            ties += parseInt(stats[2]);
+          }
         });
       }
 
@@ -75,8 +84,12 @@ const leagues = {
     // Remove player from opponent selection
     .filter(({ id }) => id !== player.id)
 
-    // Filter to same platform
-    .filter(({ platform }) => platform === player.platform)
+    // Filter to same platforms
+    .filter(({ platforms = [] }) =>
+      (!platforms || !player.platforms) || (platforms
+        ? Object.values(platforms).some(platform => Object.values(player.platforms).includes(platform))
+        : Object.values(player.platforms).some(platform => Object.values(platforms).includes(platform)))
+      )
 
     // Check if opponent has played before
     .filter(({ opponents = [] }) => !Object.values(opponents).includes(player))
@@ -103,6 +116,26 @@ const leagues = {
 
     return opponent.id;
   },
+  async cancelPair(playerID) {
+    const opponents = await admin.database()
+      .ref(`/leagues/${playerID}`)
+      .once('value')
+      .then(snap => snap.val())
+      .then(({ opponents }) => Object.values(opponents));
+
+    opponents.pop();
+
+    await admin.database()
+      .ref(`/leagues/${playerID}`)
+      .update({ opponents });
+
+    const player = await admin.database()
+      .ref(`/leagues/${playerID}`)
+      .once('value')
+      .then(snap => snap.val());
+
+    return player;
+  },
   async report({ id: playerID, result }) {
     const player = await admin.database()
       .ref(`/leagues/${playerID}`)
@@ -117,7 +150,7 @@ const leagues = {
     if (!opponentID) return false;
 
     const playerRound = {
-      round: Object.values(matches).length,
+      round: Object.values(matches).length + 1,
       record: `${wins}-${losses}-${ties}`,
       opponent: opponentID,
     };
@@ -132,7 +165,9 @@ const leagues = {
         .once('value')
         .then(snap => snap.val());
 
-      await results.create(league);
+      await admin.database()
+        .ref(`/leagues/${id}`)
+        .remove();
     }
 
     const opponent = await admin.database()
@@ -143,7 +178,7 @@ const leagues = {
     const { opponents: oppOpponents, matches: oppMatches = [] } = opponent;
 
     const opponentRound = {
-      round: Object.values(oppMatches).length,
+      round: Object.values(oppMatches).length + 1,
       record: `${losses}-${wins}-${ties}`,
       opponent: playerID,
     };
@@ -157,8 +192,6 @@ const leagues = {
         .ref(`/leagues/${opponentID}`)
         .once('value')
         .then(snap => snap.val());
-
-      await results.create(league);
 
       await admin.database()
         .ref(`/leagues/${opponentID}`)

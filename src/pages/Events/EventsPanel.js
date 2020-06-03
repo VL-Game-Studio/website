@@ -21,8 +21,10 @@ const EventsPanel = ({
     {...rest}
   >
     <Tournaments alternate={alternate}>
-      {(!events || events.length === 0) && <Paragraph>{altText}</Paragraph>}
-      {events.length > 0 && events?.map(({ id, name, description }) => (
+      {events === false && <Paragraph>An error occured while fetching events.</Paragraph>}
+      {(!events && events !== false) && <Paragraph>Loading events..</Paragraph>}
+      {events?.length === 0 && <Paragraph>{altText}</Paragraph>}
+      {events?.length > 0 && events?.map(({ id, name, description }) => (
         <Tournament
           key={id}
           to={`/events/${id}`}

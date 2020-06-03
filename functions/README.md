@@ -8,9 +8,9 @@ Path | Method | Parameters | Description
 --- | --- | --- | ---
    /events/ | GET | *none* | Fetches all events, returning an object.
    /events/:id | GET | *none* | Fetches a single event by id, returning an object.
-   /events/:id | POST | `name` `description` `time` `date` `platform` | Updates a single event by id, returning an object.
-   /events/ | POST | `name` `description` `time` `date` `platform` | Creates an event, returning an event object.
-   /events/signup/:id | POST | `name` `username` `deckID` or `mainboard` `sideboard` | Generates and assigns a decklist to a player, adding player to the player queue, returning a player receipt.
+   /events/:id | POST | `name` `description` `time` `platform` | Updates a single event by id, returning an object.
+   /events/ | POST | `name` `description` `time` `platform` | Creates an event, returning an event object.
+   /events/signup/:id | POST | `name (optional)` `username` `mainboard` `sideboard` | Creates a player entry, returning a player receipt.
    /events/fire/:id | GET | *none* | Fires an event to lockdown signup and enable pairings and other in-game actions.
    /events/pairings/:id | GET | *none* | Generates and returns pairings, assigning player 1 and player 2 for later results.
    /events/report/:id/:playerID | POST | `record` | Updates match history and generates performance track from record.
@@ -34,19 +34,12 @@ Path | Method | Parameters | Description
 --- | --- | --- | ---
    /leagues/ | GET | *none* | Fetches all league entries, returning an object.
    /leagues/:id | GET | *none* | Fetches a single league entry by id, returning an object.
-   /leagues/:id | POST | `id` `platform` `deckID` | Creates or updates a league entry with player id, platform, and deckID, returning an object.
-   /leagues/pair/:id | GET | *none* | Generates and binds next league pairing.
+   /leagues/:id | POST | `id` `platforms (optional)` | Creates or updates a league entry with player id, and platforms, returning an object.
+   /leagues/queue/:id | GET | *none* | Initiated league queue, generating and binding a league pairing.
+   /leagues/queue/cancel/:id | GET | *none* | Cancels last league pairing.
    /leagues/report/:id | POST | `record` | Updates match history and generates performance track from record.
+   /leagues/drop/:id | GET | *none* | Drops a league entry by id, recording matchup data, returning an object.
    /leagues/:id | DELETE | *none* | Fetches and deletes a league entry by id, returning an object.
-
-### Players Methods
-
-Path | Method | Parameters | Description
---- | --- | --- | ---
-   /players/ | GET | *none* | Fetches all players, returning an object.
-   /players/:id | GET | *none* | Fetches a single player by id, returning an object.
-   /players/:id | POST | `name` `platforms` | Creates or updates player with optional id, Discord name, and platforms, returning an object.
-   /players/:id | DELETE | *none* | Fetches and deletes a player by id, returning an object.
 
 ### Results Methods
 

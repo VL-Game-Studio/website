@@ -319,8 +319,17 @@ const PostContent = styled.div`
 
   @media (max-width: ${props => props.theme.tablet}px) {
     grid-template-columns: 100%;
+    padding: 0 20px;
 
     & > pre {
+      grid-column: 1;
+    }
+
+    ${Title2}, ${Paragraph} {
+      grid-column: 1;
+    }
+
+    ul, li {
       grid-column: 1;
     }
   }

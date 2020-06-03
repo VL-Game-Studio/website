@@ -58,6 +58,8 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   const { author, mainboard, sideboard, ...rest } = req.body;
+  if (!author) return res.status(400).json({ error: 'Author is a required field.' });
+  if (!mainboard) return res.status(400).json({ error: 'Mainboard is a required field.' });
 
   try {
     const deck = validateDecklist(mainboard, sideboard);

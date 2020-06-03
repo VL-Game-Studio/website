@@ -6,18 +6,26 @@ import config from 'config';
 
 function Auth(props) {
   const { search } = useLocation();
-  const code = search.includes('?code=') && search.split('?code=')[1];
+  const code = search.includes('code=') && search.split('code=')[1];
   const { user, redirect, dispatch } = useAppContext();
 
   useEffect(() => {
     async function authorize() {
       try {
-        const credentials = btoa(`${config.clientID}:${config.secret}`);
-        const response = await fetch(`https://discordapp.com/api/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=${config.redirect}`, {
+        const data = new URLSearchParams();
+        data.append('client_id', config.clientID);
+        data.append('client_secret', config.secret);
+        data.append('grant_type', 'authorization_code');
+        data.append('code', code);
+        data.append('redirect_uri', config.redirect);
+        data.append('scope', 'identify');
+
+        const response = await fetch('https://discordapp.com/api/oauth2/token', {
           method: 'POST',
           headers: {
-            'Authorization': `Basic ${credentials}`,
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
           },
+          body: data,
         });
         if (response.status !== 200) throw new Error('An error occured between us and Discord.\nYour session may have expired.');
 
@@ -25,13 +33,13 @@ function Auth(props) {
         const response2 = await fetch('https://discordapp.com/api/users/@me', {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${access_token}`
+            Authorization: `Bearer ${access_token}`
           },
         });
         if (response2.status !== 200) throw new Error('An error occured with authenticating with Discord.');
 
-        const data = await response2.json();
-        dispatch({ type: 'setUser', value: data });
+        const userData = await response2.json();
+        dispatch({ type: 'setUser', value: userData });
 
         return props.history.push(redirect || '/');
       } catch (error) {

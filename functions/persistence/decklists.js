@@ -29,10 +29,10 @@ const decklists = {
 
     return decklist;
   },
-  async create(props) {
+  async create({ author, mainboard, sideboard, ...rest }) {
     const id = await admin.database()
       .ref('/decklists')
-      .push(props)
+      .push({ author, mainboard, sideboard, ...rest })
       .then(({ key }) => key);
 
     await admin.database()
