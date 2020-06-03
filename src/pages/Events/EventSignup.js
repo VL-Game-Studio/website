@@ -19,7 +19,7 @@ function EventSignup(props) {
   const { history, match: { params: { eventID } } } = props;
   const { events, user, dispatch } = useAppContext();
   const activeEvent = events?.length > 0 && events?.filter(({ id }) => id === eventID)[0];
-  const isPlaying = activeEvent?.players[user?.id];
+  const isPlaying = user && activeEvent?.players[user?.id];
   const username = useFormInput(isPlaying?.username || '');
   const name = useFormInput(isPlaying?.deck?.name || '');
   const mainboard = useFormInput(isPlaying?.deck?.mainboard?.join('\n') || '');

@@ -20,7 +20,7 @@ function EventInfo(props) {
   const { events, user, dispatch } = useAppContext();
   const activeEvent = events?.length > 0 && events.filter(({ id }) => id === eventID)[0];
   const otherEvents = events?.length > 0 && events.filter(({ id }) => id !== eventID);
-  const isPlaying = activeEvent?.players[user?.id];
+  const isPlaying = user && activeEvent?.players[user?.id];
   const cta = useRef();
   const [visible, setVisible] = useState();
   const { width } = useWindowSize();
