@@ -1,6 +1,14 @@
 # Project Modern Cloud Functions
 
-## Public Methods
+### Sheets Methods
+Path | Method | Parameters | Description
+--- | --- | --- | ---
+   /sheets/events | GET | *none* | Returns an HTML table of events' signup and matchup data.
+
+### Machine Learning Methods
+Path | Method | Parameters | Description
+--- | --- | --- | ---
+   /ml/ | GET | *none* | Fetches all event decks, parsing as an array of quantities and card names.
 
 ### Events Methods
 
@@ -26,8 +34,6 @@ Path | Method | Parameters | Description
    /decklists/:id | POST | `name (optional)` `author` `mainboard` `sideboard` | Validates mainboard and sideboard and adds to registry or throws error on infractions, returning an object.
    /decklists/:id | DELETE | *none* | Fetches and deletes a decklist by id, returning an object.
 
-## Private Methods
-
 ### Leagues Methods
 
 Path | Method | Parameters | Description
@@ -40,12 +46,3 @@ Path | Method | Parameters | Description
    /leagues/report/:id | POST | `record` | Updates match history and generates performance track from record.
    /leagues/drop/:id | GET | *none* | Drops a league entry by id, recording matchup data, returning an object.
    /leagues/:id | DELETE | *none* | Fetches and deletes a league entry by id, returning an object.
-
-### Results Methods
-
-Path | Method | Parameters | Description
---- | --- | --- | ---
-   /results/ | GET | *none* | Fetches all results, returning an object.
-   /results/:id | GET | *none* | Fetches a single result by id, returning an object.
-   /results/:id | POST | `id` `deckID` `matches` | Creates or updates a result with player id, deckid, and match history, returning an object.
-   /results/:id | DELETE | *none* | Fetches and deletes a result by id, returning an object.

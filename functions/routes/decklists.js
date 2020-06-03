@@ -15,33 +15,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/ml', async (req, res) => {
-  try {
-    const ref = await decklists.fetchAll();
-
-    const allDecklists = Object.values(ref).map(deck => {
-      const { id, mainboard, sideboard } = deck;
-
-      const quantities = [];
-      const cards = [];
-
-      [...mainboard, ...sideboard].forEach(str => {
-        const [quantity, card] = str.split(/ (.*)/);
-
-        quantities.push(parseInt(quantity));
-        cards.push(card);
-      });
-
-      return { id, quantities, cards };
-    });
-
-    return res.status(200).json(allDecklists);
-  } catch (error) {
-    console.error(`GET /functions/ml >> ${error.stack}`);
-    return res.status(500).json({ error: `An error occured. ${error.message}` });
-  }
-});
-
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
