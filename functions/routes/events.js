@@ -44,6 +44,7 @@ router.post('/', async (req, res) => {
   const { name, time, ...rest } = req.body;
   if (!name) return res.status(400).json({ error: 'Name is a required field.' });
   if (!time) return res.status(400).json({ error: 'Time is a required field.' });
+  if (isNaN(time)) return res.status(400).json({ error: 'Time must be in milliseconds.' });
 
   try {
     const activeEvent = await events.create({ name, time, ...rest });

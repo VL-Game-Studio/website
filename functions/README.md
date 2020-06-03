@@ -41,8 +41,8 @@ Private methods require authorization via Discord secret in headers: `secret`.
 
 Path | Method | Parameters | Description
 --- | --- | --- | ---
-   /events/:id | POST | `name` `description` `time` `platform` | Updates a single event by id, returning an object.
-   /events/ | POST | `name` `description` `time` `platform` | Creates an event, returning an event object.
+   /events/:id | POST | `name` `description` `time (in milliseconds)` `platform` | Updates a single event by id, returning an object.
+   /events/ | POST | `name` `description` `time (in milliseconds)` `platform` | Creates an event, returning an event object.
    /events/signup/:id | POST | `name (optional)` `username` `mainboard` `sideboard` | Creates a player entry, returning a player receipt.
    /events/fire/:id | GET | *none* | Fires an event to lockdown signup and enable pairings and other in-game actions.
    /events/pairings/:id | GET | *none* | Generates and returns pairings, assigning player 1 and player 2 for later results.

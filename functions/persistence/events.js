@@ -17,8 +17,8 @@ const events = {
 
     return eventItem;
   },
-  async create({ name, time, platform, ...rest }) {
-    const id = Date.parse(new Date(time));
+  async create({ time, name, platform, ...rest }) {
+    const id = time;
 
     const eventExists = await admin.database()
       .ref(`/events/${id}`)

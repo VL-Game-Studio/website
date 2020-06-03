@@ -3,10 +3,10 @@ const app = require('.');
 
 describe('events', () => {
   const testEvent = {
-    id: '329151600000',
+    id: 1117450800000,
     name: 'Test Event Name',
     description: 'Test event description.',
-    time: '1980-06-06T15:00:00Z',
+    time: 1117450800000,
     platform: 'MTGO',
     players: [
       {
@@ -68,7 +68,7 @@ describe('events', () => {
       .get('/events');
 
     expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty(id);
+    expect(res.body).toHaveProperty(JSON.stringify(id));
     Object.keys(testEvent).forEach(key => {
       expect(res.body[id]).toHaveProperty(key);
       expect(res.body[id][key]).toEqual(testEvent[key]);

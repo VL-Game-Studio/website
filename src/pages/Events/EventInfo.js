@@ -89,7 +89,7 @@ function EventInfo(props) {
                       <div>
                         <Tag loading={!activeEvent?.time ? 1 : 0}>
                           <label>Date:</label>
-                          {activeEvent?.time && new Date(activeEvent.time).toLocaleDateString('default', {
+                          {activeEvent?.time && new Date(parseInt(activeEvent.time)).toLocaleDateString('default', {
                             weekday: 'long',
                             month: 'long',
                             day: 'numeric',
@@ -97,7 +97,7 @@ function EventInfo(props) {
                         </Tag>
                         <Tag loading={!activeEvent?.time ? 1 : 0}>
                           <label>Time:</label>
-                          {activeEvent?.ime && new Date(activeEvent.time).toLocaleTimeString('default', {
+                          {activeEvent?.time && new Date(parseInt(activeEvent.time)).toLocaleTimeString('default', {
                             hour: '2-digit',
                             minute: '2-digit',
                             timeZoneName: 'short',
