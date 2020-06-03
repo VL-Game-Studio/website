@@ -17,6 +17,7 @@ describe('Decklists', () => {
     const { mainboard, sideboard, ...ref } = testDecklist;
     const res = await request(app)
       .post('/decklists')
+      .set('secret', process.env.SECRET)
       .send(testDecklist);
 
     expect(res.statusCode).toEqual(201);
@@ -37,6 +38,7 @@ describe('Decklists', () => {
 
     const res = await request(app)
       .post(`/decklists/${id}`)
+      .set('secret', process.env.SECRET)
       .send({ ...rest, ...deck });
 
     expect(res.statusCode).toEqual(200);
@@ -77,7 +79,8 @@ describe('Decklists', () => {
     const { id } = testDecklist;
 
     const res = await request(app)
-      .delete(`/decklists/${id}`);
+      .delete(`/decklists/${id}`)
+      .set('secret', process.env.SECRET);
 
     expect(res.statusCode).toEqual(200);
     Object.keys(testDecklist).forEach(key => {

@@ -1,5 +1,7 @@
 # Project Modern Cloud Functions
 
+## Public Methods
+
 ### Sheets Methods
 Path | Method | Parameters | Description
 --- | --- | --- | ---
@@ -16,6 +18,29 @@ Path | Method | Parameters | Description
 --- | --- | --- | ---
    /events/ | GET | *none* | Fetches all events, returning an object.
    /events/:id | GET | *none* | Fetches a single event by id, returning an object.
+
+### Decklists Methods
+
+Path | Method | Parameters | Description
+--- | --- | --- | ---
+   /decklists/ | GET | *none* | Fetches all decklists, returning an object.
+   /decklists/:id | GET | *none* | Fetches a single decklist by id, returning an object.
+
+### Leagues Methods
+
+Path | Method | Parameters | Description
+--- | --- | --- | ---
+   /leagues/ | GET | *none* | Fetches all league entries, returning an object.
+   /leagues/:id | GET | *none* | Fetches a single league entry by id, returning an object.
+
+## Private Methods
+
+Private methods require authorization via Discord secret in headers: `secret`.
+
+### Events Methods
+
+Path | Method | Parameters | Description
+--- | --- | --- | ---
    /events/:id | POST | `name` `description` `time` `platform` | Updates a single event by id, returning an object.
    /events/ | POST | `name` `description` `time` `platform` | Creates an event, returning an event object.
    /events/signup/:id | POST | `name (optional)` `username` `mainboard` `sideboard` | Creates a player entry, returning a player receipt.
@@ -28,8 +53,6 @@ Path | Method | Parameters | Description
 
 Path | Method | Parameters | Description
 --- | --- | --- | ---
-   /decklists/ | GET | *none* | Fetches all decklists, returning an object.
-   /decklists/:id | GET | *none* | Fetches a single decklist by id, returning an object.
    /decklists/ | POST | `name (optional)` `author` `mainboard` `sideboard` | Validates mainboard and sideboard and creates decklist object and adds to registry, returning an object.
    /decklists/:id | POST | `name (optional)` `author` `mainboard` `sideboard` | Validates mainboard and sideboard and adds to registry or throws error on infractions, returning an object.
    /decklists/:id | DELETE | *none* | Fetches and deletes a decklist by id, returning an object.
@@ -38,8 +61,6 @@ Path | Method | Parameters | Description
 
 Path | Method | Parameters | Description
 --- | --- | --- | ---
-   /leagues/ | GET | *none* | Fetches all league entries, returning an object.
-   /leagues/:id | GET | *none* | Fetches a single league entry by id, returning an object.
    /leagues/:id | POST | `id` `platforms (optional)` | Creates or updates a league entry with player id, and platforms, returning an object.
    /leagues/queue/:id | GET | *none* | Initiated league queue, generating and binding a league pairing.
    /leagues/queue/cancel/:id | GET | *none* | Cancels last league pairing.

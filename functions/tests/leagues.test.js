@@ -13,6 +13,7 @@ describe('Leagues', () => {
 
     const res = await request(app)
       .post(`/leagues/${id}`)
+      .set('secret', process.env.SECRET)
       .send(rest);
 
     expect(res.statusCode).toEqual(201);
@@ -40,11 +41,13 @@ describe('Leagues', () => {
     const { id, ...rest } = testLeague;
 
     await request(app)
-      .post(`/leagues/2`)
+      .post('/leagues/2')
+      .set('secret', process.env.SECRET)
       .send(rest);
 
     const res = await request(app)
-      .get(`/leagues/queue/${id}`);
+      .get(`/leagues/queue/${id}`)
+      .set('secret', process.env.SECRET);
 
     expect(res.statusCode).toEqual(200);
   });
@@ -54,6 +57,7 @@ describe('Leagues', () => {
 
     const res = await request(app)
       .post(`/leagues/report/${id}`)
+      .set('secret', process.env.SECRET)
       .send({ result: '2-0-0' });
 
     expect(res.statusCode).toEqual(200);
@@ -63,10 +67,12 @@ describe('Leagues', () => {
     const { id } = testLeague;
 
     const res = await request(app)
-      .delete(`/leagues/${id}`);
+      .delete(`/leagues/${id}`)
+      .set('secret', process.env.SECRET);
 
     await request(app)
-      .delete('/leagues/2');
+      .delete('/leagues/2')
+      .set('secret', process.env.SECRET);
 
     expect(res.statusCode).toEqual(200);
   });

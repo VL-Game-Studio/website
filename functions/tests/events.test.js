@@ -51,6 +51,7 @@ describe('events', () => {
   it('creates event', async () => {
     const res = await request(app)
       .post('/events')
+      .set('secret', process.env.SECRET)
       .send(testEvent);
 
     expect(res.statusCode).toEqual(200);
@@ -93,6 +94,7 @@ describe('events', () => {
 
       const res = await request(app)
         .post(`/events/signup/${id}`)
+        .set('secret', process.env.SECRET)
         .send(testRegistration);
 
       expect(res.statusCode).toEqual(200);
@@ -105,7 +107,8 @@ describe('events', () => {
     const { id } = testEvent;
 
     const res = await request(app)
-      .get(`/events/drop/${id}/6`);
+      .get(`/events/drop/${id}/6`)
+      .set('secret', process.env.SECRET);
 
     expect(res.statusCode).toEqual(200);
     expect(res.body.dropped).toEqual(true);
@@ -115,7 +118,8 @@ describe('events', () => {
     const { id } = testEvent;
 
     const res = await request(app)
-      .get(`/events/fire/${id}`);
+      .get(`/events/fire/${id}`)
+      .set('secret', process.env.SECRET);
 
     expect(res.statusCode).toEqual(200);
     testEvent.fired = true;
@@ -125,7 +129,8 @@ describe('events', () => {
     const { id } = testEvent;
 
     const res = await request(app)
-      .get(`/events/pairings/${id}`);
+      .get(`/events/pairings/${id}`)
+      .set('secret', process.env.SECRET);
 
     expect(res.statusCode).toEqual(200);
     expect(res.body).toEqual([
@@ -141,6 +146,7 @@ describe('events', () => {
 
     const res = await request(app)
       .post(`/events/report/${id}/${playerID}`)
+      .set('secret', process.env.SECRET)
       .send({ result: '2-0-0' });
 
     expect(res.statusCode).toEqual(200);
@@ -154,7 +160,8 @@ describe('events', () => {
     const { id } = testEvent;
 
     const res = await request(app)
-      .delete(`/events/${id}`);
+      .delete(`/events/${id}`)
+      .set('secret', process.env.SECRET);
 
     expect(res.statusCode).toEqual(200);
   });

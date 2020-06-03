@@ -1,3 +1,4 @@
+const functions = require('firebase-functions');
 const { Router } = require('express');
 const { events, decklists } = require('../persistence');
 const { validateDecklist } = require('../utils');
@@ -27,6 +28,16 @@ router.get('/:id', async (req, res) => {
     console.error(`GET /events/${id} >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while fetching event: ${id}.` });
   }
+});
+
+router.use(async (req, res, next) => {
+  const secret = process.env.SECRET || functions.config().discord.secret;
+
+  if (!req.headers || req.headers.secret !== secret) {
+    return res.status(403).json({ error: 'You are not authorized for this action.' });
+  }
+
+  return next();
 });
 
 router.post('/', async (req, res) => {
@@ -81,6 +92,7 @@ router.post('/signup/:id', async (req, res) => {
 
 router.get('/pairings/:id', async (req, res) => {
   const { id } = req.params;
+  if (req.headers.secret !== process.env.SECRET) return res.status(403).json({ error: 'You are not authorized for this action.' });
 
   try {
     const activeEvent = await events.fetch(id);

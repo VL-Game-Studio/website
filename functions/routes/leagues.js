@@ -1,3 +1,4 @@
+const functions = require('firebase-functions');
 const { Router } = require('express');
 const { leagues, decklists } = require('../persistence');
 const { validateDecklist } = require('../utils');
@@ -27,6 +28,16 @@ router.get('/:id', async (req, res) => {
     console.error(`GET /leagues/${id} >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while fetching league info for player: ${id}.` });
   }
+});
+
+router.use(async (req, res, next) => {
+  const secret = process.env.SECRET || functions.config().discord.secret;
+
+  if (!req.headers || req.headers.secret !== secret) {
+    return res.status(403).json({ error: 'You are not authorized for this action.' });
+  }
+
+  return next();
 });
 
 router.post('/:id', async (req, res) => {

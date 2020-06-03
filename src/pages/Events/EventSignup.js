@@ -56,6 +56,7 @@ function EventSignup(props) {
         mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
+          'secret': config.secret,
         },
         body: JSON.stringify({
           player: user?.id,

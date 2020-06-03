@@ -17,7 +17,7 @@ function getEventsTable(events) {
     'Deck Mainboard',
     'Deck Sideboard',
     'Opponents',
-    'Records'
+    'Records',
   ].map(header => `<td>${header}</td>`).join('');
 
   const table = `<table>${headers}${events.map(({ id, name, description, platform, fired, players = [] }) => {
