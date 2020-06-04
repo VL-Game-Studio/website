@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import styled from 'styled-components/macro';
 import Hero from 'pages/Hero';
 import { Title, Paragraph } from 'components/Type';
+import { media } from 'utils/style';
 
 const Intro = (props) => (
   <IntroHero
@@ -35,7 +36,7 @@ const IntroHero = styled(Hero)`
     max-width: 530px;
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     ${Title}, ${Paragraph} {
       max-width: none;
     }

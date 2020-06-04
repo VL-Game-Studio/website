@@ -4,7 +4,7 @@ import { Transition } from 'react-transition-group';
 import { Label, Title, Title2, Paragraph } from 'components/Type';
 import Button from 'components/Button';
 import { useScrollRestore } from 'hooks';
-import { AnimFade } from 'utils/style';
+import { AnimFade, media } from 'utils/style';
 import { reflow } from 'utils/transition';
 import prerender from 'utils/prerender';
 
@@ -67,21 +67,21 @@ function Hero({
 
 const HeroWrapper = styled.section`
   align-items: center;
-  background: ${props => props.dark
-    ? props.theme.colorBackgroundDark
-    : props.theme.colorBackground};
+  background: rgb(${props => props.dark
+    ? 'var(--rgbBackgroundDark)'
+    : 'var(--rgbBackground)'});
   display: flex;
   padding: 0 50px;
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     padding: 0 20px;
   }
 
   ${props => props.accent && css`
-    background: ${props => props.theme.colorAccent};
+    background: rgb(var(--rgbAccent));
 
     ${Label}, ${Title}, ${Title2}, ${Paragraph} {
-      color: ${props => props.theme.colorWhite};
+      color: rgb(var(--rgbWhite));
     }
   `}
 `;
@@ -92,15 +92,15 @@ const HeroContainer = styled.div`
   opacity: 0;
   width: 100%;
 
-  @media (max-width: ${props => props.theme.desktop}px) {
+  @media (max-width: ${media.desktop}px) {
     max-width: 1080px;
   }
 
-  @media (max-width: ${props => props.theme.laptop}px) {
+  @media (max-width: ${media.laptop}px) {
     max-width: 960px;
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     max-width: 100%;
   }
 
@@ -153,7 +153,7 @@ const HeroContent = styled.div`
     margin-top: 60px;
   }
 
-  @media (max-width: ${props => props.theme.laptop}px) {
+  @media (max-width: ${media.laptop}px) {
     ${Title}, ${Title2} {
       width: 70%;
     }
@@ -163,7 +163,7 @@ const HeroContent = styled.div`
     }
   }
 
-  @media (max-width: ${props => props.theme.tablet}px) {
+  @media (max-width: ${media.tablet}px) {
     padding-left: 35px;
 
     ${Label} {
@@ -175,7 +175,7 @@ const HeroContent = styled.div`
     }
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     margin: 96px 0;
     padding-left: 0;
 
@@ -212,13 +212,13 @@ const HeroContent = styled.div`
       margin-left: -50px;
     }
 
-    @media (max-width: ${props => props.theme.tablet}px) {
+    @media (max-width: ${media.tablet}px) {
       ${Label} {
         margin-left: -35px;
       }
     }
 
-    @media (max-width: ${props => props.theme.mobile}px) {
+    @media (max-width: ${media.mobile}px) {
       ${Label} {
         margin-left: 0;
       }

@@ -24,9 +24,9 @@ const Line = styled.div``;
 
 const NavToggleButton = styled.button`
   align-items: center;
-  background: ${props => props.dark
-    ? props.theme.colorWhite
-    : props.theme.colorTitle};
+  background: rgb(${props => props.dark
+    ? 'var(--rgbWhite)'
+    : 'var(--rgbText)'});
   border-radius: 50%;
   border: none;
   cursor: pointer;
@@ -39,13 +39,13 @@ const NavToggleButton = styled.button`
   width: 40px;
 
   ${Line}, ::before, ::after {
-    background: ${props => props.dark
-      ? props.theme.colorTitle
-      : props.theme.colorWhite};
+    background: rgb(${props => props.dark
+      ? 'var(--rgbText)'
+      : 'var(--rgbWhite)'});
     height: 1px;
     margin-left: 5px;
     margin-top: 4px;
-    transition: all 0.45s ${props => props.theme.ease1};
+    transition: all 0.45s var(--ease1);
     width: 12px;
   }
 

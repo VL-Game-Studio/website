@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import styled, { css } from 'styled-components/macro';
 import { Link } from 'components/Link';
 import Icon from 'components/Icon';
-import { rgba } from 'utils/style';
+import { media } from 'utils/style';
 
 const ButtonContent = ({ label, icon = 'arrowRight', ...rest }) => (
   <ButtonWrapper aria-label={label} {...rest}>
@@ -32,10 +32,10 @@ function Button(props) {
 }
 
 const linkStyles = css`
-  color: ${props => props.accent || props.dark
-    ? props.theme.colorWhite
-    : props.theme.colorTitle};
-  font-family: ${props => props.theme.fontStack};
+  color: rgb(${props => (props.accent && 'var(--rgbAccent)') || props.dark
+    ? 'var(--rgbWhite)'
+    : 'var(--rgbText)'});
+  font-family: var(--fontStack);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.25em;
@@ -74,13 +74,13 @@ const ButtonWrapper = styled.button`
     margin-left: 28px;
     opacity: 0.7;
     position: relative;
-    transition: margin 0.5s ${props => props.theme.ease1};
+    transition: margin 0.5s var(--ease1);
   }
 
   ::before {
     background: ${props => props.dark
       ? '#323135'
-      : rgba(props.theme.colorBlack, 0.05)};
+      : 'rgb(var(--rgbBlack) / 0.05)'};
     border-radius: 24px;
     content: '';
     display: block;
@@ -88,12 +88,12 @@ const ButtonWrapper = styled.button`
     left: 0;
     position: absolute;
     top: 0;
-    transition: width 0.45s ${props => props.theme.ease1};
+    transition: width 0.45s var(--ease1);
     width: 48px;
     z-index: 1;
 
     ${props => props.accent && css`
-      background: ${props => rgba(props.theme.colorWhite, 0.2)};
+      background: rgb(var(--rgbWhite) / 0.2);
     `}
   }
 
@@ -107,7 +107,7 @@ const ButtonWrapper = styled.button`
     }
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${props => media.mobile}px) {
     font-size: 14px;
   }
 `;

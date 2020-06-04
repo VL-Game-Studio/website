@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/macro';
 import Icon from 'components/Icon';
-import { rgba } from 'utils/style';
 import { socials } from 'data/nav';
 
 function Socials(props) {
@@ -29,16 +28,16 @@ const SocialsMenu = styled.div`
   display: flex;
 
   a {
-    color: ${props => rgba(props.dark ? props.theme.colorWhite : props.theme.colorTitle, 0.6)}!important;
+    color: rgb(var(${props => props.dark ? '--rgbWhite' : '--rgbText'}) / 0.6)!important;
     margin-left: 36px;
-    transition: color 0.4s ${props => props.theme.ease1};
+    transition: color 0.4s var(--ease1);
 
     :first-of-type {
       margin-left: 0;
     }
 
     :hover, :focus, :active {
-      color: ${props => props.dark ? props.theme.colorWhite : props.theme.colorTitle}!important;
+      color: rgb(var(${props => props.dark ? '--rgbWhite' : '--rgbText'}))!important;
     }
   }
 `;

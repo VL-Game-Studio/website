@@ -6,7 +6,8 @@ import { Helmet } from 'react-helmet-async';
 import { Title2, Paragraph } from 'components/Type';
 import ProgressiveImage from 'components/ProgressiveImage';
 import Anchor from 'components/Anchor';
-import { AnimFade } from 'utils/style';
+import { Link } from 'components/Link';
+import { AnimFade, media } from 'utils/style';
 import { useScrollRestore } from 'hooks';
 import { reflow } from 'utils/transition';
 import prerender from 'utils/prerender';
@@ -104,13 +105,13 @@ const PostHeader = styled.header`
     grid-gap: 60px;
   }
 
-  @media (max-width: ${props => props.theme.laptop}px) {
+  @media (max-width: ${media.laptop}px) {
     padding-left: 180px;
     grid-gap: 40px;
     min-height: 70vh;
   }
 
-  @media (max-width: ${props => props.theme.tablet}px) {
+  @media (max-width: ${media.tablet}px) {
     padding-left: 160px;
     min-height: 40vh;
     grid-gap: 20px;
@@ -120,7 +121,7 @@ const PostHeader = styled.header`
     padding-left: 100px;
   }
 
-  @media (max-width: ${props => props.theme.mobile}px), ${props => props.theme.mobileLS} {
+  @media (max-width: ${media.mobile}px), ${props => props.theme.mobileLS} {
     grid-template-columns: 100%;
     grid-gap: 20px;
     height: auto;
@@ -140,7 +141,7 @@ const PostHeaderText = styled.div`
   padding: 60px 0 80px;
   max-width: 800px;
 
-  @media (max-width: ${props => props.theme.mobile}px), ${props => props.theme.mobileLS} {
+  @media (max-width: ${media.mobile}px), ${props => props.theme.mobileLS} {
     padding: 100px 0 0;
   }
 `;
@@ -149,18 +150,18 @@ const PostDate = styled.div`
   font-size: 18px;
   font-weight: 500;
   margin-bottom: 60px;
-  color: ${props => props.theme.colorAccent};
+  color: rgb(var(--rgbAccent));
   display: grid;
   grid-template-columns: 140px 1fr;
   grid-gap: 20px;
   align-items: center;
 
-  @media (max-width: ${props => props.theme.tablet}px) {
+  @media (max-width: ${media.tablet}px) {
     margin-bottom: 30px;
     grid-gap: 10px;
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     grid-template-columns: 100px 1fr;
   }
 `;
@@ -168,7 +169,7 @@ const PostDate = styled.div`
 const PostDateText = styled.span`
   opacity: ${props => (props.status === 'entered' ? 1 : 0)};
   transform: ${props => (props.status === 'entered' ? 'none' : 'translate3d(-5%, 0, 0)')};
-  transition: opacity 0.8s ease, transform 0.8s ${props => props.theme.ease1};
+  transition: opacity 0.8s ease, transform 0.8s var(--ease1);
 `;
 
 const PostTitle = styled.h1`
@@ -176,21 +177,21 @@ const PostTitle = styled.h1`
   font-weight: 700;
   line-height: 1.1;
   margin: 0;
-  color: ${props => props.theme.colorTitle};
+  color: var(--colorTextTitle);
 
   @media (max-width: 1600px) {
     font-size: 80px;
   }
 
-  @media (max-width: ${props => props.theme.laptop}px) {
+  @media (max-width: ${media.laptop}px) {
     font-size: 64px;
   }
 
-  @media (max-width: ${props => props.theme.tablet}px) {
+  @media (max-width: ${media.tablet}px) {
     font-size: 42px;
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     font-size: 36px;
   }
 `;
@@ -213,7 +214,7 @@ const PostTitleWordWrapper = styled.span`
 const PostTitleWord = styled.span`
   transform: translate3d(0, 110%, 0);
   animation-name: ${AnimPostTitleWord};
-  animation-timing-function: ${props => props.theme.ease1};
+  animation-timing-function: var(--ease1);
   animation-duration: 1.2s;
   animation-delay: ${props => props.index * 120 + 200}ms;
   animation-fill-mode: forwards;
@@ -228,9 +229,9 @@ const PostBanner = styled.div`
   justify-self: flex-end;
   width: 100%;
   height: 100%;
-  z-index: 1024;
+  z-index: 48;
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     min-height: 40vh;
     z-index: 1;
   }
@@ -258,7 +259,7 @@ const PostContent = styled.div`
   align-self: center;
   margin: 75px 0;
   animation-name: ${AnimFade};
-  animation-timing-function: ${props => props.theme.ease1};
+  animation-timing-function: var(--ease1);
   animation-duration: 1.2s;
   animation-delay: 1s;
   animation-fill-mode: forwards;
@@ -307,7 +308,7 @@ const PostContent = styled.div`
     margin: 60px 0;
   }
 
-  @media (max-width: ${props => props.theme.laptop}px) {
+  @media (max-width: ${media.laptop}px) {
     grid-template-columns: 1fr 60px 680px 60px 1fr;
     margin: 50px 0;
   }
@@ -317,7 +318,7 @@ const PostContent = styled.div`
     margin: 30px 0;
   }
 
-  @media (max-width: ${props => props.theme.tablet}px) {
+  @media (max-width: ${media.tablet}px) {
     grid-template-columns: 100%;
     padding: 0 20px;
 
@@ -334,7 +335,7 @@ const PostContent = styled.div`
     }
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     margin: 20px 0;
 
     ${Title2} {
@@ -359,7 +360,7 @@ const Image = styled.img`
   height: auto;
   grid-column: 2 / span 3;
 
-  @media (max-width: ${props => props.theme.tablet}px) {
+  @media (max-width: ${media.tablet}px) {
     grid-column: 1;
     margin: 60px 0;
   }
@@ -370,7 +371,9 @@ const components = {
   h2: Title2,
   p: Paragraph,
   img: props => <Image {...props} />,
-  a: props => <Anchor target="_blank" rel="noreferrer noopener" {...props} />,
+  a: ({ href, ...props }) => href.startsWith('http')
+    ? <Anchor href={href} target="_blank" rel="noreferrer noopener" {...props} />
+    : <Anchor as={Link} to={href} {...props} />,
 };
 
 function Post({ children }) {

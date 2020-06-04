@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useCallback, Fragment } from 'react
 import styled, { css, keyframes } from 'styled-components/macro';
 import { usePrefersReducedMotion } from 'hooks';
 import prerender from 'utils/prerender';
-import { rgba } from 'utils/style';
 
 function ProgressiveImage(props) {
   const { className, style, reveal, delay = 0, ...rest } = props;
@@ -165,7 +164,7 @@ const ImageContainer = styled.div`
   ${props => props.reveal && css`
     &::before {
       content: '';
-      background: ${props => rgba(props.theme.colorAccent, 0.2)};
+      background: rgb(var(--rgbAccent) / 0.2);
       position: absolute;
       top: 0;
       right: 0;
@@ -175,7 +174,7 @@ const ImageContainer = styled.div`
       transform-origin: left;
       z-index: 16;
       animation: ${props.intersect && !prerender && css`
-        ${AnimImageReveal} 1.8s ${props.theme.ease} ${props.delay + 200}ms
+        ${AnimImageReveal} 1.8s var(--ease1) ${props.delay + 200}ms
       `};
     }
   `}

@@ -1,13 +1,13 @@
 import React, { useState, memo } from 'react';
 import { useLocation } from 'react-router-dom';
-import styled, { useTheme } from 'styled-components/macro';
+import styled from 'styled-components/macro';
 import { Transition } from 'react-transition-group';
 import { Link, NavLink } from 'components/Link';
 import Icon from 'components/Icon';
 import NavToggle from './NavToggle';
 import Anchor from 'components/Anchor';
 import Socials from 'components/Socials';
-import { rgba } from 'utils/style';
+import { media } from 'utils/style';
 import { useAppContext, useWindowSize } from 'hooks';
 import { reflow } from 'utils/transition';
 import { navLinks } from 'data/nav';
@@ -17,9 +17,8 @@ function Header(props) {
   const { menuOpen, dispatch } = useAppContext();
   const [hashKey, setHashKey] = useState();
   const location = useLocation();
-  const { mobile, colorAccent } = useTheme();
   const { width } = useWindowSize();
-  const isMobile = width <= mobile;
+  const isMobile = width <= media.mobile;
   const isDark = menuOpen ? !dark : dark;
 
   const handleNavClick = () => {
@@ -82,14 +81,14 @@ function Header(props) {
                 <NavInfo dark={isDark}>
                   <Anchor
                     href="mailto:support@projectmodern.gg"
-                    style={{ marginBottom: '6px', color: colorAccent }}
+                    style={{ marginBottom: '6px' }}
                   >
                     support@projectmodern.gg
                   </Anchor>
                   <Anchor
                     href="https://discord.gg/mjtTnr8"
                     target="_blank"
-                    style={{ marginBottom: '6px', color: colorAccent }}
+                    style={{ marginBottom: '6px' }}
                   >
                     discord.gg/mjtTnr8
                   </Anchor>
@@ -117,16 +116,16 @@ const HeaderWrapper = styled.header`
   position: absolute;
   right: 0;
   top: 0;
-  transition: opacity 0.55s ${props => props.theme.ease1};
+  transition: opacity 0.55s var(--ease1);
   z-index: 1024;
 
   &, a {
     color: ${props => props.dark
-      ? props.theme.colorWhite
-      : props.theme.colorTitle};
+      ? 'rgb(var(--rgbWhite))'
+      : 'var(--colorTextBody)'};
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     height: 116px;
     max-width: calc(100% - 40px);
   }
@@ -145,9 +144,9 @@ const HeaderNav = styled.nav`
 `;
 
 const CTALink = styled.a`
-  color: ${props => props.dark
-    ? props.theme.colorWhite
-    : props.theme.colorTitle};
+  color: rgb(${props => props.dark
+    ? 'var(--rgbWhite)'
+    : 'var(--rgbText)'});
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.15em;
@@ -157,16 +156,16 @@ const CTALink = styled.a`
   text-transform: uppercase;
 
   ::after {
-    background: ${props => props.dark
-      ? props.theme.colorWhite
-      : props.theme.colorTitle};
+    background: rgb(${props => props.dark
+      ? 'var(--rgbWhite)'
+      : 'var(--rgbText)'});
     content: '';
     display: block;
     height: 1px;
     margin-top: 5px;
     transform-origin: left;
     transform: scaleX(1);
-    transition: transform 0.4s ${props => props.theme.ease1};
+    transition: transform 0.4s var(--ease1);
     width: 100%;
   }
 
@@ -178,15 +177,15 @@ const CTALink = styled.a`
     }
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     line-height: 24px;
   }
 `;
 
 const HeaderMenu = styled.div`
-  background: ${props => props.dark
-    ? props.theme.colorBackgroundDark
-    : props.theme.colorBackground};
+  background: rgb(${props => props.dark
+    ? 'var(--rgbBackgroundDark)'
+    : 'var(--rgbBackground)'});
   height: 100vh;
   left: 0;
   opacity: ${props => props.menuOpen ? '1' : '0'};
@@ -194,7 +193,7 @@ const HeaderMenu = styled.div`
   pointer-events: ${props => props.menuOpen ? 'all' : 'none'};
   position: fixed;
   top: 0;
-  transition: opacity 0.55s ${props => props.theme.ease1};
+  transition: opacity 0.55s var(--ease1);
   width: 100vw;
   z-index: 20;
 `;
@@ -208,15 +207,15 @@ const HeaderMenuContent = styled.div`
   position: relative;
   width: 100%;
 
-  @media (max-width: ${props => props.theme.desktop}px) {
+  @media (max-width: ${media.desktop}px) {
     max-width: 1080px;
   }
 
-  @media (max-width: ${props => props.theme.laptop}px) {
+  @media (max-width: ${media.laptop}px) {
     max-width: 960px;
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     max-width: 100%;
   }
 `;
@@ -227,7 +226,7 @@ const HeaderContentWrapper = styled.div`
   justify-content: space-between;
   width: 100%;
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     align-items: flex-start;
     flex-direction: column;
     justify-content: flex-start;
@@ -236,11 +235,11 @@ const HeaderContentWrapper = styled.div`
 `;
 
 const PrimaryNav = styled.nav`
-  color: ${props => props.dark
-    ? props.theme.colorWhite
-    : props.theme.colorTitle};
+  color: rgb(${props => props.dark
+    ? 'var(--rgbWhite)'
+    : 'var(--rgbText)'});
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     margin-bottom: 80px;
   }
 `;
@@ -255,7 +254,7 @@ const NavLabel = styled.label`
   transform-origin: bottom left;
   transform: rotate(-90deg) translate3d(-45px, 0, 0);
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     display: none;
   }
 `;
@@ -269,7 +268,7 @@ const NavMenu = styled.ul`
   padding: 0;
   transform: translate3d(0, -20px, 0);
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     margin-left: 0;
   }
 `;
@@ -333,24 +332,24 @@ const NavItem = styled(NavLink)`
       opacity: 1;
     }
 
-    @media (max-width: ${props => props.theme.mobile}px) {
+    @media (max-width: ${media.mobile}px) {
       h4, label {
         margin-left: 0;
       }
     }
   }
 
-  @media (max-width: ${props => props.theme.desktop}px) {
+  @media (max-width: ${media.desktop}px) {
     font-size: 67px;
     line-height: 87px;
   }
 
-  @media (max-width: ${props => props.theme.laptop}px) {
+  @media (max-width: ${media.laptop}px) {
     font-size: 59px;
     line-height: 79px;
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     font-size: 40px;
     line-height: 55px;
 
@@ -370,9 +369,9 @@ const NavInfo = styled.div`
   z-index: 22;
 
   h4 {
-    color: ${props => rgba(props.dark
-      ? props.theme.colorWhite
-      : props.theme.colorTitle, 0.4)};
+    color: ${props => props.dark
+      ? 'rgb(var(--rgbWhite))'
+      : 'rgb(var(--rgbText) / 0.4)'};
     font-size: 16px;
     font-weight: 500;
     letter-spacing: 0.8px;
@@ -380,7 +379,7 @@ const NavInfo = styled.div`
     margin: 15px 0 30px;
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     align-self: flex-start;
     margin: 0;
 

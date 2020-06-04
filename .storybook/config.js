@@ -3,7 +3,7 @@ import React, { Fragment } from 'react';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { ThemeProvider } from 'styled-components';
-import { theme } from '../src/app/theme';
+import { tokens } from '../src/app/theme';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { fontStyles, GlobalStyles } from '../src/app';
 import montserratLight from 'assets/fonts/montserrat-light.woff2';
@@ -15,7 +15,7 @@ import montserratBold from 'assets/fonts/montserrat-bold.woff2';
 addParameters({
   options: {
     theme: {
-      ...theme,
+      ...tokens,
       brandImage: 'https://projectmodern.gg/icon.svg',
       brandTitle: 'Project Modern Components',
       brandUrl: 'https://projectmodern.gg',
@@ -28,7 +28,7 @@ addDecorator(story => {
 
   return (
     <HelmetProvider>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={tokens}>
         <Fragment>
           <Helmet>
             <link rel="preload" href={montserratLight} as="font" crossorigin="" />

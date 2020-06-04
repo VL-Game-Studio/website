@@ -9,7 +9,7 @@ import Anchor from 'components/Anchor';
 import { Link } from 'components/Link';
 import PageLayout from 'components/PageLayout';
 import NotFound from 'pages/NotFound';
-import { AnimFade } from 'utils/style';
+import { AnimFade, media } from 'utils/style';
 import { useAppContext, useFormInput, useScrollRestore } from 'hooks';
 import { reflow } from 'utils/transition';
 import prerender from 'utils/prerender';
@@ -158,7 +158,7 @@ const EventsSignupWrapper = styled.section`
   display: flex;
   padding: 0 50px;
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     padding: 0 20px;
   }
 `;
@@ -169,15 +169,15 @@ const EventsSignupContainer = styled.section`
   opacity: 0;
   width: 100%;
 
-  @media (max-width: ${props => props.theme.desktop}px) {
+  @media (max-width: ${media.desktop}px) {
     max-width: 1080px;
   }
 
-  @media (max-width: ${props => props.theme.laptop}px) {
+  @media (max-width: ${media.laptop}px) {
     max-width: 960px;
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     max-width: 100%;
   }
 
@@ -201,19 +201,19 @@ const EventsSignupContent = styled.div`
     width: 56%;
   }
 
-  @media (max-width: ${props => props.theme.laptop}px) {
+  @media (max-width: ${media.laptop}px) {
     ${Title2} {
       width: 70%;
     }
   }
 
-  @media (max-width: ${props => props.theme.tablet}px) {
+  @media (max-width: ${media.tablet}px) {
     ${Title2} {
       width: 100%;
     }
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     justify-content: center;
     margin-top: 75px;
   }
@@ -225,7 +225,7 @@ const Form = styled.form`
   flex-direction: column;
   margin-top: 100px;
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     margin-top: 50px;
     width: 100%;
   }
@@ -237,7 +237,7 @@ const HalvedGrid = styled.div`
   grid-template-columns: 1fr 1fr;
   width: 100%;
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     grid-template-columns: 1fr;
   }
 `;
@@ -250,7 +250,7 @@ const FormLabel = styled.label`
   line-height: 36px;
   margin: 60px 0 20px;
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     font-size: 14px;
     line-height: 28px;
   }
@@ -260,7 +260,7 @@ const SubmitGrid = styled(HalvedGrid)`
   grid-template-columns: 175px auto;
   margin-top: 50px;
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     margin-top: 30px;
     display: block;
   }
@@ -268,12 +268,12 @@ const SubmitGrid = styled(HalvedGrid)`
 
 const Comment = styled.p`
   &, a {
-    color: ${props => props.theme.colorText};
+    color: var(--colorTextBody);
     font-size: 16px;
     letter-spacing: 0.05em;
     line-height: 48px;
 
-    @media (max-width: ${props => props.theme.mobile}px) {
+    @media (max-width: ${media.mobile}px) {
       line-height: 26px;
       margin-top: 20px;
     }

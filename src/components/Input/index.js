@@ -8,7 +8,7 @@ const Input = ({ textarea, ...rest }) => textarea
 
 const inputStyles = css`
   background:
-    linear-gradient(${props => props.theme.colorBackgroundDarkSecondary}, ${props => props.theme.colorBackgroundDarkSecondary}) no-repeat 100% 100% / 0 1px,
+    linear-gradient(rgb(var(--rgbBackgroundDarkSecondary)), rgb(var(--rgbBackgroundDarkSecondary))) no-repeat 100% 100% / 0 1px,
     linear-gradient(#bcbcbc, #bcbcbc) no-repeat 0 100% / 100% 1px;
   border: none!important;
   box-shadow: none!important;
@@ -18,12 +18,12 @@ const inputStyles = css`
   line-height: 1.15;
   margin: 0;
   padding: 26px 0;
-  transition: background-size 0.4s ${props => props.theme.ease1};
+  transition: background-size 0.4s var(--ease1);
   width: 100%;
 
   &:focus {
     background:
-      linear-gradient(${props => props.theme.colorBackgroundDarkSecondary}, ${props => props.theme.colorBackgroundDarkSecondary}) no-repeat 0 100% / 100% 1px,
+      linear-gradient(rgb(var(--rgbBackgroundDarkSecondary)), rgb(var(--rgbBackgroundDarkSecondary))) no-repeat 0 100% / 100% 1px,
       linear-gradient(#bcbcbc, #bcbcbc) no-repeat 0 100% / 100% 1px;
     outline: none;
   }

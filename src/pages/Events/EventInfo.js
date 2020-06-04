@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, Fragment } from 'react';
-import styled, { css, useTheme } from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 import { Helmet } from 'react-helmet-async';
 import { Transition } from 'react-transition-group';
 import { Title2, Paragraph } from 'components/Type';
@@ -9,7 +9,7 @@ import Button from 'components/Button';
 import GetStarted from 'pages/GetStarted';
 import PageLayout from 'components/PageLayout';
 import NotFound from 'pages/NotFound';
-import { AnimFade } from 'utils/style';
+import { AnimFade, media } from 'utils/style';
 import { useScrollRestore, useWindowSize, useAppContext } from 'hooks';
 import { reflow } from 'utils/transition';
 import prerender from 'utils/prerender';
@@ -24,8 +24,7 @@ function EventInfo(props) {
   const cta = useRef();
   const [visible, setVisible] = useState();
   const { width } = useWindowSize();
-  const { mobile } = useTheme();
-  const isMobile = width <= mobile;
+  const isMobile = width <= media.mobile;
   useScrollRestore();
 
   const handleRedirect = () => {
@@ -110,7 +109,7 @@ function EventInfo(props) {
                           </Tag>
                         }
                         {activeEvent?.players &&
-                          <Tag >
+                          <Tag>
                             <label>Players:</label>
                             {Object.values(activeEvent.players).length}
                           </Tag>
@@ -157,7 +156,7 @@ const EventsInfoWrapper = styled.div`
   display: flex;
   padding: 0 50px;
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     padding: 0 20px;
   }
 `;
@@ -171,20 +170,20 @@ const EventsInfoHeader = styled.div`
   opacity: 0;
   width: 100%;
 
-  @media (max-width: ${props => props.theme.desktop}px) {
+  @media (max-width: ${media.desktop}px) {
     max-width: 1080px;
   }
 
-  @media (max-width: ${props => props.theme.laptop}px) {
+  @media (max-width: ${media.laptop}px) {
     max-width: 960px;
   }
 
-  @media (max-width: ${props => props.theme.tablet}px) {
+  @media (max-width: ${media.tablet}px) {
     grid-template-columns: 1fr;
     max-width: 100%;
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     grid-gap: 45px;
     margin: 96px auto;
   }
@@ -221,7 +220,7 @@ const InfoPanel = styled.div`
     }
   }
 
-  @media (max-width: ${props => props.theme.tablet}px) {
+  @media (max-width: ${media.tablet}px) {
     width: 100%;
     margin-top: 50px;
 
@@ -238,7 +237,7 @@ const InfoPanel = styled.div`
 
 const Tag = styled(Paragraph)`
   align-items: center;
-  color: ${props => props.theme.colorTitle};
+  color: var(--colorTextTitle);
   display: flex;
   margin-top: 12px;
 
@@ -247,13 +246,14 @@ const Tag = styled(Paragraph)`
   }
 
   ::before {
-    background-color: ${props => props.theme.colorAccent};
+    background-color: rgb(var(--rgbAccent));
     border-radius: 50%;
     content: '';
     display: inline-block;
     height: 4px;
     margin-right: 20px;
     width: 4px;
+    align-self: center;
   }
 
   label {
@@ -270,7 +270,7 @@ const RelatedEvents = styled.div`
   margin-top: 250px;
 
   h4 {
-    color: ${props => props.theme.colorTitle};
+    color: var(--colorTextTitle);
     font-size: 14px;
     font-weight: bold;
     letter-spacing: 0.16em;
@@ -283,7 +283,7 @@ const RelatedEvents = styled.div`
     margin: 7px 0;
   }
 
-  @media (max-width: ${props => props.theme.tablet}px) {
+  @media (max-width: ${media.tablet}px) {
     margin-top: 50px;
 
     a {

@@ -5,7 +5,8 @@ import { Transition, TransitionGroup, config as transitionConfig } from 'react-t
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { useLocalStorage, usePrefersReducedMotion } from 'hooks';
 import { initialState, reducer } from 'app/reducer';
-import { theme } from 'app/theme';
+import { tokens, createThemeProperties, msToNum } from 'app/theme';
+import { media } from 'utils/style';
 import { reflow } from 'utils/transition';
 import montserratLight from 'assets/fonts/montserrat-light.woff2';
 import montserratRegular from 'assets/fonts/montserrat-regular.woff2';
@@ -95,7 +96,7 @@ function App() {
 
   return (
     <HelmetProvider>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={tokens}>
         <AppContext.Provider value={{ ...state, dispatch }}>
           <BrowserRouter>
             <AppRoutes menuOpen={menuOpen} />
@@ -131,7 +132,7 @@ function AppRoutes({ menuOpen }) {
       >
         <Transition
           key={pathname}
-          timeout={300}
+          timeout={msToNum(tokens.base.durationS)}
           onEnter={reflow}
         >
           {status => (
@@ -158,13 +159,29 @@ function AppRoutes({ menuOpen }) {
 }
 
 export const GlobalStyles = createGlobalStyle`
+  :root {
+    ${createThemeProperties(tokens.base)}
+
+    @media (max-width: ${media.laptop}px) {
+      ${createThemeProperties(tokens.laptop)}
+    }
+
+    @media (max-width: ${media.tablet}px) {
+      ${createThemeProperties(tokens.tablet)}
+    }
+
+    @media (max-width: ${media.mobile}px) {
+      ${createThemeProperties(tokens.mobile)}
+    }
+  }
+
   html,
   body {
     box-sizing: border-box;
-    font-family: ${props => props.theme.fontStack};
-    font-weight: 400;
-    background: ${props => props.theme.colorBackground};
-    color: ${props => props.theme.colorText};
+    font-family: var(--fontStack);
+    font-weight: var(--fontWeightRegular);
+    background: rgb(var(--rgbBackground));
+    color: var(--colorTextBody);
     border: 0;
     margin: 0;
     width: 100vw;
@@ -184,8 +201,8 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   ::selection {
-    background: ${props => props.theme.colorAccent};
-    color: ${props => props.theme.colorWhite}
+    background: rgb(var(--rgbAccent));
+    color: rgb(var(--rgbBlack));
   }
 
   #root *,
@@ -201,13 +218,13 @@ export const GlobalStyles = createGlobalStyle`
 `;
 
 const AppMainContent = styled.main`
-  background: ${props => props.theme.colorBackground};
+  background: rgb(var(--rgbBackground));
   display: grid;
   grid-template-columns: 100%;
   outline: none;
   overflow-x: hidden;
   position: relative;
-  transition: background 0.4s ease;
+  transition: background var(--durationM) ease;
   width: 100%;
 `;
 
@@ -216,7 +233,7 @@ const AppPage = styled.div`
   grid-row: 1;
   opacity: 0;
   overflow-x: hidden;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--durationS) ease;
 
   ${props => (props.status === 'exiting' || props.status === 'entering') && css`
     opacity: 0;
@@ -224,15 +241,16 @@ const AppPage = styled.div`
 
   ${props => props.status === 'entered' && css`
     opacity: 1;
-    transition-delay: 0.2s;
-    transition-duration: 0.5s;
+    transition-delay: var(--durationXS);
+    transition-duration: var(--durationL);
   `}
 `;
 
 const SkipToMain = styled.a`
+  background: rgb(var(--rgbPrimary));
   border: 0;
   clip: rect(0 0 0 0);
-  color: ${props => props.theme.colorBackground};
+  color: rgb(var(--rgbBackground));
   height: 1px;
   overflow: hidden;
   padding: 0;
@@ -241,17 +259,15 @@ const SkipToMain = styled.a`
   z-index: 99;
 
   &:focus {
-    background: ${props => props.theme.colorPrimary};
-    clip-path: ${props => props.theme.clipPath(8)};
     clip: auto;
-    font-weight: 500;
+    font-weight: var(--fontWeightMedium);
     height: auto;
-    left: 16px;
+    left: var(--spaceM);
     line-height: 1;
-    padding: 8px 16px;
+    padding: var(--spaceS) var(--spaceM);
     position: fixed;
     text-decoration: none;
-    top: 16px;
+    top: var(--spaceM);
     width: auto;
   }
 `;

@@ -7,65 +7,108 @@ const fontStack = [
 ];
 
 const monoFontStack = [
+  'SFMono Regular',
+  'Roboto Mono',
   'Consolas',
-  'Andale Mono WT',
-  'Andale Mono',
-  'Lucida Console',
-  'Lucida Sans Typewriter',
-  'DejaVu Sans Mono',
-  'Bitstream Vera Sans Mono',
   'Liberation Mono',
-  'Nimbus Mono L',
-  'Monaco',
-  'Courier New',
+  'Menlo',
   'Courier',
   'monospace',
 ];
 
-const spacing = {
-  spacingGutter: 20,
-  spacingOuter: {
-    desktop: 60,
-    tablet: 40,
-    mobile: 20,
-  }
-};
+/**
+ * Convert pixel values to rem for a11y
+ */
+export const pxToRem = px => `${px / 16}rem`;
 
-const media = {
-  desktop: 1600,
-  laptop: 1280,
-  tablet: 1024,
-  mobile: 696,
-  mobileSmall: 320,
-  mobileLS: `(max-width: 820px) and (max-height: 420px)`,
-};
+/**
+ * Convert ms token values to a raw numbers for ReactTransitionGroup
+ * Transition delay props
+ */
+export const msToNum = msString => Number(msString.replace('ms', ''));
 
-const easing = {
+// Full list of tokens
+const baseTokens = {
+  rgbBlack: '0 0 0',
+  rgbWhite: '255 255 255',
+  rgbAccent: '248 69 37',
+  rgbBackground: '255 255 255',
+  rgbBackgroundSecondary: '249 249 249',
+  rgbBackgroundDark: '31 30 29',
+  rgbBackgroundDarkSecondary: '23 22 21',
+  rgbText: '17 17 17',
+  colorTextTitle: 'rgb(var(--rgbText) / 1)',
+  colorTextBody: 'rgb(var(--rgbText) / 0.8)',
+  colorTextLight: 'rgb(var(--rgbText) / 0.6)',
   ease1: 'cubic-bezier(0.475, 0.425, 0, 0.995)',
   ease2: 'cubic-bezier(0.835, -0.005, 0.06, 1)',
-};
-
-const base = {
-  clipPath: (size = 8) => `polygon(0 0, 100% 0, 100% calc(100% - ${size}px), calc(100% - ${size}px) 100%, 0 100%)`,
+  durationXS: '200ms',
+  durationS: '300ms',
+  durationM: '400ms',
+  durationL: '600ms',
+  durationXL: '800ms',
   fontStack: fontStack.join(', '),
   monoFontStack: monoFontStack.join(', '),
-  colorBlack: 'rgba(0, 0, 0, 1)',
-  colorWhite: 'rgba(255, 255, 255, 1)',
-  colorAccent: 'rgba(248, 69, 37, 1)',
-  maxWidthDesktop: 1100,
-  maxWidthLaptop: 1000,
+  fontWeightLight: 300,
+  fontWeightRegular: 400,
+  fontWeightMedium: 500,
+  fontWeightSemiBold: 600,
+  fontWeightBold: 700,
+  fontSizeH1: pxToRem(72),
+  fontSizeH2: pxToRem(54),
+  fontSizeH3: pxToRem(16),
+  fontSizeBody: pxToRem(20),
+  letterSpacingH1: '-0.01em',
+  letterSpacingH2: '0em',
+  letterSpacingH3: '0.8em',
+  letterSpacingBody: '0.03em',
+  lineHeightTitle: '1.2',
+  lineHeightBody: '1.8',
+  maxWidthS: '100%',
+  maxWidthM: '960px',
+  maxWidthL: '1080px',
+  spaceOuter: '64px',
+  spaceXS: '4px',
+  spaceS: '8px',
+  spaceM: '16px',
+  spaceL: '24px',
+  spaceXL: '32px',
+  space2XL: '48px',
+  space3XL: '64px',
+  space4XL: '96px',
+  space5XL: '128px',
+  space6XL: '150px',
+  space7XL: '180px',
+  space8XL: '200px',
 };
 
-export const theme = {
-  ...spacing,
-  ...base,
-  ...media,
-  ...easing,
-  themeId: 'light',
-  colorBackground: 'rgba(255, 255, 255, 1)',
-  colorBackgroundSecondary: 'rgba(249, 249, 249, 1)',
-  colorBackgroundDark: 'rgba(31, 30, 29, 1)',
-  colorBackgroundDarkSecondary: 'rgba(23, 22, 21, 1)',
-  colorTitle: 'rgba(17, 17, 17, 1)',
-  colorText: 'rgba(111, 111, 111, 1)',
+// Tokens that change based on viewport size
+const tokensLaptop = {
+  fontSizeH2: pxToRem(36),
 };
+
+const tokensTablet = {
+  spaceOuter: '48px',
+};
+
+const tokensMobile = {
+  spaceOuter: '24px',
+  fontSizeH1: pxToRem(38),
+  fontSizeH2: pxToRem(28),
+  fontSizeH3: pxToRem(14),
+  fontSizeBody: pxToRem(16),
+};
+
+export const tokens = {
+  base: baseTokens,
+  laptop: tokensLaptop,
+  tablet: tokensTablet,
+  mobile: tokensMobile,
+};
+
+/**
+ * Transform theme token objects into CSS custom properties
+ */
+export function createThemeProperties(theme) {
+  return Object.keys(theme).map(key => `--${key}: ${theme[key]};`);
+}

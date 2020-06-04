@@ -1,20 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
-import styled, { useTheme, css } from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 import { Transition } from 'react-transition-group';
 import { Link } from 'components/Link';
 import Icon from 'components/Icon';
 import { Paragraph } from 'components/Type';
 import Anchor from 'components/Anchor';
 import Socials from 'components/Socials';
-import { AnimFade, rgba } from 'utils/style';
+import { AnimFade, media } from 'utils/style';
 import { useWindowSize } from 'hooks';
 import { reflow } from 'utils/transition';
 import { navLinks } from 'data/nav';
 
 function Footer() {
   const { width } = useWindowSize();
-  const { mobile } = useTheme();
-  const isMobile = width <= mobile;
+  const isMobile = width <= media.mobile;
   const [visible, setVisible] = useState();
   const footer = useRef();
 
@@ -87,11 +86,11 @@ function Footer() {
 
 const FooterWrapper = styled.footer`
   align-items: center;
-  background: ${props => props.theme.colorBackgroundDarkSecondary};
+  background: rgb(var(--rgbBackgroundDarkSecondary));
   display: flex;
   padding: 0 50px;
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     padding: 0 20px;
   }
 `;
@@ -105,15 +104,15 @@ const FooterContent = styled.div`
   opacity: 0;
   width: 100%;
 
-  @media (max-width: ${props => props.theme.desktop}px) {
+  @media (max-width: ${media.desktop}px) {
     max-width: 1080px;
   }
 
-  @media (max-width: ${props => props.theme.laptop}px) {
+  @media (max-width: ${media.laptop}px) {
     max-width: 960px;
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     display: block;
     max-width: 100%;
     margin: 80px 0;
@@ -132,7 +131,7 @@ const FooterLeft = styled.div`
   position: relative;
 
   a, ${Paragraph} {
-    color: ${props => props.theme.colorWhite};
+    color: rgb(var(--rgbWhite));
   }
 
   ${Paragraph} {
@@ -140,7 +139,7 @@ const FooterLeft = styled.div`
   }
 
   h4 {
-    color: ${props => rgba(props.theme.colorWhite, 0.4)};
+    color: rgb(var(--rgbWhite) / 0.4);
     font-size: 16px;
     font-weight: 500;
     letter-spacing: 0.8px;
@@ -153,7 +152,7 @@ const FooterSocials = styled(Socials)`
   bottom: 0;
   position: absolute;
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     position: relative;
   }
 `;
@@ -164,7 +163,7 @@ const FooterRight = styled.div`
 `;
 
 const FooterLabel = styled.label`
-  color: ${props => props.theme.colorWhite};
+  color: rgb(var(--rgbWhite));
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 2.1px;
@@ -172,7 +171,7 @@ const FooterLabel = styled.label`
   margin: 85px 0 30px;
   text-transform: uppercase;
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     margin: 65px 0 30px;
   }
 
@@ -202,24 +201,24 @@ const FooterMenu = styled.ul`
   padding: 0;
 
   a {
-    color: ${props => rgba(props.theme.colorWhite, 0.6)};
+    color: rgb(var(--rgbWhite) / 0.6);
     font-size: 16px;
     letter-spacing: 0.8px;
     line-height: 32px;
     margin-left: 15px;
     text-decoration: none;
-    transition: color 0.4s ${props => props.theme.ease1};
+    transition: color 0.4s var(--ease1);
 
     :first-of-type {
       margin-left: 0;
     }
 
     :hover, :focus, :active {
-      color: ${props => props.theme.colorWhite};
+      color: rgb(var(--rgbWhite));
     }
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     flex-direction: column;
 
     a {

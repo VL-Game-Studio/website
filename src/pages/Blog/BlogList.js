@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import Hero from 'pages/Hero';
 import { Link } from 'components/Link';
 import ProgressiveImage from 'components/ProgressiveImage';
-import { rgba } from 'utils/style';
+import { media } from 'utils/style';
 import { useScrollRestore } from 'hooks';
 
 function BlogList(props) {
@@ -69,7 +69,7 @@ function BlogList(props) {
 }
 
 const ArticlesGrid = styled.div`
-  background: ${props => props.theme.colorBackgroundSecondary};
+  background: rgb(var(--rgbBackgroundSecondary));
   display: grid;
   grid-column-gap: 6.666%;
   grid-row-gap: 160px;
@@ -77,7 +77,7 @@ const ArticlesGrid = styled.div`
   padding: 180px 0;
   width: 100%;
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     display: block;
     padding: 96px 0;
     padding-bottom: 60px;
@@ -92,7 +92,7 @@ const PostListItemWrapper = styled.article`
   justify-content: center;
   padding: 0 60px;
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     padding: 0 35px;
   }
 `;
@@ -105,7 +105,7 @@ const PostContent = styled(Link)`
   text-decoration: none;
   transition: background-color 0.4s ease;
 
-  @media (max-width: ${props => props.theme.tablet}px) {
+  @media (max-width: ${media.tablet}px) {
     grid-template-columns: 100%;
     max-width: 440px;
   }
@@ -115,7 +115,7 @@ const PostText = styled.div`
   grid-column: 2;
   padding: 60px 0;
 
-  @media (max-width: ${props => props.theme.tablet}px) {
+  @media (max-width: ${media.tablet}px) {
     grid-column: 1;
     padding: 30px 0;
   }
@@ -124,37 +124,37 @@ const PostText = styled.div`
 const PostDate = styled.span`
   display: block;
   margin-bottom: 8px;
-  color: ${props => rgba(props.theme.colorText, 0.8)};
+  color: var(--colorTextLight);
 `;
 
 const PostTitle = styled.h2`
-  background: linear-gradient(${props => props.theme.colorText}, ${props => props.theme.colorText}) no-repeat 100% 100% / 0 2px;
-  color: ${props => props.theme.colorTitle};
+  background: linear-gradient(var(--colorTextTitle)), var(--colorTextTitle)) no-repeat 100% 100% / 0 2px;
+  color: var(--colorTextTitle);
   display: inline;
   font-size: 36px;
   font-weight: 500;
   line-height: 1.2;
   margin: 0;
   padding-bottom: 2px;
-  transition: background-size 0.4s ${props => props.theme.ease1};
+  transition: background-size 0.4s var(--ease1);
 
   &:hover,
   &:focus {
-    background: linear-gradient(var(--colorTextBody), var(--colorTextBody)) no-repeat 0 100% / 100% 2px;
+    background: linear-gradient(rgb(var(--colorTextBody)), rgb(var(--colorTextBody))) no-repeat 0 100% / 100% 2px;
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     font-size: 30px;
   }
 `;
 
 const PostDescription = styled.p`
-  color: ${props => props.theme.colorText};
+  color: var(--colorTextBody);
   font-size: 20px;
   line-height: 1.5;
   margin: 20px 0 0;
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     font-size: 18px;
   }
 `;
@@ -167,7 +167,7 @@ const PostImage = styled(ProgressiveImage)`
   video {
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s ${props => props.theme.ease1};
+    transition: transform 0.5s var(--ease1);
     width: 100%;
   }
 
@@ -178,7 +178,7 @@ const PostImage = styled(ProgressiveImage)`
 `;
 
 const PostImageWrapper = styled.div`
-  background: rgba(255, 255, 255, 0.1);
+  background: rgb(--var(rgbWhite) / 0.1);
   position: relative;
 `;
 

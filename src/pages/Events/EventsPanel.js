@@ -5,6 +5,7 @@ import { Link } from 'components/Link';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import Hero from 'pages/Hero';
+import { media } from 'utils/style';
 
 const EventsPanel = ({
   alternate,
@@ -45,7 +46,7 @@ const EventsPanel = ({
 
 const EventsHero = styled(Hero)`
   display: flex;
-  background: ${props => props.theme.colorBackgroundSecondary};
+  background: var(--rgbBackgroundSecondary);
 
   ${Title2} {
     max-width: 564px;
@@ -56,7 +57,7 @@ const EventsHero = styled(Hero)`
     margin: 60px auto 0;
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     ${Title2} {
       max-width: none;
     }
@@ -79,13 +80,13 @@ const Tournaments = styled.div`
   width: 100%;
 
   svg {
-    color: ${props => props.theme.colorAccent};
+    color: rgb(var(--rgbAccent));
     position: absolute;
     right: 0;
     top: 50px;
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     align-self: flex-start;
     margin-top: 35px;
     max-width: none;
@@ -98,7 +99,7 @@ const Tournaments = styled.div`
 
 const TournamentName = styled.h4`
   align-self: flex-start;
-  color: ${props => props.theme.colorTitle};
+  color: var(--colorTextTitle);
   flex: none;
   font-size: 30px;
   font-weight: 700;
@@ -119,18 +120,19 @@ const TournamentName = styled.h4`
     right: -20px;
     transform-origin: right;
     transform: scaleX(0);
-    transition: transform 0.85s ${props => props.theme.ease2};
+    transition: transform 0.85s var(--ease1);
     width: 100%;
     z-index: 1;
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     font-size: 20px;
     line-height: 26px;
   }
 `;
 
 const Tournament = styled(Link)`
+  color: var(--colorTextBody);
   display: flex;
   flex-direction: column;
   height: 145px;
@@ -157,20 +159,19 @@ const Tournament = styled(Link)`
     }
   }
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     height: 100px;
   }
 `;
 
 const TournamentInfo = styled.p`
-  color: ${props => props.theme.colorText};
   font-size: 16px;
   font-weight: 400;
   letter-spacing: 0.05em;
   line-height: 36px;
   margin-top: 10px;
 
-  @media (max-width: ${props => props.theme.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
     font-size: 16px;
     line-height: 26px;
   }

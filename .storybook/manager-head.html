@@ -5,7 +5,7 @@
   document.head.insertBefore(titleTag, firstMeta.nextSibling);
 
   const callback = function(mutationsList, observer) {
-    for(let mutation of mutationsList) {
+    for (let mutation of mutationsList) {
       if (mutation.type == 'childList') {
         observer.disconnect();
         titleTag.text = 'Project Modern | Storybook';
