@@ -1,7 +1,7 @@
 import React, { Suspense, Fragment } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import PageLayout from 'components/PageLayout';
-import Post from './Post';
+import Article from './Article';
 import BlogList from './BlogList';
 import NotFound from 'pages/NotFound';
 import { useScrollRestore } from 'hooks';
@@ -12,7 +12,7 @@ function Blog() {
 
   return (
     <PageLayout>
-      <Post>
+      <Article>
         <Suspense fallback={Fragment}>
           <Switch>
             {articles?.map(({ content: Article, path, ...rest }) => (
@@ -30,7 +30,7 @@ function Blog() {
             <Route component={NotFound} />
           </Switch>
         </Suspense>
-      </Post>
+      </Article>
     </PageLayout>
   );
 }

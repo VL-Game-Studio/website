@@ -3,7 +3,7 @@ import styled from 'styled-components/macro';
 import { Helmet } from 'react-helmet-async';
 import Hero from 'pages/Hero';
 import { Link } from 'components/Link';
-import ProgressiveImage from 'components/ProgressiveImage';
+import { Label, Title2, Paragraph } from 'components/Type';
 import { media } from 'utils/style';
 import { useScrollRestore } from 'hooks';
 
@@ -37,30 +37,20 @@ function BlogList(props) {
             description,
             ...rest
           }) => (
-            <PostListItemWrapper>
-              <PostContent to={`/blog${path}`}>
-                <PostImageWrapper>
-                  {(banner || bannerVideo) &&
-                    <PostImage
-                      srcSet={banner ? require(`articles/assets/${banner}`) : undefined}
-                      videoSrc={bannerVideo ? require(`articles/assets/${bannerVideo}`) : undefined}
-                      placeholder={bannerPlaceholder ? require(`articles/assets/${bannerPlaceholder}`) : undefined}
-                      alt={bannerAlt}
-                    />
-                  }
-                </PostImageWrapper>
-                <PostText>
-                  <PostDate>
+            <ArticleListItemWrapper>
+              <ArticleContent to={`/blog${path}`}>
+                <ArticleText>
+                  <ArticleDate>
                     {new Date(date).toLocaleDateString('default', {
                       year: 'numeric',
                       month: 'long',
                     })}
-                  </PostDate>
-                  <PostTitle>{title}</PostTitle>
-                  <PostDescription>{description}</PostDescription>
-                </PostText>
-              </PostContent>
-            </PostListItemWrapper>
+                  </ArticleDate>
+                  <Title2>{title}</Title2>
+                  <Paragraph>{description}</Paragraph>
+                </ArticleText>
+              </ArticleContent>
+            </ArticleListItemWrapper>
           ))}
         </ArticlesGrid>
       }
@@ -87,7 +77,7 @@ const ArticlesGrid = styled.div`
   }
 `;
 
-const PostListItemWrapper = styled.article`
+const ArticleListItemWrapper = styled.article`
   display: flex;
   justify-content: center;
   padding: 0 60px;
@@ -97,89 +87,38 @@ const PostListItemWrapper = styled.article`
   }
 `;
 
-const PostContent = styled(Link)`
-  width: 100%;
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  grid-gap: 0 40px;
+const ArticleContent = styled(Link)`
   text-decoration: none;
   transition: background-color 0.4s ease;
+  width: 100%;
+
+  p {
+    margin-top: 20px;
+  }
 
   @media (max-width: ${media.tablet}px) {
-    grid-template-columns: 100%;
     max-width: 440px;
   }
 `;
 
-const PostText = styled.div`
-  grid-column: 2;
-  padding: 60px 0;
+const ArticleText = styled.div`
+  padding: 60px 0 0 20px;
 
   @media (max-width: ${media.tablet}px) {
-    grid-column: 1;
     padding: 30px 0;
   }
 `;
 
-const PostDate = styled.span`
+const ArticleDate = styled(Label)`
   display: block;
-  margin-bottom: 8px;
-  color: var(--colorTextLight);
-`;
-
-const PostTitle = styled.h2`
-  background: linear-gradient(var(--colorTextTitle)), var(--colorTextTitle)) no-repeat 100% 100% / 0 2px;
-  color: var(--colorTextTitle);
-  display: inline;
-  font-size: 36px;
-  font-weight: 500;
-  line-height: 1.2;
-  margin: 0;
-  padding-bottom: 2px;
-  transition: background-size 0.4s var(--ease1);
-
-  &:hover,
-  &:focus {
-    background: linear-gradient(rgb(var(--colorTextBody)), rgb(var(--colorTextBody))) no-repeat 0 100% / 100% 2px;
-  }
-
-  @media (max-width: ${media.mobile}px) {
-    font-size: 30px;
-  }
-`;
-
-const PostDescription = styled.p`
-  color: var(--colorTextBody);
-  font-size: 20px;
-  line-height: 1.5;
-  margin: 20px 0 0;
-
-  @media (max-width: ${media.mobile}px) {
-    font-size: 18px;
-  }
-`;
-
-const PostImage = styled(ProgressiveImage)`
-  clip-path: polygon(0 0,100% 0,100% 100%,28px 100%,0 calc(100% - 28px));
-  height: 100%;
-
-  img,
-  video {
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s var(--ease1);
-    width: 100%;
-  }
-
-  ${PostContent}:hover & img,
-  ${PostContent}:hover & video {
-    transform: scale3d(1.1, 1.1, 1);
-  }
-`;
-
-const PostImageWrapper = styled.div`
-  background: rgb(--var(rgbWhite) / 0.1);
+  margin-bottom: 24px;
   position: relative;
+  left: -20px;
+
+  @media (max-width: ${media.tablet}px) {
+    margin-bottom: 16px;
+    left: 0;
+  }
 `;
 
 export default memo(BlogList);

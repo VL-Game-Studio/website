@@ -202,7 +202,7 @@ export const GlobalStyles = createGlobalStyle`
 
   ::selection {
     background: rgb(var(--rgbAccent));
-    color: rgb(var(--rgbBlack));
+    color: rgb(var(--rgbWhite));
   }
 
   #root *,

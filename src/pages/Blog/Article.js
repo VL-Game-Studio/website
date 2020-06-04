@@ -1,10 +1,10 @@
 import React, { Fragment } from 'react';
 import styled, { keyframes } from 'styled-components/macro';
+import { msToNum, tokens } from 'app/theme';
 import { MDXProvider } from '@mdx-js/react';
 import { Transition } from 'react-transition-group';
 import { Helmet } from 'react-helmet-async';
-import { Title2, Paragraph } from 'components/Type';
-import ProgressiveImage from 'components/ProgressiveImage';
+import { Title, Title2, Paragraph } from 'components/Type';
 import Anchor from 'components/Anchor';
 import { Link } from 'components/Link';
 import { AnimFade, media } from 'utils/style';
@@ -12,15 +12,11 @@ import { useScrollRestore } from 'hooks';
 import { reflow } from 'utils/transition';
 import prerender from 'utils/prerender';
 
-function PostWrapper({
+function ArticleWrapper({
   children,
   title,
   date,
   description,
-  banner = undefined,
-  bannerVideo = undefined,
-  bannerPlaceholder = undefined,
-  bannerAlt = '',
   readTime,
   ...rest
 }) {
@@ -35,118 +31,76 @@ function PostWrapper({
           content: description,
         }]}
       />
-      <PostArticle {...rest}>
-        <PostHeader>
-          <PostHeaderText>
+      <ArticleArticle {...rest}>
+        <ArticleHeader>
+          <ArticleHeaderText>
             <Transition
               appear
               in={!prerender}
-              timeout={400}
+              timeout={msToNum(tokens.base.durationM)}
               onEnter={reflow}
             >
               {status => (
-                <PostDate>
-                  <PostDateText status={status}>
+                <ArticleDate>
+                  <ArticleDateText status={status}>
                     {new Date(date).toLocaleDateString('default', {
                       year: 'numeric',
                       month: 'long',
                     })}
-                  </PostDateText>
-                </PostDate>
+                  </ArticleDateText>
+                </ArticleDate>
               )}
             </Transition>
-            <PostTitle aria-label={title}>
+            <Title aria-label={title}>
               {title.split(' ').map((word, index) => (
-                <PostTitleWordWrapper key={`${word}-${index}`}>
-                  <PostTitleWord index={index}>
+                <ArticleTitleWordWrapper key={`${word}-${index}`}>
+                  <ArticleTitleWord index={index}>
                     {word}
                     {index !== title.split(' ').length - 1 ? '\u00a0' : ''}
-                  </PostTitleWord>
-                </PostTitleWordWrapper>
+                  </ArticleTitleWord>
+                </ArticleTitleWordWrapper>
               ))}
-            </PostTitle>
-          </PostHeaderText>
-          <PostBanner>
-            {(banner || bannerVideo) &&
-              <PostBannerImage
-                reveal
-                srcSet={banner ? require(`articles/assets/${banner}`) : undefined}
-                videoSrc={bannerVideo ? require(`articles/assets/${bannerVideo}`) : undefined}
-                placeholder={bannerPlaceholder ? require(`articles/assets/${bannerPlaceholder}`) : undefined}
-                alt={bannerAlt}
-              />
-            }
-          </PostBanner>
-        </PostHeader>
-        <PostContentWrapper id="postContent">
-          <PostContent>{!prerender && children}</PostContent>
-        </PostContentWrapper>
-      </PostArticle>
+            </Title>
+          </ArticleHeaderText>
+        </ArticleHeader>
+        <ArticleContentWrapper id="ArticleContent">
+          <ArticleContent>{!prerender && children}</ArticleContent>
+        </ArticleContentWrapper>
+      </ArticleArticle>
     </Fragment>
   );
 }
 
-const PostArticle = styled.article`
+const ArticleArticle = styled.article`
   position: relative;
   display: flex;
   flex-direction: column;
 `;
 
-const PostHeader = styled.header`
-  padding-left: 300px;
-  display: grid;
-  grid-template-columns: calc(50% - 40px) 1fr;
-  grid-gap: 80px;
+const ArticleHeader = styled.header`
+  display: flex;
   align-items: center;
-  min-height: 80vh;
-
-  @media (max-width: 1600px) {
-    padding-left: 200px;
-    grid-gap: 60px;
-  }
-
-  @media (max-width: ${media.laptop}px) {
-    padding-left: 180px;
-    grid-gap: 40px;
-    min-height: 70vh;
-  }
-
-  @media (max-width: ${media.tablet}px) {
-    padding-left: 160px;
-    min-height: 40vh;
-    grid-gap: 20px;
-  }
-
-  @media (max-height: 696px) {
-    padding-left: 100px;
-  }
+  justify-content: center;
+  padding: 180px 0;
 
   @media (max-width: ${media.mobile}px), ${props => props.theme.mobileLS} {
-    grid-template-columns: 100%;
-    grid-gap: 20px;
     height: auto;
     padding-right: 20px;
     padding-left: 20px;
   }
 `;
 
-const PostHeaderText = styled.div`
+const ArticleHeaderText = styled.div`
   height: 100%;
   width: 100%;
   position: relative;
   display: flex;
-  justify-self: flex-end;
   justify-content: center;
   flex-direction: column;
-  padding: 60px 0 80px;
   max-width: 800px;
-
-  @media (max-width: ${media.mobile}px), ${props => props.theme.mobileLS} {
-    padding: 100px 0 0;
-  }
 `;
 
-const PostDate = styled.div`
+const ArticleDate = styled.div`
   font-size: 18px;
   font-weight: 500;
   margin-bottom: 60px;
@@ -166,37 +120,13 @@ const PostDate = styled.div`
   }
 `;
 
-const PostDateText = styled.span`
+const ArticleDateText = styled.span`
   opacity: ${props => (props.status === 'entered' ? 1 : 0)};
   transform: ${props => (props.status === 'entered' ? 'none' : 'translate3d(-5%, 0, 0)')};
-  transition: opacity 0.8s ease, transform 0.8s var(--ease1);
+  transition: opacity var(--durationXL) ease, transform var(--durationXL) var(--ease1);
 `;
 
-const PostTitle = styled.h1`
-  font-size: 94px;
-  font-weight: 700;
-  line-height: 1.1;
-  margin: 0;
-  color: var(--colorTextTitle);
-
-  @media (max-width: 1600px) {
-    font-size: 80px;
-  }
-
-  @media (max-width: ${media.laptop}px) {
-    font-size: 64px;
-  }
-
-  @media (max-width: ${media.tablet}px) {
-    font-size: 42px;
-  }
-
-  @media (max-width: ${media.mobile}px) {
-    font-size: 36px;
-  }
-`;
-
-const AnimPostTitleWord = keyframes`
+const AnimArticleTitleWord = keyframes`
   from {
     transform: translate3d(0, 110%, 0);
   }
@@ -205,15 +135,15 @@ const AnimPostTitleWord = keyframes`
   }
 `;
 
-const PostTitleWordWrapper = styled.span`
+const ArticleTitleWordWrapper = styled.span`
   overflow: hidden;
   position: relative;
   display: inline-flex;
 `;
 
-const PostTitleWord = styled.span`
+const ArticleTitleWord = styled.span`
   transform: translate3d(0, 110%, 0);
-  animation-name: ${AnimPostTitleWord};
+  animation-name: ${AnimArticleTitleWord};
   animation-timing-function: var(--ease1);
   animation-duration: 1.2s;
   animation-delay: ${props => props.index * 120 + 200}ms;
@@ -225,46 +155,28 @@ const PostTitleWord = styled.span`
   }
 `;
 
-const PostBanner = styled.div`
-  justify-self: flex-end;
-  width: 100%;
-  height: 100%;
-  z-index: 48;
-
-  @media (max-width: ${media.mobile}px) {
-    min-height: 40vh;
-    z-index: 1;
-  }
-`;
-
-const PostBannerImage = styled(ProgressiveImage)`
-  height: 100%;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 28px 100%, 0 calc(100% - 28px));
-
-  img,
-  video {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-  }
-`;
-
-const PostContentWrapper = styled.div`
+const ArticleContentWrapper = styled.div`
+  animation-delay: 1.2s;
+  animation-duration: var(--durationXL);
+  animation-fill-mode: forwards;
+  animation-name: ${AnimFade};
+  animation-timing-function: var(--ease1);
+  background: rgb(var(--rgbBackgroundSecondary));
   display: flex;
   flex-direction: column;
+  opacity: 0;
+
+  @media (prefers-reduced-motion: reduce) {
+    opacity: 1;
+  }
 `;
 
-const PostContent = styled.div`
+const ArticleContent = styled.div`
   width: 100%;
   align-self: center;
   margin: 75px 0;
-  animation-name: ${AnimFade};
-  animation-timing-function: var(--ease1);
-  animation-duration: 1.2s;
-  animation-delay: 1s;
-  animation-fill-mode: forwards;
-  opacity: 0;
   display: grid;
+  padding-bottom: 180px;
   grid-template-columns: 1fr 100px 800px 100px 1fr;
 
   ${Title2}, ${Paragraph} {
@@ -289,18 +201,22 @@ const PostContent = styled.div`
     line-height: 36px;
     letter-spacing: 0.03em;
     font-weight: 400;
+
+    :first-of-type {
+      margin-top: 0;
+    }
+  }
+
+  ${Paragraph} + ${Title2}, ${Title2} + ${Paragraph} {
+    margin-top: 30px;
   }
 
   ${Paragraph} + ${Paragraph} {
-    margin-top: 30px;
+    margin-top: 20px;
   }
 
   & > pre {
     grid-column: 3;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    opacity: 1;
   }
 
   @media (max-width: 1320px) {
@@ -337,9 +253,14 @@ const PostContent = styled.div`
 
   @media (max-width: ${media.mobile}px) {
     margin: 20px 0;
+    padding-bottom: 96px;
 
     ${Title2} {
       font-size: 18px;
+    }
+
+    ${Paragraph} + ${Title2}, ${Title2} + ${Paragraph} {
+      margin-top: 20px;
     }
 
     ${Paragraph} + ${Paragraph} {
@@ -367,7 +288,7 @@ const Image = styled.img`
 `;
 
 const components = {
-  wrapper: PostWrapper,
+  wrapper: ArticleWrapper,
   h2: Title2,
   p: Paragraph,
   img: props => <Image {...props} />,
@@ -376,8 +297,8 @@ const components = {
     : <Anchor as={Link} to={href} {...props} />,
 };
 
-function Post({ children }) {
+function Article({ children }) {
   return <MDXProvider components={components}>{children}</MDXProvider>;
 }
 
-export default Post;
+export default Article;

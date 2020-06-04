@@ -2,7 +2,6 @@ import React, { Fragment } from 'react';
 import styled, { css } from 'styled-components/macro';
 import { Link } from 'components/Link';
 import Icon from 'components/Icon';
-import { media } from 'utils/style';
 
 const ButtonContent = ({ label, icon = 'arrowRight', ...rest }) => (
   <ButtonWrapper aria-label={label} {...rest}>
@@ -36,10 +35,10 @@ const linkStyles = css`
     ? 'var(--rgbWhite)'
     : 'var(--rgbText)'});
   font-family: var(--fontStack);
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 0.75rem;
+  font-weight: var(--fontWeightBold);
   letter-spacing: 0.25em;
-  line-height: 24px;
+  line-height: var(--spaceL);
   position: relative;
   text-decoration: none;
   text-transform: uppercase;
@@ -57,9 +56,9 @@ const ButtonWrapper = styled.button`
   border-style: none;
   cursor: pointer;
   display: flex;
-  height: 48px;
+  height: var(--space2XL);
   outline: 0;
-  padding: 0 24px;
+  padding: 0 var(--spaceL);
 
   &, span {
     ${linkStyles}
@@ -71,25 +70,25 @@ const ButtonWrapper = styled.button`
 
   svg {
     display: inline-block;
-    margin-left: 28px;
+    margin-left: calc(var(--spaceL) + 4px);
     opacity: 0.7;
     position: relative;
-    transition: margin 0.5s var(--ease1);
+    transition: margin var(--durationL) var(--ease1);
   }
 
   ::before {
     background: ${props => props.dark
       ? '#323135'
       : 'rgb(var(--rgbBlack) / 0.05)'};
-    border-radius: 24px;
+    border-radius: var(--spaceL);
     content: '';
     display: block;
-    height: 48px;
+    height: var(--space2XL);
     left: 0;
     position: absolute;
     top: 0;
-    transition: width 0.45s var(--ease1);
-    width: 48px;
+    transition: width var(--durationM) var(--ease1);
+    width: var(--space2XL);
     z-index: 1;
 
     ${props => props.accent && css`
@@ -103,12 +102,8 @@ const ButtonWrapper = styled.button`
     }
 
     svg {
-      margin-left: 36px;
+      margin-left: calc(var(--spaceXL) + 4px);
     }
-  }
-
-  @media (max-width: ${props => media.mobile}px) {
-    font-size: 14px;
   }
 `;
 
