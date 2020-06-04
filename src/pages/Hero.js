@@ -71,10 +71,10 @@ const HeroWrapper = styled.section`
     ? 'var(--rgbBackgroundDark)'
     : 'var(--rgbBackground)'});
   display: flex;
-  padding: 0 50px;
+  padding: 0 var(--space2XL);
 
   @media (max-width: ${media.mobile}px) {
-    padding: 0 20px;
+    padding: 0 var(--spaceL);
   }
 
   ${props => props.accent && css`
@@ -88,24 +88,24 @@ const HeroWrapper = styled.section`
 
 const HeroContainer = styled.div`
   margin: 0 auto;
-  max-width: 1200px;
+  max-width: var(--maxWidthXL);
   opacity: 0;
   width: 100%;
 
   @media (max-width: ${media.desktop}px) {
-    max-width: 1080px;
+    max-width: var(--maxWidthL);
   }
 
   @media (max-width: ${media.laptop}px) {
-    max-width: 960px;
+    max-width: var(--maxWidthM);
   }
 
   @media (max-width: ${media.mobile}px) {
-    max-width: 100%;
+    max-width: var(-maxWidthS);
   }
 
   ${props => props.status === 'entering' && css`
-    animation: ${css`${AnimFade} 0.6s ease 0.2s forwards`};
+    animation: ${css`${AnimFade} var(--durationL) ease var(--durationXS) forwards`};
   `}
 
   ${props => props.status === 'entered' && css`
@@ -117,40 +117,40 @@ const HeroContent = styled.div`
   align-items: flex-start;
   display: flex;
   flex-direction: column;
-  margin: 180px 0;
-  padding-left: 50px;
+  margin: var(--space7XL) 0;
+  padding-left: var(--space2XL);
 
   ${Label} {
-    left: -50px;
+    left: -var(--space2XL);
     position: relative;
   }
 
   ${Title} {
-    margin-top: 45px;
+    margin-top: var(--space2XL);
     width: 56%;
   }
 
   ${Title2} {
-    margin-top: 40px;
+    margin-top: var(--space2XL);
     width: 56%;
   }
 
   ${Paragraph} {
-    margin-top: 30px;
+    margin-top: var(--spaceXL);
     width: 70%;
   }
 
   ${Title} + ${Paragraph} {
-    margin-top: 20px;
+    margin-top: var(--spaceL);
   }
 
   ${Title2} + ${Paragraph} {
     letter-spacing: 0;
-    margin-top: 75px;
+    margin-top: var(--space3XL);
   }
 
   a {
-    margin-top: 60px;
+    margin-top: var(--space3XL);
   }
 
   @media (max-width: ${media.laptop}px) {
@@ -164,10 +164,10 @@ const HeroContent = styled.div`
   }
 
   @media (max-width: ${media.tablet}px) {
-    padding-left: 35px;
+    padding-left: var(--spaceXL);
 
     ${Label} {
-      left: -35px;
+      left: -var(--spaceXL);
     }
 
     ${Title}, ${Title2}, ${Paragraph} {
@@ -176,7 +176,7 @@ const HeroContent = styled.div`
   }
 
   @media (max-width: ${media.mobile}px) {
-    margin: 96px 0;
+    margin: var(--space4XL) 0;
     padding-left: 0;
 
     ${Label} {
@@ -184,17 +184,17 @@ const HeroContent = styled.div`
     }
 
     ${Title} {
-      margin-top: 33px;
+      margin-top: var(--spaceXL);
     }
 
     ${Title2}, ${Paragraph} {
       &, :first-of-type {
-        margin-top: 20px;
+        margin-top: var(--spaceL);
       }
     }
 
     a {
-      margin-top: 45px;
+      margin-top: var(--space2XL);
     }
   }
 
@@ -209,12 +209,12 @@ const HeroContent = styled.div`
 
     ${Label} {
       left: 0;
-      margin-left: -50px;
+      margin-left: -var(--space2XL);
     }
 
     @media (max-width: ${media.tablet}px) {
       ${Label} {
-        margin-left: -35px;
+        margin-left: -var(--spaceXL);
       }
     }
 

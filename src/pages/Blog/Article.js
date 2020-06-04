@@ -81,12 +81,12 @@ const ArticleHeader = styled.header`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 180px 0;
+  padding: var(--space7XL) 0;
 
   @media (max-width: ${media.mobile}px), ${props => props.theme.mobileLS} {
     height: auto;
-    padding-right: 20px;
-    padding-left: 20px;
+    padding-right: var(--spaceL);
+    padding-left: var(--spaceL);
   }
 `;
 
@@ -97,26 +97,26 @@ const ArticleHeaderText = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
-  max-width: 800px;
+  max-width: var(--maxWidthM);
 `;
 
 const ArticleDate = styled.div`
-  font-size: 18px;
-  font-weight: 500;
-  margin-bottom: 60px;
+  font-size: 1.125rem;
+  font-weight: var(--fontWeightMedium);
+  margin-bottom: var(--space3XL);
   color: rgb(var(--rgbAccent));
   display: grid;
-  grid-template-columns: 140px 1fr;
-  grid-gap: 20px;
+  grid-template-columns: var(--space6XL) 1fr;
+  grid-gap: var(--spaceL);
   align-items: center;
 
   @media (max-width: ${media.tablet}px) {
-    margin-bottom: 30px;
-    grid-gap: 10px;
+    margin-bottom: var(--spaceXL);
+    grid-gap: var(--spaceS);
   }
 
   @media (max-width: ${media.mobile}px) {
-    grid-template-columns: 100px 1fr;
+    grid-template-columns: var(--space4XL) 1fr;
   }
 `;
 
@@ -174,17 +174,16 @@ const ArticleContentWrapper = styled.div`
 const ArticleContent = styled.div`
   width: 100%;
   align-self: center;
-  margin: 75px 0;
+  margin: var(--space3XL) 0;
   display: grid;
-  padding-bottom: 180px;
-  grid-template-columns: 1fr 100px 800px 100px 1fr;
+  grid-template-columns: 1fr var(--space4XL) 800px var(--space4XL) 1fr;
 
   ${Title2}, ${Paragraph} {
     grid-column: 3;
   }
 
   ${Title2} {
-    font-size: 24px;
+    font-size: 1.5rem;
   }
 
   ul, li {
@@ -192,15 +191,16 @@ const ArticleContent = styled.div`
   }
 
   ul {
-    padding: 30px 20px;
+    padding: var(--spaceXL) var(--spaceL);
   }
 
   li {
-    margin-top: 12px;
-    font-size: 20px;
-    line-height: 36px;
-    letter-spacing: 0.03em;
-    font-weight: 400;
+    color: inherit;
+    font-size: var(--fontSizeBody);
+    font-weight: var(--fontWeightLight);
+    letter-spacing: var(--letterSpacingBody);
+    line-height: var(--lineHeightBody);
+    margin-top: var(--spaceM);
 
     :first-of-type {
       margin-top: 0;
@@ -208,11 +208,11 @@ const ArticleContent = styled.div`
   }
 
   ${Paragraph} + ${Title2}, ${Title2} + ${Paragraph} {
-    margin-top: 30px;
+    margin-top: var(--spaceXL);
   }
 
   ${Paragraph} + ${Paragraph} {
-    margin-top: 20px;
+    margin-top: var(--spaceL);
   }
 
   & > pre {
@@ -220,23 +220,23 @@ const ArticleContent = styled.div`
   }
 
   @media (max-width: 1320px) {
-    grid-template-columns: 1fr 80px 740px 80px 1fr;
-    margin: 60px 0;
+    grid-template-columns: 1fr var(--space4XL) 740px var(--space4XL) 1fr;
+    margin: var(--space3XL) 0;
   }
 
   @media (max-width: ${media.laptop}px) {
-    grid-template-columns: 1fr 60px 680px 60px 1fr;
-    margin: 50px 0;
+    grid-template-columns: 1fr var(--space3XL) 680px var(--space3XL) 1fr;
+    margin: var(--space2XL) 0;
   }
 
   @media (max-width: 1096px) {
-    grid-template-columns: 1fr 50px 660px 50px 1fr;
-    margin: 30px 0;
+    grid-template-columns: 1fr var(--space2XL) 660px var(--space2XL) 1fr;
+    margin: var(--spaceXL) 0;
   }
 
   @media (max-width: ${media.tablet}px) {
     grid-template-columns: 100%;
-    padding: 0 20px;
+    padding: 0 var(--spaceL);
 
     & > pre {
       grid-column: 1;
@@ -252,30 +252,22 @@ const ArticleContent = styled.div`
   }
 
   @media (max-width: ${media.mobile}px) {
-    margin: 20px 0;
-    padding-bottom: 96px;
-
-    ${Title2} {
-      font-size: 18px;
-    }
+    margin: var(--spaceL) 0;
+    padding-bottom: var(--space4XL);
 
     ${Paragraph} + ${Title2}, ${Title2} + ${Paragraph} {
-      margin-top: 20px;
+      margin-top: var(--spaceL);
     }
 
     ${Paragraph} + ${Paragraph} {
-      margin-top: 20px;
-    }
-
-    li {
-      font-size: 16px;
+      margin-top: var(--spaceL);
     }
   }
 `;
 
 const Image = styled.img`
   display: block;
-  margin: 80px 0;
+  margin: var(--space4XL) 0;
   max-width: 100%;
   width: 100%;
   height: auto;
@@ -283,7 +275,7 @@ const Image = styled.img`
 
   @media (max-width: ${media.tablet}px) {
     grid-column: 1;
-    margin: 60px 0;
+    margin: var(--space3XL) 0;
   }
 `;
 

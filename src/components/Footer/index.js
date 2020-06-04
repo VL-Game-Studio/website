@@ -88,34 +88,34 @@ const FooterWrapper = styled.footer`
   align-items: center;
   background: rgb(var(--rgbBackgroundDarkSecondary));
   display: flex;
-  padding: 0 50px;
+  padding: 0 var(--space2XL);
 
   @media (max-width: ${media.mobile}px) {
-    padding: 0 20px;
+    padding: 0 var(--spaceL);
   }
 `;
 
 const FooterContent = styled.div`
   display: grid;
-  grid-gap: 30px;
+  grid-gap: var(--spaceXL);
   grid-template-columns: 1fr auto;
-  margin: 150px auto;
-  max-width: 1200px;
+  margin: var(--space6XL) auto;
+  max-width: var(--maxWidthXL);
   opacity: 0;
   width: 100%;
 
   @media (max-width: ${media.desktop}px) {
-    max-width: 1080px;
+    max-width: var(--maxWidthL);
   }
 
   @media (max-width: ${media.laptop}px) {
-    max-width: 960px;
+    max-width: var(--maxWidthM);
   }
 
   @media (max-width: ${media.mobile}px) {
     display: block;
-    max-width: 100%;
-    margin: 80px 0;
+    max-width: var(--maxWidthS);
+    margin: var(--space3XL) 0;
   }
 
   ${props => props.status === 'entering' && css`
@@ -135,16 +135,16 @@ const FooterLeft = styled.div`
   }
 
   ${Paragraph} {
-    margin-top: 30px;
+    margin-top: var(--spaceXL);
   }
 
   h4 {
     color: rgb(var(--rgbWhite) / 0.4);
-    font-size: 16px;
-    font-weight: 500;
+    font-size: var(--fontSizeH3);
+    font-weight: var(--fontWeightMedium);
     letter-spacing: 0.8px;
-    line-height: 32px;
-    margin: 15px 0 30px;
+    line-height: 2;
+    margin: var(--spaceM) 0 var(--spaceXL);
   }
 `;
 
@@ -164,15 +164,15 @@ const FooterRight = styled.div`
 
 const FooterLabel = styled.label`
   color: rgb(var(--rgbWhite));
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 0.875rem;
+  font-weight: var(--fontWeightBold);
   letter-spacing: 2.1px;
-  line-height: 28px;
-  margin: 85px 0 30px;
+  line-height: 2;
+  margin: var(--space3XL) 0 var(--spaceXL);
   text-transform: uppercase;
 
   @media (max-width: ${media.mobile}px) {
-    margin: 65px 0 30px;
+    margin: var(--space2XL) 0 var(--spaceXL);
   }
 
   :first-of-type {
@@ -186,7 +186,7 @@ const FooterLinks = styled.div`
   flex-direction: column;
 
   ${Anchor} {
-    margin-top: 12px;
+    margin-top: var(--spaceM);
 
     :first-of-type {
       margin-top: 0;
@@ -202,10 +202,10 @@ const FooterMenu = styled.ul`
 
   a {
     color: rgb(var(--rgbWhite) / 0.6);
-    font-size: 16px;
+    font-size: var(--fontSizeH3);
     letter-spacing: 0.8px;
-    line-height: 32px;
-    margin-left: 15px;
+    line-height: 2;
+    margin-left: var(--spaceM);
     text-decoration: none;
     transition: color 0.4s var(--ease1);
 
@@ -223,7 +223,7 @@ const FooterMenu = styled.ul`
 
     a {
       margin-left: 0;
-      margin-top: 20px;
+      margin-top: var(--spaceL);
 
       :first-of-type {
         margin-top: 0;

@@ -23,8 +23,8 @@ export const Label = styled.label`
 
   ${props => props.loading && css`
     animation: ${Pulse} 1.5s infinite;
-    background: #CDCDCD;
-    color: #CDCDCD!important;
+    background: rgb(var(--rgbBlack) / 0.2);
+    color: rgb(var(--rgbBlack) / 0.2)!important;
     height: calc(var(--fontSizeH3) * var(--lineHeightTitle));
     width: 100%;
 
@@ -45,8 +45,8 @@ export const Title = styled.h1`
 
   ${props => props.loading && css`
     animation: ${Pulse} 1.5s infinite;
-    background: #CDCDCD;
-    color: #CDCDCD!important;
+    background: rgb(var(--rgbBlack) / 0.2);
+    color: rgb(var(--rgbBlack) / 0.2)!important;
     height: calc(var(--fontSizeH1) * var(--lineHeightTitle));
     width: 100%;
 
@@ -66,8 +66,8 @@ export const Title2 = styled.h2`
 
   ${props => props.loading && css`
     animation: ${Pulse} 1.5s infinite;
-    background: #CDCDCD;
-    color: #CDCDCD!important;
+    background: rgb(var(--rgbBlack) / 0.2);
+    color: rgb(var(--rgbBlack) / 0.2)!important;
     height: calc(var(--fontSizeH2) * var(--lineHeightTitle));
     width: 100%;
 
@@ -88,8 +88,8 @@ export const Paragraph = styled.p`
 
   ${props => props.loading && css`
     animation: ${Pulse} 1.5s infinite;
-    background: #CDCDCD;
-    color: #CDCDCD!important;
+    background: rgb(var(--rgbBlack) / 0.2);
+    color: rgb(var(--rgbBlack) / 0.2)!important;
     height: calc(var(--fontSizeBody) * var(--lineHeightBody));
     width: 100%;
 

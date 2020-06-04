@@ -4,6 +4,7 @@ import PageLayout from 'components/PageLayout';
 import Article from './Article';
 import BlogList from './BlogList';
 import NotFound from 'pages/NotFound';
+import GetStarted from 'pages/GetStarted';
 import { useScrollRestore } from 'hooks';
 import articles from 'articles';
 
@@ -31,6 +32,7 @@ function Blog() {
           </Switch>
         </Suspense>
       </Article>
+      <GetStarted />
     </PageLayout>
   );
 }

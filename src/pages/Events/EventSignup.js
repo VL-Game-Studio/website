@@ -156,29 +156,29 @@ function EventSignup(props) {
 const EventsSignupWrapper = styled.section`
   align-items: center;
   display: flex;
-  padding: 0 50px;
+  padding: 0 var(--space2XL);
 
   @media (max-width: ${media.mobile}px) {
-    padding: 0 20px;
+    padding: 0 var(--spaceL);
   }
 `;
 
 const EventsSignupContainer = styled.section`
   margin: 0 auto;
-  max-width: 1200px;
+  max-width: var(--maxWidthXL);
   opacity: 0;
   width: 100%;
 
   @media (max-width: ${media.desktop}px) {
-    max-width: 1080px;
+    max-width: var(--maxWidthL);
   }
 
   @media (max-width: ${media.laptop}px) {
-    max-width: 960px;
+    max-width: var(--maxWidthM);
   }
 
   @media (max-width: ${media.mobile}px) {
-    max-width: 100%;
+    max-width: var(--maxWidthS);
   }
 
   ${props => props.status === 'entering' && css`
@@ -194,10 +194,10 @@ const EventsSignupContent = styled.div`
   align-items: flex-start;
   display: flex;
   flex-direction: column;
-  margin: 140px 0;
+  margin: var(--space6XL) 0;
 
   ${Title2} {
-    margin-top: 40px;
+    margin-top: var(--space2XL);
     width: 56%;
   }
 
@@ -215,7 +215,7 @@ const EventsSignupContent = styled.div`
 
   @media (max-width: ${media.mobile}px) {
     justify-content: center;
-    margin-top: 75px;
+    margin-top: var(--space4XL);
   }
 `;
 
@@ -226,14 +226,14 @@ const Form = styled.form`
   margin-top: 100px;
 
   @media (max-width: ${media.mobile}px) {
-    margin-top: 50px;
+    margin-top: var(--space2XL);
     width: 100%;
   }
 `;
 
 const HalvedGrid = styled.div`
   display: grid;
-  grid-gap: 40px;
+  grid-gap: var(--spaceXL);
   grid-template-columns: 1fr 1fr;
   width: 100%;
 
@@ -244,24 +244,19 @@ const HalvedGrid = styled.div`
 
 const FormLabel = styled.label`
   color: ${props => props.theme.colorTitle};
-  font-size: 22px;
-  font-weight: 500;
+  font-size: 1.375rem;
+  font-weight: var(--fontWeightMedium);
   letter-spacing: 0.02em;
-  line-height: 36px;
-  margin: 60px 0 20px;
-
-  @media (max-width: ${media.mobile}px) {
-    font-size: 14px;
-    line-height: 28px;
-  }
+  line-height: 1.6;
+  margin: var(--space2XL) 0 var(--spaceL);
 `;
 
 const SubmitGrid = styled(HalvedGrid)`
-  grid-template-columns: 175px auto;
-  margin-top: 50px;
+  grid-template-columns: var(--space7XL) auto;
+  margin-top: var(--space2XL);
 
   @media (max-width: ${media.mobile}px) {
-    margin-top: 30px;
+    margin-top: var(--spaceXL);
     display: block;
   }
 `;
@@ -269,13 +264,12 @@ const SubmitGrid = styled(HalvedGrid)`
 const Comment = styled.p`
   &, a {
     color: var(--colorTextBody);
-    font-size: 16px;
+    font-size: var(--fontSizeH3);
     letter-spacing: 0.05em;
-    line-height: 48px;
+    line-height: 3;
 
     @media (max-width: ${media.mobile}px) {
-      line-height: 26px;
-      margin-top: 20px;
+      margin-top: var(--spaceL);
     }
   }
 `;

@@ -192,7 +192,7 @@ const ImageElementWrapper = styled.div`
 const ImagePlaceholder = styled.img`
   width: 100%;
   height: auto;
-  transition: opacity 0.4s ease;
+  transition: opacity var(--durationM) ease;
   pointer-events: none;
   display: block;
   position: relative;

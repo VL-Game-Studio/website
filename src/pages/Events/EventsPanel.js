@@ -46,7 +46,7 @@ const EventsPanel = ({
 
 const EventsHero = styled(Hero)`
   display: flex;
-  background: var(--rgbBackgroundSecondary);
+  background: rgb(var(--rgbBackgroundSecondary));
 
   ${Title2} {
     max-width: 564px;
@@ -54,7 +54,7 @@ const EventsHero = styled(Hero)`
   }
 
   a {
-    margin: 60px auto 0;
+    margin: var(--space3XL) auto 0;
   }
 
   @media (max-width: ${media.mobile}px) {
@@ -74,8 +74,8 @@ const EventsHero = styled(Hero)`
 const Tournaments = styled.div`
   align-self: ${props => props.alternate ? 'flex-start' : 'flex-end'};
   display: grid;
-  grid-row-gap: 20px;
-  margin: 20px 0 0;
+  grid-row-gap: var(--spaceXL);
+  margin: var(--spaceL) 0 0;
   max-width: 624px;
   width: 100%;
 
@@ -83,16 +83,16 @@ const Tournaments = styled.div`
     color: rgb(var(--rgbAccent));
     position: absolute;
     right: 0;
-    top: 50px;
+    top: var(--space2XL);
   }
 
   @media (max-width: ${media.mobile}px) {
     align-self: flex-start;
-    margin-top: 35px;
+    margin-top: var(--spaceXL);
     max-width: none;
 
     svg {
-      top: 30px;
+      top: var(--spaceXL);
     }
   }
 `;
@@ -101,10 +101,10 @@ const TournamentName = styled.h4`
   align-self: flex-start;
   color: var(--colorTextTitle);
   flex: none;
-  font-size: 30px;
-  font-weight: 700;
+  font-size: 1.875rem;
+  font-weight: var(--fontWeightBold);
   letter-spacing: 0.02em;
-  line-height: 44px;
+  line-height: 1.5;
   position: relative;
 
   span {
@@ -115,19 +115,14 @@ const TournamentName = styled.h4`
   div {
     background-color: #eee;
     bottom: 0;
-    height: 26px;
+    height: var(--spaceL);
     position: absolute;
-    right: -20px;
+    right: -var(--spaceM);
     transform-origin: right;
     transform: scaleX(0);
-    transition: transform 0.85s var(--ease1);
+    transition: transform var(--durationXL) var(--ease1);
     width: 100%;
     z-index: 1;
-  }
-
-  @media (max-width: ${media.mobile}px) {
-    font-size: 20px;
-    line-height: 26px;
   }
 `;
 
@@ -135,10 +130,10 @@ const Tournament = styled(Link)`
   color: var(--colorTextBody);
   display: flex;
   flex-direction: column;
-  height: 145px;
+  height: var(--space6XL);
   justify-content: center;
   margin: 0!important;
-  padding-right: 12px;
+  padding-right: var(--spaceM);
   position: relative;
   text-decoration: none;
   width: 100%;
@@ -165,16 +160,11 @@ const Tournament = styled(Link)`
 `;
 
 const TournamentInfo = styled.p`
-  font-size: 16px;
-  font-weight: 400;
+  font-size: var(--fontSizeH3);
+  font-weight: var(--fontWeightRegular);
   letter-spacing: 0.05em;
-  line-height: 36px;
-  margin-top: 10px;
-
-  @media (max-width: ${media.mobile}px) {
-    font-size: 16px;
-    line-height: 26px;
-  }
+  line-height: var(--lineHeightBody);
+  margin-top: var(--spaceS);
 `;
 
 export default memo(EventsPanel);

@@ -154,38 +154,38 @@ function EventInfo(props) {
 const EventsInfoWrapper = styled.div`
   align-items: center;
   display: flex;
-  padding: 0 50px;
+  padding: 0 var(--space2XL);
 
   @media (max-width: ${media.mobile}px) {
-    padding: 0 20px;
+    padding: 0 var(--spaceL);
   }
 `;
 
 const EventsInfoHeader = styled.div`
   display: grid;
-  grid-gap: 60px;
+  grid-gap: var(--space3XL);
   grid-template-columns: 1fr auto;
-  margin: 180px auto;
-  max-width: 1200px;
+  margin: var(--space7XL) auto;
+  max-width: var(--maxWidthXL);
   opacity: 0;
   width: 100%;
 
   @media (max-width: ${media.desktop}px) {
-    max-width: 1080px;
+    max-width: var(--maxWidthL);
   }
 
   @media (max-width: ${media.laptop}px) {
-    max-width: 960px;
+    max-width: var(--maxWidthM);
   }
 
   @media (max-width: ${media.tablet}px) {
     grid-template-columns: 1fr;
-    max-width: 100%;
+    max-width: var(--maxWidthS);
   }
 
   @media (max-width: ${media.mobile}px) {
-    grid-gap: 45px;
-    margin: 96px auto;
+    grid-gap: var(--space2XL);
+    margin: var(--space4XL) auto;
   }
 
   ${props => props.status === 'entering' && css`
@@ -205,16 +205,16 @@ const InfoPanel = styled.div`
 
   :first-of-type {
     ${Paragraph} {
-      margin-top: 30px;
+      margin-top: var(--spaceXL);
 
       :first-of-type {
-        margin-top: 50px;
+        margin-top: var(--space2XL);
       }
     }
 
     a {
       bottom: 0;
-      margin-top: 60px;
+      margin-top: var(--space3XL);
       position: absolute;
       width: 0;
     }
@@ -222,13 +222,13 @@ const InfoPanel = styled.div`
 
   @media (max-width: ${media.tablet}px) {
     width: 100%;
-    margin-top: 50px;
+    margin-top: var(--space2XL);
 
     :first-of-type {
       margin-top: 0;
 
       a {
-        margin-top: 45px;
+        margin-top: var(--space2XL);
         position: relative;
       }
     }
@@ -239,7 +239,7 @@ const Tag = styled(Paragraph)`
   align-items: center;
   color: var(--colorTextTitle);
   display: flex;
-  margin-top: 12px;
+  margin-top: var(--spaceM);
 
   :first-of-type {
     margin-top: 0;
@@ -250,15 +250,15 @@ const Tag = styled(Paragraph)`
     border-radius: 50%;
     content: '';
     display: inline-block;
-    height: 4px;
-    margin-right: 20px;
-    width: 4px;
+    height: var(--spaceXS);
+    margin-right: var(--spaceL);
+    width: var(--spaceXS);
     align-self: center;
   }
 
   label {
-    font-weight: 600;
-    margin-right: 10px;
+    font-weight: var(--fontWeightSemiBold);
+    margin-right: var(--spaceS);
   }
 `;
 
@@ -267,27 +267,27 @@ const RelatedEvents = styled.div`
   display: flex;
   flex-direction: column;
   justify-self: flex-end;
-  margin-top: 250px;
+  margin-top: var(--space9XL);
 
   h4 {
     color: var(--colorTextTitle);
-    font-size: 14px;
-    font-weight: bold;
-    letter-spacing: 0.16em;
-    line-height: 28px;
-    margin-bottom: 10px;
+    font-size: var(--fontSizeH4);
+    font-weight: var(--fontWeightBold);
+    letter-spacing: var(--letterSpacingH4);
+    line-height: var(--lineHeightLabel);
+    margin-bottom: var(--spaceS);
     text-transform: uppercase;
   }
 
   a {
-    margin: 7px 0;
+    margin: var(--spaceS) 0;
   }
 
   @media (max-width: ${media.tablet}px) {
-    margin-top: 50px;
+    margin-top: var(--space2XL);
 
     a {
-      margin-top: 17px;
+      margin-top: var(--spaceM);
 
       :first-of-type {
         margin-top: 0;

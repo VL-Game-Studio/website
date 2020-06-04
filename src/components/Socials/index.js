@@ -29,8 +29,8 @@ const SocialsMenu = styled.div`
 
   a {
     color: rgb(var(${props => props.dark ? '--rgbWhite' : '--rgbText'}) / 0.6)!important;
-    margin-left: 36px;
-    transition: color 0.4s var(--ease1);
+    margin-left: var(--spaceXL);
+    transition: color var(--durationM) var(--ease1);
 
     :first-of-type {
       margin-left: 0;
