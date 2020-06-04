@@ -38,16 +38,16 @@ export const Title = styled.h1`
   color: rgb(${props => props.dark
     ? 'var(--rgbWhite)'
     : 'var(--rgbText)'});
-  font-size: 72px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  line-height: 90px;
+  font-size: var(--fontSizeH1);
+  font-weight: var(--fontWeightBold);
+  letter-spacing: var(--letterSpacingH1);
+  line-height: var(--lineHeightTitle);
 
   ${props => props.loading && css`
     animation: ${Pulse} 1.5s infinite;
     background: #CDCDCD;
     color: #CDCDCD!important;
-    height: 90px;
+    height: calc(var(--fontSizeH1) * var(--lineHeightTitle));
     width: 100%;
 
     ::before, ::after {
