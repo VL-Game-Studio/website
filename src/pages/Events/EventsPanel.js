@@ -53,7 +53,7 @@ const EventsHero = styled(Hero)`
     width: auto;
   }
 
-  a {
+  a.button {
     margin: var(--space3XL) auto 0;
   }
 
@@ -113,16 +113,23 @@ const TournamentName = styled.h4`
   }
 
   div {
-    background-color: #eee;
+    background-color: rgb(var(--rgbBlack) / 0.067);
     bottom: 0;
     height: var(--spaceL);
     position: absolute;
+    right: -20px;
     right: -var(--spaceM);
     transform-origin: right;
     transform: scaleX(0);
     transition: transform var(--durationXL) var(--ease1);
     width: 100%;
     z-index: 1;
+  }
+
+  @media (max-width: ${media.mobile}px) {
+    div {
+      display: none;
+    }
   }
 `;
 
@@ -132,7 +139,7 @@ const Tournament = styled(Link)`
   flex-direction: column;
   height: var(--space6XL);
   justify-content: center;
-  margin: 0!important;
+  margin: 0;
   padding-right: var(--spaceM);
   position: relative;
   text-decoration: none;

@@ -20,7 +20,7 @@ function EventInfo(props) {
   const { events, user, dispatch } = useAppContext();
   const activeEvent = events?.length > 0 && events.filter(({ id }) => id === eventID)[0];
   const otherEvents = events?.length > 0 && events.filter(({ id }) => id !== eventID);
-  const isPlaying = user && activeEvent?.players[user?.id];
+  const isPlaying = activeEvent?.players && activeEvent?.players[user?.id];
   const cta = useRef();
   const [visible, setVisible] = useState();
   const { width } = useWindowSize();
@@ -116,24 +116,26 @@ function EventInfo(props) {
                         }
                       </div>
                       {(activeEvent && isMobile) && <Button style={{ marginTop: '50px' }} {...buttonProps} />}
-                      <RelatedEvents>
-                        <h4>{otherEvents.length > 0 && 'Other Events'}</h4>
-                        {!otherEvents.length > 0 &&
-                          <Paragraph loading={1}>
-                            <br/><br/><br/>
-                          </Paragraph>
-                        }
-                        {activeEvent && otherEvents.map(({ id, name }, index) => index < 4 && (
-                          <Anchor
-                            key={id}
-                            secondary={1}
-                            as={Link}
-                            to={`/events/${id}`}
-                          >
-                            {name}
-                          </Anchor>
-                        ))}
-                      </RelatedEvents>
+                      {(!activeEvent || otherEvents.length > 1) &&
+                        <RelatedEvents>
+                          <h4>Other Events</h4>
+                          {!activeEvent &&
+                            <Paragraph loading={1}>
+                              <br/><br/><br/>
+                            </Paragraph>
+                          }
+                          {otherEvents.map(({ id, name }, index) => index < 4 && (
+                            <Anchor
+                              key={id}
+                              secondary={1}
+                              as={Link}
+                              to={`/events/${id}`}
+                            >
+                              {name}
+                            </Anchor>
+                          ))}
+                        </RelatedEvents>
+                      }
                     </InfoPanel>
                   </EventsInfoHeader>
                 </EventsInfoWrapper>
@@ -211,13 +213,13 @@ const InfoPanel = styled.div`
         margin-top: var(--space2XL);
       }
     }
+  }
 
-    a {
-      bottom: 0;
-      margin-top: var(--space3XL);
-      position: absolute;
-      width: 0;
-    }
+  .button {
+    left: 0;
+    margin-top: var(--space3XL);
+    position: relative;
+    width: 0;
   }
 
   @media (max-width: ${media.tablet}px) {
@@ -226,12 +228,16 @@ const InfoPanel = styled.div`
 
     :first-of-type {
       margin-top: 0;
-
-      a {
-        margin-top: var(--space2XL);
-        position: relative;
-      }
     }
+
+    .button {
+      margin-top: var(--space2XL);
+      position: relative;
+    }
+  }
+
+  @media (max-width: ${media.mobile}px) {
+    margin-top: 0;
   }
 `;
 

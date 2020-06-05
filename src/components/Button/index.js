@@ -11,18 +11,18 @@ const ButtonContent = ({ label, icon = 'arrowRight', ...rest }) => (
 );
 
 function Button(props) {
-  const { href, target, to, ...rest } = props;
+  const { href, target, to, className = 'button', ...rest } = props;
 
   return (
     <Fragment>
-      {(!href && !to) && <ButtonContent {...rest} />}
+      {(!href && !to) && <ButtonContent className={className} {...rest} />}
       {href &&
-        <AnchorLink href={href} target={target}>
+        <AnchorLink href={href} target={target} className={className}>
           <ButtonContent {...rest} />
         </AnchorLink>
       }
       {to &&
-        <Link to={to} style={{ textDecoration: 'none' }}>
+        <Link to={to} style={{ textDecoration: 'none' }} className={className}>
           <ButtonContent {...rest} />
         </Link>
       }
