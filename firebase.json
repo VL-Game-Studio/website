@@ -5,6 +5,10 @@
       "public": "build",
       "rewrites": [
         {
+          "source": "/functions",
+          "function": "app"
+        },
+        {
           "source": "/functions/**",
           "function": "app"
         }
