@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('.');
+const { server } = require('../');
 
 describe('events', () => {
   const testEvent = {
@@ -49,7 +49,7 @@ describe('events', () => {
   };
 
   it('creates event', async () => {
-    const res = await request(app)
+    const res = await request(server)
       .post('/events')
       .set('secret', process.env.SECRET)
       .send(testEvent);
@@ -64,7 +64,7 @@ describe('events', () => {
   it('fetches all events', async () => {
     const { id } = testEvent;
 
-    const res = await request(app)
+    const res = await request(server)
       .get('/events');
 
     expect(res.statusCode).toEqual(200);
@@ -78,7 +78,7 @@ describe('events', () => {
   it('fetches event', async () => {
     const { id } = testEvent;
 
-    const res = await request(app)
+    const res = await request(server)
       .get(`/events/${id}`);
 
     expect(res.statusCode).toEqual(200);
@@ -92,7 +92,7 @@ describe('events', () => {
     try {
       const { id } = testEvent;
 
-      const res = await request(app)
+      const res = await request(server)
         .post(`/events/signup/${id}`)
         .set('secret', process.env.SECRET)
         .send(testRegistration);
@@ -106,7 +106,7 @@ describe('events', () => {
   it('drops player from event', async () => {
     const { id } = testEvent;
 
-    const res = await request(app)
+    const res = await request(server)
       .get(`/events/drop/${id}/6`)
       .set('secret', process.env.SECRET);
 
@@ -117,9 +117,10 @@ describe('events', () => {
   it('fires event', async () => {
     const { id } = testEvent;
 
-    const res = await request(app)
-      .get(`/events/fire/${id}`)
-      .set('secret', process.env.SECRET);
+    const res = await request(server)
+      .post(`/events/fire/${id}`)
+      .set('secret', process.env.SECRET)
+      .send({ channel: 'test' });
 
     expect(res.statusCode).toEqual(200);
     testEvent.fired = true;
@@ -128,7 +129,7 @@ describe('events', () => {
   it('generates pairings', async () => {
     const { id } = testEvent;
 
-    const res = await request(app)
+    const res = await request(server)
       .get(`/events/pairings/${id}`)
       .set('secret', process.env.SECRET);
 
@@ -144,7 +145,7 @@ describe('events', () => {
     const { id } = testEvent;
     const playerID = 1;
 
-    const res = await request(app)
+    const res = await request(server)
       .post(`/events/report/${id}/${playerID}`)
       .set('secret', process.env.SECRET)
       .send({ result: '2-0-0' });
@@ -159,7 +160,7 @@ describe('events', () => {
   it('deletes event', async () => {
     const { id } = testEvent;
 
-    const res = await request(app)
+    const res = await request(server)
       .delete(`/events/${id}`)
       .set('secret', process.env.SECRET);
 

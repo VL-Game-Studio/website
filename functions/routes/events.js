@@ -1,5 +1,5 @@
-const functions = require('firebase-functions');
 const { Router } = require('express');
+const middleware = require('../middleware');
 const { events, decklists } = require('../persistence');
 const { validateDecklist } = require('../utils');
 
@@ -30,21 +30,10 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.use(async (req, res, next) => {
-  const secret = process.env.SECRET || functions.config().discord.secret;
-
-  if (!req.headers || req.headers.secret !== secret) {
-    return res.status(403).json({ error: 'You are not authorized for this action.' });
-  }
-
-  return next();
-});
-
-router.post('/', async (req, res) => {
+router.post('/', middleware, async (req, res) => {
   const { name, time, ...rest } = req.body;
   if (!name) return res.status(400).json({ error: 'Name is a required field.' });
   if (!time) return res.status(400).json({ error: 'Time is a required field.' });
-  if (isNaN(time)) return res.status(400).json({ error: 'Time must be in milliseconds.' });
 
   try {
     const activeEvent = await events.create({ name, time, ...rest });
@@ -57,7 +46,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.post('/:id', async (req, res) => {
+router.post('/:id', middleware, async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -71,7 +60,7 @@ router.post('/:id', async (req, res) => {
   }
 });
 
-router.post('/signup/:id', async (req, res) => {
+router.post('/signup/:id', middleware, async (req, res) => {
   const { id } = req.params;
   const { player, username, mainboard, sideboard, name = '' } = req.body;
   if (!player) return res.status(400).json({ error: 'Player is a required field.' });
@@ -91,7 +80,7 @@ router.post('/signup/:id', async (req, res) => {
   }
 });
 
-router.get('/pairings/:id', async (req, res) => {
+router.get('/pairings/:id', middleware, async (req, res) => {
   const { id } = req.params;
   if (req.headers.secret !== process.env.SECRET) return res.status(403).json({ error: 'You are not authorized for this action.' });
 
@@ -109,7 +98,7 @@ router.get('/pairings/:id', async (req, res) => {
   }
 });
 
-router.post('/report/:id/:playerID', async (req, res) => {
+router.post('/report/:id/:playerID', middleware, async (req, res) => {
   const { id, playerID } = req.params;
   const { result } = req.body;
   if (!result) return res.status(400).json({ error: 'Result is a required field.' });
@@ -125,7 +114,7 @@ router.post('/report/:id/:playerID', async (req, res) => {
   }
 });
 
-router.get('/drop/:id/:playerID', async (req, res) => {
+router.get('/drop/:id/:playerID', middleware, async (req, res) => {
   const { id, playerID } = req.params;
 
   try {
@@ -139,21 +128,22 @@ router.get('/drop/:id/:playerID', async (req, res) => {
   }
 });
 
-router.get('/fire/:id', async (req, res) => {
+router.post('/fire/:id', middleware, async (req, res) => {
   const { id } = req.params;
+  const { channel } = req.body;
 
   try {
-    const activeEvent = await events.fire(id);
+    const activeEvent = await events.fire(id, channel);
     if (!activeEvent) return res.status(404).json({ error: `An event could not be found for: ${id}.` });
 
     return res.status(200).json(activeEvent);
   } catch (error) {
-    console.error(`POST /events/fire/${id} >> ${error.stack}`);
+    console.error(`POST /events/fire/${id} ({ channel: ${channel} }) >> ${error.stack}`);
     return res.status(500).json({ error: `An error occured while firing event: ${id}.` });
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', middleware, async (req, res) => {
   const { id } = req.params;
 
   try {

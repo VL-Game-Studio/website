@@ -1,5 +1,5 @@
-const functions = require('firebase-functions');
 const { Router } = require('express');
+const middleware = require('../middleware');
 const { decklists } = require('../persistence');
 const { validateDecklist } = require('../utils');
 
@@ -30,17 +30,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.use(async (req, res, next) => {
-  const secret = process.env.SECRET || functions.config().discord.secret;
-
-  if (!req.headers || req.headers.secret !== secret) {
-    return res.status(403).json({ error: 'You are not authorized for this action.' });
-  }
-
-  return next();
-});
-
-router.post('/', async (req, res) => {
+router.post('/', middleware, async (req, res) => {
   const { author, mainboard, sideboard, ...rest } = req.body;
   if (!author) return res.status(400).json({ error: 'Author is a required field.' });
   if (!mainboard) return res.status(400).json({ error: 'Mainboard is a required field.' });
@@ -56,7 +46,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.post('/:id', async (req, res) => {
+router.post('/:id', middleware, async (req, res) => {
   const { id } = req.params;
   const { author, mainboard, sideboard, ...rest } = req.body;
 
@@ -71,7 +61,7 @@ router.post('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', middleware, async (req, res) => {
   const { id } = req.params;
 
   try {

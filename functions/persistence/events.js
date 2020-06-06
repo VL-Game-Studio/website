@@ -18,6 +18,7 @@ const events = {
     return eventItem;
   },
   async create({ time, name, platform, ...rest }) {
+    time = Date.parse(new Date(time));
     const id = time;
 
     const eventExists = await admin.database()
@@ -209,16 +210,35 @@ const events = {
 
     return activeEvent;
   },
-  async fire(id) {
+  async fire(id, channel) {
     const eventExists = await admin.database()
       .ref(`/events/${id}`)
       .once('value')
       .then(snap => snap.val());
     if (!eventExists) return false;
 
+    const playerCount = Object.values(eventExists.players).length;
+    let rounds;
+
+    if (playerCount < 5) {
+      rounds = 2;
+    } else if (playerCount < 9) {
+      rounds = 4;
+    } else if (playerCount < 33) {
+      rounds = 5;
+    } else if (playerCount < 65) {
+      rounds = 6;
+    } else if (playerCount < 129) {
+      rounds = 7;
+    } else if (playerCount < 213) {
+      rounds = 8;
+    } else {
+      rounds = 9;
+    }
+
     await admin.database()
       .ref(`/events/${id}`)
-      .update({ fired: true });
+      .update({ channel, rounds, fired: true });
 
     const activeEvent = await admin.database()
       .ref(`/events/${id}`)

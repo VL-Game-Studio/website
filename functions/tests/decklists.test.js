@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('.');
+const { server } = require('../');
 
 describe('Decklists', () => {
   const deck = {
@@ -15,7 +15,7 @@ describe('Decklists', () => {
 
   it('creates decklist', async () => {
     const { mainboard, sideboard, ...ref } = testDecklist;
-    const res = await request(app)
+    const res = await request(server)
       .post('/decklists')
       .set('secret', process.env.SECRET)
       .send(testDecklist);
@@ -36,7 +36,7 @@ describe('Decklists', () => {
 
     const { id, mainboard, sideboard, ...rest } = testDecklist;
 
-    const res = await request(app)
+    const res = await request(server)
       .post(`/decklists/${id}`)
       .set('secret', process.env.SECRET)
       .send({ ...rest, ...deck });
@@ -51,7 +51,7 @@ describe('Decklists', () => {
   it('fetches all decklists', async () => {
     const { id } = testDecklist;
 
-    const res = await request(app)
+    const res = await request(server)
       .get('/decklists');
 
     expect(res.statusCode).toEqual(200);
@@ -65,7 +65,7 @@ describe('Decklists', () => {
   it('fetches decklist', async () => {
     const { id } = testDecklist;
 
-    const res = await request(app)
+    const res = await request(server)
       .get(`/decklists/${id}`);
 
     expect(res.statusCode).toEqual(200);
@@ -78,7 +78,7 @@ describe('Decklists', () => {
   it('deletes decklist', async () => {
     const { id } = testDecklist;
 
-    const res = await request(app)
+    const res = await request(server)
       .delete(`/decklists/${id}`)
       .set('secret', process.env.SECRET);
 

@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('.');
+const { server } = require('../');
 
 describe('Leagues', () => {
   const testLeague = {
@@ -11,7 +11,7 @@ describe('Leagues', () => {
   it('creates league', async () => {
     const { id, ...rest } = testLeague;
 
-    const res = await request(app)
+    const res = await request(server)
       .post(`/leagues/${id}`)
       .set('secret', process.env.SECRET)
       .send(rest);
@@ -22,7 +22,7 @@ describe('Leagues', () => {
   it('fetches all leagues', async () => {
     const { id } = testLeague;
 
-    const res = await request(app)
+    const res = await request(server)
       .get('/leagues');
 
     expect(res.statusCode).toEqual(200);
@@ -31,7 +31,7 @@ describe('Leagues', () => {
   it('fetches league', async () => {
     const { id } = testLeague;
 
-    const res = await request(app)
+    const res = await request(server)
       .get(`/leagues/${id}`);
 
     expect(res.statusCode).toEqual(200);
@@ -40,12 +40,12 @@ describe('Leagues', () => {
   it('gets next pairing', async () => {
     const { id, ...rest } = testLeague;
 
-    await request(app)
+    await request(server)
       .post('/leagues/2')
       .set('secret', process.env.SECRET)
       .send(rest);
 
-    const res = await request(app)
+    const res = await request(server)
       .get(`/leagues/queue/${id}`)
       .set('secret', process.env.SECRET);
 
@@ -55,7 +55,7 @@ describe('Leagues', () => {
   it('reports league match result', async () => {
     const { id } = testLeague;
 
-    const res = await request(app)
+    const res = await request(server)
       .post(`/leagues/report/${id}`)
       .set('secret', process.env.SECRET)
       .send({ result: '2-0-0' });
@@ -66,11 +66,11 @@ describe('Leagues', () => {
   it('deletes league', async () => {
     const { id } = testLeague;
 
-    const res = await request(app)
+    const res = await request(server)
       .delete(`/leagues/${id}`)
       .set('secret', process.env.SECRET);
 
-    await request(app)
+    await request(server)
       .delete('/leagues/2')
       .set('secret', process.env.SECRET);
 
