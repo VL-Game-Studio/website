@@ -1,0 +1,74 @@
+jobs:
+  website:
+    docker:
+      - image: circleci/node:12
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run:
+          name: Install Dependencies
+          command: yarn
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Run Tests
+          command: yarn preflight
+      - run:
+          name: Get Production Build
+          command: yarn build
+
+  storybook:
+    docker:
+      - image: circleci/node:12
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run:
+          name: Install Dependencies
+          command: yarn
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Get Production Build
+          command: yarn build-storybook
+
+  functions:
+    docker:
+      - image: circleci/node:12
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "./functions/package.json" }}
+            - v1-dependencies-
+      - run:
+          name: Install Dependencies
+          command: npm --prefix ./functions install
+      - save_cache:
+          paths:
+              - ~/repo/functions/node_modules
+          key: v1-dependencies-{{ checksum "./functions/package.json" }}
+      - run:
+          name: Run Tests
+          command: npm --prefix ./functions run preflight
+
+workflows:
+  version: 2
+  test-build:
+    jobs:
+      - website
+      - storybook
+      - functions

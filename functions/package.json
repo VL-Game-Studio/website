@@ -9,8 +9,8 @@
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "preflight": "eslint . --fix && jest --verbose --testTimeout=10000",
-    "test": "jest --watchAll --verbose --testTimeout=10000"
+    "test": "jest --watchAll --verbose --testTimeout=10000",
+    "preflight": "jest --testTimeout=10000"
   },
   "dependencies": {
     "cors": "^2.8.5",

@@ -36,13 +36,14 @@
   "scripts": {
     "start": "set PORT=80 && react-scripts start",
     "build": "react-scripts build",
+    "build-snap": "react-scripts build && react-snap",
     "build-storybook": "build-storybook -o build-storybook && rimraf build-storybook/static/**/*.{jpg,txt,png,mp4,webm,svg}",
-    "postbuild": "react-snap",
     "deploy": "firebase deploy --only hosting:website",
     "deploy-functions": "firebase deploy --only functions",
     "deploy-storybook": "firebase deploy --only hosting:storybook",
     "serve": "firebase serve --only hosting",
     "test": "react-scripts test --env=jsdom --watchAll --verbose",
+    "preflight": "react-scripts test --env=jsdom --testTimeout=10000",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9009 -s public"
   },

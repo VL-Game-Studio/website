@@ -20,13 +20,7 @@ To run tests:
 npm run test
 ```
 
-
 ## Public Methods
-
-### Sheets Methods
-Path | Method | Parameters | Description
---- | --- | --- | ---
-   /sheets/events | GET | *none* | Returns an HTML table of events' signup and matchup data.
 
 ### Machine Learning Methods
 Path | Method | Parameters | Description
