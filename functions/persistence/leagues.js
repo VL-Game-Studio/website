@@ -80,28 +80,65 @@ const leagues = {
 
     // Calculate points ceiling
     const maxDiff = (Object.values(player.matches).length + 1) * 3;
-    const [opponent] = players
-    // Remove player from opponent selection
-    .filter(({ id }) => id !== player.id)
 
-    // Filter to same platforms
-    .filter(({ platforms = [] }) =>
-      (!platforms || !player.platforms) || (platforms
-        ? Object.values(platforms).some(platform => Object.values(player.platforms).includes(platform))
-        : Object.values(player.platforms).some(platform => Object.values(platforms).includes(platform)))
+    const [opponent1] = players
+      // Remove player from opponent selection
+      .filter(({ id }) => id !== player.id)
+      // Filter to same platforms
+      .filter(({ platforms = [] }) =>
+        (!platforms || !player.platforms) || (platforms
+          ? Object.values(platforms).some(platform => Object.values(player.platforms).includes(platform))
+          : Object.values(player.platforms).some(platform => Object.values(platforms).includes(platform)))
+        )
+      // Check if opponent has played before
+      .filter(({ opponents = [] }) => !Object.values(opponents).includes(player))
+      // Check if opponent isn't already paired or playing and in same round
+      .filter(({ matches = [], opponents = [] }) =>
+        Object.values(opponents).length === Object.values(matches).length &&
+        Object.values(matches).length === Object.values(player.matches).length
       )
+      // Pair within point ceiling
+      .filter(({ points = 0 }) => Math.abs(points - player.points) <= maxDiff);
 
-    // Check if opponent has played before
-    .filter(({ opponents = [] }) => !Object.values(opponents).includes(player))
+    const [opponent2] = players.filter(({ id }) => id !== player.id)
+      // Remove player from opponent selection
+      .filter(({ id }) => id !== player.id)
+      // Filter to same platforms
+      .filter(({ platforms = [] }) =>
+        (!platforms || !player.platforms) || (platforms
+          ? Object.values(platforms).some(platform => Object.values(player.platforms).includes(platform))
+          : Object.values(player.platforms).some(platform => Object.values(platforms).includes(platform)))
+        )
+      // Check if opponent has played before
+      .filter(({ opponents = [] }) => !Object.values(opponents).includes(player))
+      // Check if opponent isn't already paired or playing and in same round
+      .filter(({ matches = [], opponents = [] }) =>
+        Object.values(opponents).length === Object.values(matches).length &&
+        Object.values(matches).length === Object.values(player.matches).length
+      );
 
-    // Check if opponent isn't already paired or playing
-    .filter(({ matches = [], opponents = [] }) =>
-      Object.values(opponents).length === Object.values(matches).length &&
-      Object.values(matches).length === Object.values(player.matches).length
-    )
+    const [opponent3] = players.filter(({ id }) => id !== player.id)
+      // Remove player from opponent selection
+      .filter(({ id }) => id !== player.id)
+      // Filter to same platforms
+      .filter(({ platforms = [] }) =>
+        (!platforms || !player.platforms) || (platforms
+          ? Object.values(platforms).some(platform => Object.values(player.platforms).includes(platform))
+          : Object.values(player.platforms).some(platform => Object.values(platforms).includes(platform)))
+        )
+      // Check if opponent isn't already paired or playing
+      .filter(({ matches = [], opponents = [] }) =>
+        Object.values(opponents).length === Object.values(matches).length
+      );
 
-    // Pair within point ceiling
-    .filter(({ points = 0 }) => Math.abs(points - player.points) <= maxDiff);
+    const [opponent4] = players.filter(({ id }) => id !== player.id)
+      // Remove player from opponent selection
+      .filter(({ id }) => id !== player.id)
+      // Check if opponent isn't already paired or playing
+      .filter(({ matches = [], opponents = [] }) =>
+        Object.values(opponents).length === Object.values(matches).length
+      );
+    const opponent = opponent1 || opponent2 || opponnet3 || opponent4;
     if (!opponent) return null;
 
     // Append opponent to player's history
