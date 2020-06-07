@@ -22,6 +22,11 @@ npm run test
 
 ## Public Methods
 
+### Google Sheets Methods
+Path | Method | Parameters | Description
+--- | --- | --- | ---
+   /sheets/ | GET | *none* | Fetches a sample event, for initial sheets' testing.
+
 ### Machine Learning Methods
 Path | Method | Parameters | Description
 --- | --- | --- | ---
