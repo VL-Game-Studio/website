@@ -11,6 +11,10 @@
         {
           "source": "/functions/**",
           "function": "app"
+        },
+        {
+          "source": "**",
+          "destination": "/index.html"
         }
       ],
       "redirects": [
