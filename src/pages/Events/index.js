@@ -44,7 +44,7 @@ function Events(props) {
         <Route exact path="/events" component={AllEvents} />
         <Route path="/events/signup/:eventID" component={EventSignup} />
         <Route path="/events/:eventID" component={EventInfo} />
-        <NotFound />
+        <Route component={NotFound} />
       </Switch>
     </Suspense>
   );

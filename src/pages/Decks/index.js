@@ -1,25 +1,20 @@
-import React, { Fragment } from 'react';
-import { Helmet } from 'react-helmet-async';
-import PageLayout from 'components/PageLayout';
-import Hero from 'pages/Hero';
-import { useScrollRestore } from 'hooks';
+import React, { lazy, Suspense, Fragment } from 'react';
+import { Switch, Route } from 'react-router-dom';
+import NotFound from 'pages/NotFound';
 
-function Decks() {
-  useScrollRestore();
+const AllDecks = lazy(() => import('./AllDecks'));
+const Deck = () => false;
+const DeckEditor = () => false;
 
-  return (
-    <Fragment>
-      <Helmet
-        title="Decks - Project Modern"
-      />
-      <PageLayout>
-        <Hero
-          label="Decks"
-          title="Recent Decklists"
-        />
-      </PageLayout>
-    </Fragment>
-  );
-}
+const Decks = () => (
+  <Suspense fallback={<Fragment />}>
+    <Switch>
+      <Route exact path="/decks" component={AllDecks} />
+      <Route exact path="/decks/:deckID" component={Deck} />
+      <Route exact path="/decks/edit/:deckID" component={DeckEditor} />
+      <Route component={NotFound} />
+    </Switch>
+  </Suspense>
+);
 
 export default Decks;
