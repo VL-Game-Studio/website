@@ -18,10 +18,7 @@ describe('Decklists', () => {
   }
 
   it('creates decklist', async () => {
-    const res = await request(server)
-      .post('/decklists')
-      .set('secret', config.secret)
-      .send(testDecklist)
+    const res = await request(server).post('/decklists').set('secret', config.secret).send(testDecklist)
 
     expect(res.statusCode).toEqual(201)
     testDecklist.id = res.body.id
@@ -60,9 +57,7 @@ describe('Decklists', () => {
   it('deletes decklist', async () => {
     const { id } = testDecklist
 
-    const res = await request(server)
-      .delete(`/decklists/${id}`)
-      .set('secret', config.secret)
+    const res = await request(server).delete(`/decklists/${id}`).set('secret', config.secret)
 
     expect(res.statusCode).toEqual(200)
   })

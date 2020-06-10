@@ -46,14 +46,7 @@ const events = {
 
     return eventItem
   },
-  async signup({
-    id: eventID,
-    player: playerID,
-    username,
-    name,
-    mainboard,
-    sideboard = [],
-  }) {
+  async signup({ id: eventID, player: playerID, username, name, mainboard, sideboard = [] }) {
     const activeEvent = await database()
       .ref(`/events/${eventID}`)
       .once('value')
@@ -111,9 +104,7 @@ const events = {
 
     // Remove dropped players and sort by points (descending order)
     const allPlayers: IPlayer[] = Object.values(players)
-    const sortedPlayers = allPlayers
-      .filter(({ dropped }) => !dropped)
-      .sort((a: any, b: any) => b.points - a.points)
+    const sortedPlayers = allPlayers.filter(({ dropped }) => !dropped).sort((a: any, b: any) => b.points - a.points)
 
     const pairings = []
     const pairedPlayers = []
@@ -190,8 +181,7 @@ const events = {
     const { opponents = [], matches = [] } = player
     const [wins, losses, ties] = result.split('-')
 
-    const opponentID =
-      Object.values(opponents).length > 0 && Object.values(opponents).pop()
+    const opponentID = Object.values(opponents).length > 0 && Object.values(opponents).pop()
     if (!opponentID) throw Error('You are not in an active match.')
 
     await database()

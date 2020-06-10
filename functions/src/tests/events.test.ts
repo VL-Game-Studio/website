@@ -51,10 +51,7 @@ describe('events', () => {
   }
 
   it('creates event', async () => {
-    const res = await request(server)
-      .post('/events')
-      .set('secret', config.secret)
-      .send(testEvent)
+    const res = await request(server).post('/events').set('secret', config.secret).send(testEvent)
 
     expect(res.statusCode).toEqual(200)
   })
@@ -79,10 +76,7 @@ describe('events', () => {
   it('signs up for event', async () => {
     const { id } = testEvent
 
-    const res = await request(server)
-      .post(`/events/signup/${id}`)
-      .set('secret', config.secret)
-      .send(testRegistration)
+    const res = await request(server).post(`/events/signup/${id}`).set('secret', config.secret).send(testRegistration)
 
     expect(res.statusCode).toEqual(200)
   })
@@ -90,9 +84,7 @@ describe('events', () => {
   it('drops player from event', async () => {
     const { id } = testEvent
 
-    const res = await request(server)
-      .get(`/events/drop/${id}/6`)
-      .set('secret', config.secret)
+    const res = await request(server).get(`/events/drop/${id}/6`).set('secret', config.secret)
 
     expect(res.statusCode).toEqual(200)
     expect(res.body.dropped).toEqual(true)
@@ -101,10 +93,7 @@ describe('events', () => {
   it('fires event', async () => {
     const { id } = testEvent
 
-    const res = await request(server)
-      .post(`/events/fire/${id}`)
-      .set('secret', config.secret)
-      .send({ channel: 'test' })
+    const res = await request(server).post(`/events/fire/${id}`).set('secret', config.secret).send({ channel: 'test' })
 
     expect(res.statusCode).toEqual(200)
     testEvent.fired = true
@@ -113,9 +102,7 @@ describe('events', () => {
   it('generates pairings', async () => {
     const { id } = testEvent
 
-    const res = await request(server)
-      .get(`/events/pairings/${id}`)
-      .set('secret', config.secret)
+    const res = await request(server).get(`/events/pairings/${id}`).set('secret', config.secret)
 
     expect(res.statusCode).toEqual(200)
     expect(res.body).toEqual([
@@ -129,10 +116,7 @@ describe('events', () => {
     const { id } = testEvent
     const playerID = 1
 
-    const res = await request(server)
-      .post(`/events/report/${id}/${playerID}`)
-      .set('secret', config.secret)
-      .send({ result: '2-0-0' })
+    const res = await request(server).post(`/events/report/${id}/${playerID}`).set('secret', config.secret).send({ result: '2-0-0' })
 
     expect(res.statusCode).toEqual(200)
 

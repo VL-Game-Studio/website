@@ -55,8 +55,7 @@ const leagues = {
 
     // Calculate players' points
     players.map(player => {
-      let wins = 0,
-        ties = 0
+      let wins = 0, ties = 0
 
       if (player.matches) {
         Object.values(player.matches).forEach(({ result }) => {
@@ -83,91 +82,62 @@ const leagues = {
     // Calculate points ceiling
     const maxDiff = (Object.values(player.matches).length + 1) * 3
 
-    const [opponent1] = players
-      // Remove player from opponent selection
-      .filter(({ id }) => id !== player.id)
+    // Remove pairing player and inactive players from queue
+    const playerQueue = players.filter(({ id }) => id !== player.id)
+
+    const [opponent1] = playerQueue
       // Filter to same platforms
       .filter(
         ({ platforms = [] }) =>
           !platforms ||
           !player.platforms ||
           (platforms
-            ? Object.values(platforms).some(platform =>
-                Object.values(player.platforms).includes(platform)
-              )
-            : Object.values(player.platforms).some(platform =>
-                Object.values(platforms).includes(platform)
-              ))
+            ? Object.values(platforms).some(platform => Object.values(player.platforms).includes(platform))
+            : Object.values(player.platforms).some(platform => Object.values(platforms).includes(platform)))
       )
       // Check if opponent has played before
       .filter(({ opponents = [] }) => !Object.values(opponents).includes(player.id))
       // Check if opponent isn't already paired or playing and in same round
       .filter(
         ({ matches = [], opponents = [] }) =>
-          Object.values(opponents).length === Object.values(matches).length &&
-          Object.values(matches).length === Object.values(player.matches).length
+          Object.values(opponents).length === Object.values(matches).length && Object.values(matches).length === Object.values(player.matches).length
       )
       // Pair within point ceiling
       .filter(({ points = 0 }) => Math.abs(points - player.points) <= maxDiff)
 
-    const [opponent2] = players
-      .filter(({ id }) => id !== player.id)
-      // Remove player from opponent selection
-      .filter(({ id }) => id !== player.id)
+    const [opponent2] = playerQueue
       // Filter to same platforms
       .filter(
         ({ platforms = [] }) =>
           !platforms ||
           !player.platforms ||
           (platforms
-            ? Object.values(platforms).some(platform =>
-                Object.values(player.platforms).includes(platform)
-              )
-            : Object.values(player.platforms).some(platform =>
-                Object.values(platforms).includes(platform)
-              ))
+            ? Object.values(platforms).some(platform => Object.values(player.platforms).includes(platform))
+            : Object.values(player.platforms).some(platform => Object.values(platforms).includes(platform)))
       )
       // Check if opponent has played before
       .filter(({ opponents = [] }) => !Object.values(opponents).includes(player.id))
       // Check if opponent isn't already paired or playing and in same round
       .filter(
         ({ matches = [], opponents = [] }) =>
-          Object.values(opponents).length === Object.values(matches).length &&
-          Object.values(matches).length === Object.values(player.matches).length
+          Object.values(opponents).length === Object.values(matches).length && Object.values(matches).length === Object.values(player.matches).length
       )
 
-    const [opponent3] = players
-      .filter(({ id }) => id !== player.id)
-      // Remove player from opponent selection
-      .filter(({ id }) => id !== player.id)
-      // Filter to same platforms
+    const [opponent3] = playerQueue
       .filter(
         ({ platforms = [] }) =>
           !platforms ||
           !player.platforms ||
           (platforms
-            ? Object.values(platforms).some(platform =>
-                Object.values(player.platforms).includes(platform)
-              )
-            : Object.values(player.platforms).some(platform =>
-                Object.values(platforms).includes(platform)
-              ))
+            ? Object.values(platforms).some(platform => Object.values(player.platforms).includes(platform))
+            : Object.values(player.platforms).some(platform => Object.values(platforms).includes(platform)))
       )
       // Check if opponent isn't already paired or playing
-      .filter(
-        ({ matches = [], opponents = [] }) =>
-          Object.values(opponents).length === Object.values(matches).length
-      )
+      .filter(({ matches = [], opponents = [] }) => Object.values(opponents).length === Object.values(matches).length)
 
-    const [opponent4] = players
-      .filter(({ id }) => id !== player.id)
-      // Remove player from opponent selection
-      .filter(({ id }) => id !== player.id)
+    const [opponent4] = playerQueue
       // Check if opponent isn't already paired or playing
-      .filter(
-        ({ matches = [], opponents = [] }) =>
-          Object.values(opponents).length === Object.values(matches).length
-      )
+      .filter(({ matches = [], opponents = [] }) => Object.values(opponents).length === Object.values(matches).length)
     const opponent = opponent1 || opponent2 || opponent3 || opponent4
     if (!opponent) return null
 
@@ -196,7 +166,8 @@ const leagues = {
 
     opponents.pop()
 
-    await database().ref(`/leagues/${playerID}`).update({ opponents })
+    await database().ref(`/leagues/${playerID}`)
+      .update({ opponents })
 
     const player = await database()
       .ref(`/leagues/${playerID}`)
@@ -215,8 +186,7 @@ const leagues = {
     const { opponents = [], matches = [] } = player
     const [wins, losses, ties] = result.split('-')
 
-    const opponentID =
-      Object.values(opponents).length > 0 && Object.values(opponents).pop()
+    const opponentID = Object.values(opponents).length > 0 && Object.values(opponents).pop()
     if (!opponentID) return false
 
     const playerRound = {
@@ -225,9 +195,7 @@ const leagues = {
       opponent: opponentID,
     }
 
-    await database()
-      .ref(`/leagues/${playerID}/matches/${opponents.length}`)
-      .set(playerRound)
+    await database().ref(`/leagues/${playerID}/matches/${opponents.length}`).set(playerRound)
 
     if (Object.values(opponents).length === 5) {
       await database().ref(`/leagues/${playerID}`).remove()
@@ -246,9 +214,7 @@ const leagues = {
       opponent: playerID,
     }
 
-    await database()
-      .ref(`/leagues/${opponentID}/matches/${oppOpponents.length}`)
-      .set(opponentRound)
+    await database().ref(`/leagues/${opponentID}/matches/${oppOpponents.length}`).set(opponentRound)
 
     if (Object.values(oppOpponents).length === 5) {
       await database().ref(`/leagues/${opponentID}`).remove()

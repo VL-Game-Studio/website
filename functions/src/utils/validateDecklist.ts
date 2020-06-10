@@ -6,15 +6,10 @@ function getSize(cards: string[]) {
 
 function validateDecklist(main: string, side: string) {
   const mainboard = main.includes('\n') ? main.split('\n') : [main]
-  const sideboard = side
-    ? side[0] && side.includes('\n')
-      ? side.split('\n')
-      : [side]
-    : null
+  const sideboard = side ? (side[0] && side.includes('\n') ? side.split('\n') : [side]) : null
 
   if (getSize(mainboard) < 60) throw new Error('Mainboard must consist of 60 cards!')
-  if (sideboard && getSize(sideboard) > 15)
-    throw new Error('Sideboard must be fewer than 15 cards!')
+  if (sideboard && getSize(sideboard) > 15) throw new Error('Sideboard must be fewer than 15 cards!')
 
   return { mainboard, sideboard }
 }

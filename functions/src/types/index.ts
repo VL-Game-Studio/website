@@ -12,6 +12,7 @@ export interface IPlayer {
   points?: number
   dropped?: boolean
   platforms?: string[]
+  queueing?: boolean
 }
 
 export interface IEvent {

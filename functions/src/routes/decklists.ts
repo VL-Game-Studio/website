@@ -21,15 +21,12 @@ router.get('/:id', async (req: Request, res: Response) => {
 
   try {
     const decklist = await decklists.fetch(id)
-    if (!decklist)
-      return res.status(404).json({ error: `Decklist: ${id} was not found.` })
+    if (!decklist) return res.status(404).json({ error: `Decklist: ${id} was not found.` })
 
     return res.status(200).json(decklist)
   } catch (error) {
     console.error(`GET /decklists/${id} >> ${error.stack}`)
-    return res
-      .status(500)
-      .json({ error: `An error occured while fetching decklist: ${id}.` })
+    return res.status(500).json({ error: `An error occured while fetching decklist: ${id}.` })
   }
 })
 
@@ -44,9 +41,7 @@ router.post('/', middleware, async (req: Request, res: Response) => {
 
     return res.status(201).json(decklist)
   } catch (error) {
-    console.error(
-      `POST /decklists ({ author: ${author}, mainboard: ${mainboard}, sideboard: ${sideboard} }) >> ${error.stack}`
-    )
+    console.error(`POST /decklists ({ author: ${author}, mainboard: ${mainboard}, sideboard: ${sideboard} }) >> ${error.stack}`)
     return res.status(500).json({ error: 'An error occured while creating decklist.' })
   }
 })
@@ -61,12 +56,8 @@ router.post('/:id', middleware, async (req: Request, res: Response) => {
 
     return res.status(200).json(decklist)
   } catch (error) {
-    console.error(
-      `POST /decklists/${id} ({ author: ${author}, mainboard: ${mainboard}, sideboard: ${sideboard} }) >> ${error.stack}`
-    )
-    return res
-      .status(500)
-      .json({ error: `An error occured while updating decklist: ${id}.` })
+    console.error(`POST /decklists/${id} ({ author: ${author}, mainboard: ${mainboard}, sideboard: ${sideboard} }) >> ${error.stack}`)
+    return res.status(500).json({ error: `An error occured while updating decklist: ${id}.` })
   }
 })
 
@@ -75,15 +66,12 @@ router.delete('/:id', middleware, async (req: Request, res: Response) => {
 
   try {
     const decklist = await decklists.delete(id)
-    if (!decklist)
-      return res.status(404).json({ message: `Decklist: ${id} was not found.` })
+    if (!decklist) return res.status(404).json({ message: `Decklist: ${id} was not found.` })
 
     return res.status(200).json(decklist)
   } catch (error) {
     console.error(`DELETE /decklists/${id} >> ${error.stack}`)
-    return res
-      .status(500)
-      .json({ error: `An error occured while deleting decklist: ${id}.` })
+    return res.status(500).json({ error: `An error occured while deleting decklist: ${id}.` })
   }
 })
 
