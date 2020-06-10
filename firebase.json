@@ -117,7 +117,9 @@
   ],
   "functions": {
     "predeploy": [
-      "npm --prefix ./functions run preflight"
-    ]
+      "npm --prefix \"$RESOURCE_DIR\" run lint",
+      "npm --prefix \"$RESOURCE_DIR\" run build"
+    ],
+    "source": "functions"
   }
 }
