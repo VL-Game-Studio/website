@@ -27,7 +27,7 @@ function Events(props) {
 
         return dispatch({
           type: 'setEvents',
-          value: Object.values(data).filter(({ fired }) => !fired),
+          value: Object.values(data),
         });
       } catch (error) {
         dispatch({ type: 'setEvents', value: false });
@@ -55,7 +55,7 @@ function Events(props) {
       titleId={titleId}
       sectionRef={sectionRef}
       visible={visible}
-      events={events}
+      events={events.filter(({ fired }) => !fired)}
       {...rest}
     />
   );

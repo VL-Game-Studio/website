@@ -33,8 +33,8 @@ function EventSignup(props) {
   }, [dispatch, eventID]);
 
   useEffect(() => {
-    if (!activeEvent) history.push('/events');
-  }, [activeEvent, history]);
+    if (!activeEvent || activeEvent.fired) history.push(`/events/${eventID}`);
+  }, [activeEvent, history, eventID]);
 
   useEffect(() => {
     if (activeEvent && !user) {

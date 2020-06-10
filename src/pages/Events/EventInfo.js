@@ -82,7 +82,7 @@ function EventInfo(props) {
                     <InfoPanel>
                       <Title2 loading={!activeEvent?.name ? 1 : 0}>{activeEvent.name}</Title2>
                       <Paragraph loading={!activeEvent?.description ? 1 : 0}>{activeEvent.description}</Paragraph>
-                      {(activeEvent && !isMobile) && <Button {...buttonProps} />}
+                      {(activeEvent?.fired === false && !isMobile) && <Button {...buttonProps} />}
                     </InfoPanel>
                     <InfoPanel>
                       <div>
@@ -115,7 +115,7 @@ function EventInfo(props) {
                           </Tag>
                         }
                       </div>
-                      {(activeEvent && isMobile) && <Button style={{ marginTop: '50px' }} {...buttonProps} />}
+                      {(activeEvent?.fired === false && isMobile) && <Button style={{ marginTop: '50px' }} {...buttonProps} />}
                       {(!activeEvent || otherEvents.length > 1) &&
                         <RelatedEvents>
                           <h4>Other Events</h4>
