@@ -167,7 +167,9 @@ const events = {
       .map(({ points, ...player }) => player)
       .forEach(player => (updatedPlayers[player.id] = player))
 
-    await database().ref(`/events/${id}`).update({ players: updatedPlayers })
+    const round = Math.max.apply(Math, sortedPlayers.map(({ opponents = [] }) => Object.values(opponents).length))
+
+    await database().ref(`/events/${id}`).update({ players: updatedPlayers, round })
 
     return pairings
   },
