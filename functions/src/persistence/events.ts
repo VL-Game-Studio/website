@@ -20,7 +20,7 @@ const events = {
   },
   async create({ time, name, platform, ...rest }) {
     const date = new Date(time)
-    time = date.getTime()
+    time = JSON.stringify(date.getTime())
     const id = time
 
     const eventExists = await database()
