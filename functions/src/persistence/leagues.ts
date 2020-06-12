@@ -58,9 +58,9 @@ const leagues = {
       let wins = 0, ties = 0
 
       if (player.matches) {
-        Object.values(player.matches).forEach(({ result }) => {
-          if (result && result.includes('-')) {
-            const stats = result.split('-')
+        Object.values(player.matches).forEach(({ record }) => {
+          if (record && record.includes('-')) {
+            const stats = record.split('-')
 
             wins += parseInt(stats[0])
             ties += parseInt(stats[2])

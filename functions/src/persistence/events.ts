@@ -91,8 +91,8 @@ const events = {
         ties = 0
 
       if (player.matches) {
-        Object.values(player.matches).forEach(({ result }) => {
-          const stats = result.split('-')
+        Object.values(player.matches).forEach(({ record }) => {
+          const stats = record.split('-')
 
           wins += parseInt(stats[0])
           ties += parseInt(stats[2])
@@ -140,6 +140,14 @@ const events = {
           if (entry === player) {
             pairedPlayers.push(player)
             sortedPlayers[index].opponents.push(opponent ? opponent.id : 'bye')
+
+            const playerRef = sortedPlayers[index]
+
+            if (!opponent) sortedPlayers[index].matches[(playerRef.matches ? playerRef.matches.length : 0) + 1] = {
+              round: (playerRef.matches ? playerRef.matches.length : 0) + 1,
+              record: '2-0-0',
+              opponent: 'bye',
+            }
           } else if (opponent && entry === opponent) {
             pairedPlayers.push(opponent)
             const oppIndex = sortedPlayers.indexOf(opponent)

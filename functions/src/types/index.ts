@@ -1,6 +1,6 @@
 export interface IMatch {
   round: number
-  result: string
+  record: string
   opponent: string
 }
 

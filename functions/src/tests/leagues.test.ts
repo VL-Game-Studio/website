@@ -36,7 +36,6 @@ describe('Leagues', () => {
 
     await request(server).post('/leagues/2').set('secret', config.secret).send(rest)
 
-    await request(server).get(`/leagues/queue/2`).set('secret', config.secret)
     const res = await request(server).get(`/leagues/queue/${id}`).set('secret', config.secret)
 
     expect(res.statusCode).toEqual(200)
