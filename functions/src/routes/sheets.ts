@@ -5,13 +5,11 @@ const router = Router()
 
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const { id, platform, name, players, rounds } = await events.fetch('1590836400000')
-    const playerCount = Object.values(players).length
+    const { players = [] } = await events.fetch('1592082000000')
 
-    const props = [id, platform, name, playerCount, rounds]
-    const table = `<table><tr>${props.map(prop => `<td>${prop}</td>`).join('')}</tr></table>`
+    const table = `<table>${Object.values(players).map(({ id, username, deck: { name } }) => `<tr><td>${id}</td><td>${username}</td><td>${name}</td></tr>`).join('')}</table>`
 
-    res.send(table)
+    return res.send(table)
   } catch (error) {
     console.error(`GET /sheets/events >> ${error.stack}`)
     return res.status(500).json({ error: `An error occured while fetching events: ${error.message}.` })

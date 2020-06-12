@@ -6,7 +6,7 @@
     "start": "npm run shell",
     "lint": "eslint src --fix",
     "test": "jest --watchAll --verbose --testTimeout=10000",
-    "preflight": "npm run lint && jest src & npm run build",
+    "preflight": "jest src && npm run build",
     "build": "tsc",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
