@@ -123,7 +123,7 @@ function EventInfo(props) {
                         }
                       </div>
                       {(activeEvent?.fired === false && isMobile) && <Button style={{ marginTop: '50px' }} {...buttonProps} />}
-                      {(!activeEvent || otherEvents.length > 1) &&
+                      {(!activeEvent || otherEvents?.length > 1) &&
                         <RelatedEvents>
                           <h4>Other Events</h4>
                           {!activeEvent &&
@@ -131,7 +131,7 @@ function EventInfo(props) {
                               <br/><br/><br/>
                             </Paragraph>
                           }
-                          {otherEvents.map(({ id, name }, index) => index < 4 && (
+                          {otherEvents?.map(({ id, name }, index) => index < 4 && (
                             <Anchor
                               key={id}
                               secondary={1}

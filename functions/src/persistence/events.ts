@@ -36,6 +36,7 @@ const events = {
         name,
         time,
         platform: platform ? platform.toUpperCase() : null,
+        fired: false,
         ...rest,
       })
 
@@ -188,7 +189,7 @@ const events = {
       .then(snap => snap.val())
     if (!player) return false
 
-    const { opponents = [], matches = [] } = player
+    const { opponents = [] } = player
     const [wins, losses, ties] = result.split('-')
 
     const opponentID = Object.values(opponents).length > 0 && Object.values(opponents).pop()
@@ -197,7 +198,7 @@ const events = {
     await database()
       .ref(`/events/${id}/players/${playerID}/matches/${opponents.length}`)
       .set({
-        round: Object.values(matches).length,
+        round: opponents.length,
         record: `${wins}-${losses}-${ties}`,
         opponent: opponentID,
       })
@@ -207,12 +208,12 @@ const events = {
       .once('value')
       .then(snap => snap.val())
 
-    const { opponents: oppOpponents, matches: oppMatches = [] } = opponent
+    const { opponents: oppOpponents } = opponent
 
     await database()
       .ref(`/events/${id}/players/${opponentID}/matches/${oppOpponents.length}`)
       .set({
-        round: Object.values(oppMatches).length,
+        round: oppOpponents.length,
         record: `${losses}-${wins}-${ties}`,
         opponent: playerID,
       })

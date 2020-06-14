@@ -55,7 +55,7 @@ function Events(props) {
       titleId={titleId}
       sectionRef={sectionRef}
       visible={visible}
-      events={events.filter(({ fired }) => !fired)}
+      events={events?.filter(({ fired }) => !fired)}
       {...rest}
     />
   );

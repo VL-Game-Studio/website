@@ -50,7 +50,7 @@ function AllEvents() {
           alternate
           id="events"
           title="Active Events"
-          events={events.filter(({ fired }) => !fired)}
+          events={events?.filter(({ fired }) => !fired)}
           sectionRef={eventsList}
           visible={visibleSections.includes(eventsList.current)}
         />
