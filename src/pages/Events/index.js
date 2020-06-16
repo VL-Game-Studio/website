@@ -5,6 +5,7 @@ import { useAppContext } from 'hooks';
 import prerender from 'utils/prerender';
 
 const AllEvents = lazy(() => import('./AllEvents'));
+const EventCreate = lazy(() => import('./EventCreate'));
 const EventSignup = lazy(() => import('./EventSignup'));
 const EventInfo = lazy(() => import('./EventInfo'));
 const NotFound = lazy(() => import('pages/NotFound'));
@@ -42,6 +43,7 @@ function Events(props) {
     <Suspense fallback={<Fragment />}>
       <Switch>
         <Route exact path="/events" component={AllEvents} />
+        <Route path="/events/create" component={EventCreate} />
         <Route path="/events/signup/:eventID" component={EventSignup} />
         <Route path="/events/:eventID" component={EventInfo} />
         <Route component={NotFound} />
@@ -55,7 +57,7 @@ function Events(props) {
       titleId={titleId}
       sectionRef={sectionRef}
       visible={visible}
-      events={events?.filter(({ fired }) => !fired)}
+      events={events && events?.filter(({ fired }) => !fired)}
       {...rest}
     />
   );

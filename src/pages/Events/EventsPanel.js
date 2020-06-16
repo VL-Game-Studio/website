@@ -1,48 +1,82 @@
-import React, { memo } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import styled, { css } from 'styled-components/macro';
 import { Title2, Paragraph } from 'components/Type';
 import { Link } from 'components/Link';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import Hero from 'pages/Hero';
+import { useAppContext } from 'hooks';
 import { media } from 'utils/style';
 
-const EventsPanel = ({
+function EventsPanel({
   alternate,
   label = 'Active Events',
   title = 'New Tournaments Every Day',
   altText = 'There aren\'t any active events right now.',
   events,
   ...rest
-}) => (
-  <EventsHero
-    alternate={alternate}
-    label={!alternate && label}
-    title2={title}
-    {...rest}
-  >
-    <Tournaments alternate={alternate}>
-      {events === false && <Paragraph>An error occured while fetching events.</Paragraph>}
-      {(!events && events !== false) && <Paragraph>Loading events..</Paragraph>}
-      {events?.length === 0 && <Paragraph>{altText}</Paragraph>}
-      {events?.length > 0 && events?.map(({ id, name, description }) => (
-        <Tournament
-          key={id}
-          to={`/events/${id}`}
-          aria-label={name}
-        >
-          <TournamentName>
-            <span>{name}</span>
-            <div></div>
-          </TournamentName>
-          <TournamentInfo>{description}</TournamentInfo>
-          <Icon icon="plus" />
-        </Tournament>
-      ))}
-    </Tournaments>
-    {!alternate && <Button to="/events" label="All Events" />}
-  </EventsHero>
-);
+}) {
+  const { user } = useAppContext();
+  const [authorized, setAuthorized] = useState();
+  const [working, setWorking] = useState();
+
+  useEffect(() => {
+    async function checkPerms() {
+      if (working) return;
+
+      try {
+        setWorking(true);
+
+        const response = await fetch(`/functions/authorized/organized-play/${user.id}`, {
+          method: 'GET',
+          mode: 'cors',
+        });
+        if (response.status !== 200) return false;
+
+        const data = await response.json();
+
+        setWorking(false);
+        return setAuthorized(!!data);
+      } catch (error) {
+        setWorking(false);
+        return console.error(error.message);
+      }
+    }
+
+    if (user?.id) checkPerms();
+  }, [working, user]);
+
+  return (
+    <EventsHero
+      alternate={alternate}
+      label={!alternate && label}
+      title2={title}
+      {...rest}
+    >
+      <Tournaments alternate={alternate}>
+        {events === false && <Paragraph>An error occured while fetching events.</Paragraph>}
+        {(!events && events !== false) && <Paragraph>Loading events..</Paragraph>}
+        {events?.length === 0 && <Paragraph>{altText}</Paragraph>}
+        {events?.length > 0 && events?.map(({ id, name, description }) => (
+          <Tournament
+            key={id}
+            to={`/events/${id}`}
+            aria-label={name}
+          >
+            <TournamentName>
+              <span>{name}</span>
+              <div></div>
+            </TournamentName>
+            <TournamentInfo>{description}</TournamentInfo>
+            <Icon icon="plus" />
+          </Tournament>
+        ))}
+        {authorized && <Button to="/events/create" label="Create Event" />}
+      </Tournaments>
+      {!alternate && <Button to="/events" label="All Events" />}
+    </EventsHero>
+  );
+}
 
 const EventsHero = styled(Hero)`
   display: flex;
@@ -79,21 +113,10 @@ const Tournaments = styled.div`
   max-width: 624px;
   width: 100%;
 
-  svg {
-    color: rgb(var(--rgbAccent));
-    position: absolute;
-    right: 0;
-    top: var(--space2XL);
-  }
-
   @media (max-width: ${media.mobile}px) {
     align-self: flex-start;
     margin-top: var(--spaceXL);
     max-width: none;
-
-    svg {
-      top: var(--spaceXL);
-    }
   }
 `;
 
@@ -139,11 +162,18 @@ const Tournament = styled(Link)`
   flex-direction: column;
   height: var(--space6XL);
   justify-content: center;
-  margin: 0;
+  margin: 0!important;
   padding-right: var(--spaceM);
   position: relative;
   text-decoration: none;
   width: 100%;
+
+  svg {
+    color: rgb(var(--rgbAccent));
+    position: absolute;
+    right: 0;
+    top: var(--space2XL);
+  }
 
   ::after {
     background-color: rgb(234, 234, 234);
@@ -163,6 +193,10 @@ const Tournament = styled(Link)`
 
   @media (max-width: ${media.mobile}px) {
     height: 100px;
+
+    svg {
+      top: var(--spaceXL);
+    }
   }
 `;
 

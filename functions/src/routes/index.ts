@@ -1,4 +1,5 @@
 import { Router, Request, Response } from 'express'
+import authorized from './authorized'
 import decklists from './decklists'
 import events from './events'
 import leagues from './leagues'
@@ -7,6 +8,7 @@ import sheets from './sheets'
 
 const router = Router()
 
+router.use('/authorized', authorized)
 router.use('/decklists', decklists)
 router.use('/events', events)
 router.use('/leagues', leagues)

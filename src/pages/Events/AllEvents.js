@@ -7,7 +7,7 @@ import GetStarted from 'pages/GetStarted';
 import { useAppContext, useScrollRestore } from 'hooks';
 
 function AllEvents() {
-  const { events } = useAppContext();;
+  const { events } = useAppContext();
   const [visibleSections, setVisibleSections] = useState([]);
   const eventsList = useRef();
   const getStarted = useRef();
@@ -50,7 +50,7 @@ function AllEvents() {
           alternate
           id="events"
           title="Active Events"
-          events={events?.filter(({ fired }) => !fired)}
+          events={events && events?.filter(({ fired }) => !fired)}
           sectionRef={eventsList}
           visible={visibleSections.includes(eventsList.current)}
         />
