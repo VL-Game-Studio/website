@@ -2,20 +2,18 @@ import React, { useState, useRef, useEffect, Fragment } from 'react';
 import { Helmet } from 'react-helmet-async';
 import PageLayout from 'components/PageLayout';
 import Hero from 'pages/Hero';
-import Events from 'pages/Events';
+import About from 'pages/Home/About';
 import GetStarted from 'pages/GetStarted';
 import { useScrollRestore } from 'hooks';
-import prerender from 'utils/prerender';
 
-function Metagame() {
+function Format() {
   const [visibleSections, setVisibleSections] = useState([]);
-  const eventsList = useRef();
+  const about = useRef();
   const getStarted = useRef();
-  const [events, setEvents] = useState([]);
   useScrollRestore();
 
   useEffect(() => {
-    const revealSections = [eventsList, getStarted];
+    const revealSections = [about, getStarted];
 
     const sectionObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
@@ -37,44 +35,21 @@ function Metagame() {
     };
   }, [visibleSections]);
 
-  useEffect(() => {
-    async function fetchEvents() {
-      try {
-        const response = await fetch('/functions/events', {
-          method: 'GET',
-          mode: 'cors',
-        });
-        if (response.status !== 200) return false;
-
-        const data = await response.json();
-
-        return setEvents(Object.values(data).filter(({ fired }) => fired));
-      } catch (error) {
-        return console.error(error.message);
-      }
-    }
-
-    if (!prerender) fetchEvents();
-  }, []);
-
   return (
     <Fragment>
       <Helmet
-        title="Metagame - Project Modern"
+        title="Format - Project Modern"
       />
       <PageLayout>
         <Hero
-          label="Metagame"
-          title="Recent Events and Metagame"
+          label="Format"
+          title="Format Mission and Metagame"
         />
-        <Events
+        <About
+          id="about"
           alternate
-          id="events"
-          title="Recent Events"
-          altText="There aren't any recent events right now."
-          events={events}
-          sectionRef={eventsList}
-          visible={visibleSections.includes(eventsList.current)}
+          sectionRef={about}
+          visible={visibleSections.includes(about.current)}
         />
         <GetStarted
           id="get-started"
@@ -86,4 +61,4 @@ function Metagame() {
   );
 }
 
-export default Metagame;
+export default Format;

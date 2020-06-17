@@ -5,17 +5,16 @@ export const navLinks = [
     label: 'Home'
   },
   {
-    pathname: '/',
-    hash: '#about',
-    label: 'About'
-  },
-  {
-    pathname: '/blog',
-    label: 'Blog'
+    pathname: '/format',
+    label: 'Format'
   },
   {
     pathname: '/events',
     label: 'Events'
+  },
+  {
+    pathname: '/blog',
+    label: 'Blog'
   },
 ];
 
