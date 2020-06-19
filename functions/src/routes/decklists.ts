@@ -5,7 +5,7 @@ import { validateDecklist } from '../utils'
 
 const router = Router()
 
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', async (_: null, res: Response) => {
   try {
     const allDecklists = await decklists.fetchAll()
 
@@ -37,6 +37,7 @@ router.post('/', middleware, async (req: Request, res: Response) => {
 
   try {
     const deck = validateDecklist(mainboard, sideboard)
+    if (typeof deck !== 'object') return res.status(400).json({ error: deck })
     const decklist = await decklists.create({ author, ...deck, ...rest })
 
     return res.status(201).json(decklist)
@@ -52,6 +53,7 @@ router.post('/:id', middleware, async (req: Request, res: Response) => {
 
   try {
     const deck = validateDecklist(mainboard, sideboard)
+    if (typeof deck !== 'object') return res.status(400).json({ error: deck })
     const decklist = await decklists.update({ id, author, ...deck, ...rest })
 
     return res.status(200).json(decklist)

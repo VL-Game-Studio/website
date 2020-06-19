@@ -5,7 +5,7 @@ import { validateDecklist } from '../utils'
 
 const router = Router()
 
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', async (_: null, res: Response) => {
   try {
     const allEvents = await events.fetchAll()
 
@@ -71,12 +71,13 @@ router.post('/signup/:id', middleware, async (req: Request, res: Response) => {
     if (!activeEvent) return res.status(404).json({ message: `An event could not be found for: ${id}.` })
 
     const deck = validateDecklist(mainboard, sideboard)
+    if (typeof deck !== 'object') return res.status(400).json({ error: deck })
     const playerReceipt = await events.signup({ id, player, username, name, ...deck })
 
     return res.status(200).json(playerReceipt)
   } catch (error) {
     console.error(
-      `POST /events/ ({ player: ${player}, username: ${username}, name: ${name}, mainboard: ${mainboard}, sideboard: ${sideboard} }) >> ${error.stack}`
+      `POST /events/${id} ({ player: ${player}, username: ${username}, name: ${name}, mainboard: ${mainboard}, sideboard: ${sideboard} }) >> ${error.stack}`
     )
     return res.status(500).json({ error: `An error occured while signing up for event: ${id}.` })
   }
@@ -84,7 +85,6 @@ router.post('/signup/:id', middleware, async (req: Request, res: Response) => {
 
 router.get('/pairings/:id', middleware, async (req: Request, res: Response) => {
   const { id } = req.params
-  if (req.headers.secret !== process.env.SECRET) return res.status(403).json({ error: 'You are not authorized for this action.' })
 
   try {
     const activeEvent = await events.fetch(id)

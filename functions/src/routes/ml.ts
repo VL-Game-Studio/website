@@ -1,9 +1,9 @@
-import { Router, Request, Response } from 'express'
+import { Router, Response } from 'express'
 import { events } from '../persistence'
 
 const router = Router()
 
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', async (_: null, res: Response) => {
   try {
     const decks = Object.values(await events.fetchAll())
       .filter(({ players }) => players && players.deck)

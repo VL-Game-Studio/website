@@ -4,7 +4,7 @@ import { leagues } from '../persistence'
 
 const router = Router()
 
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', async (_: null, res: Response) => {
   try {
     const allLeagues = await leagues.fetchAll()
 
