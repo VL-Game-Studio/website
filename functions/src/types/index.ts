@@ -4,9 +4,16 @@ export interface IMatch {
   opponent: string
 }
 
+interface IDeck {
+  name?: string
+  mainboard: string[]
+  sideboard?: string[]
+}
+
 export interface IPlayer {
   id: string
-  deckID: string
+  deck?: IDeck
+  deckID?: string
   opponents?: string[]
   matches?: IMatch[]
   points?: number
