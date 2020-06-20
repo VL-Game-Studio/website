@@ -11,15 +11,23 @@ import { media } from 'utils/style';
 import { useAppContext, useWindowSize } from 'hooks';
 import { reflow } from 'utils/transition';
 import { navLinks } from 'data/nav';
+import config from 'config';
 
 function Header(props) {
   const { dark } = props;
-  const { menuOpen, dispatch } = useAppContext();
+  const { menuOpen, dispatch, user } = useAppContext();
   const [hashKey, setHashKey] = useState();
   const location = useLocation();
   const { width } = useWindowSize();
   const isMobile = width <= media.mobile;
   const isDark = menuOpen ? !dark : dark;
+
+  const onClick = () => dispatch({ type: 'setRedirect', value: '/' });
+
+  const signOut = event => {
+    event.preventDefault();
+    dispatch({ type: 'setUser', value: null });
+  };
 
   const handleNavClick = () => {
     setHashKey(Math.random().toString(32).substr(2, 8));
@@ -42,11 +50,11 @@ function Header(props) {
       <HeaderNav>
         <CTALink
           dark={isDark}
-          href="https://discord.gg/mjtTnr8"
-          target="_blank"
-          rel="noreferrer noopener"
+          href={user ? '/' : config.authURL}
+          onClick={user ? signOut : onClick}
         >
-          Get Started
+          {user && 'Sign Out'}
+          {!user && 'Sign In'}
         </CTALink>
         <NavToggle dark={isDark} menuOpen={menuOpen} />
       </HeaderNav>

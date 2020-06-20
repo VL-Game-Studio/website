@@ -12,8 +12,7 @@ import config from 'config';
 
 function EventCreate() {
   const { user, dispatch } = useAppContext();
-  const [authorized, setAuthorized] = useState();
-  const [working, setWorking] = useState();
+  const authorized = config?.admins?.includes(user?.id);
   const [submitting, setSubmitting] = useState();
   const [complete, setComplete] = useState();
   const name = useFormInput('');
@@ -28,40 +27,11 @@ function EventCreate() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!user) {
+    if (!user || !authorized) {
       handleSignout();
       window.location = config.authURL;
     }
-  }, [user, handleSignout]);
-
-  useEffect(() => {
-    async function checkPerms() {
-      if (working) return;
-
-      try {
-        setWorking(true);
-
-        const response = await fetch(`/functions/authorized/organized-play/${user.id}`, {
-          method: 'GET',
-          mode: 'cors',
-        });
-        if (response.status !== 200) throw new Error(response.statusText);
-
-        const data = await response.json();
-        if (!data) throw new Error('You are not authorized for this action.');
-
-        setWorking(false);
-        return setAuthorized(true);
-      } catch (error) {
-        setWorking(false);
-        console.error(error.message);
-        handleSignout();
-        return window.location = config.authURL;
-      }
-    }
-
-    if (user?.id) checkPerms();
-  }, [working, user, handleSignout]);
+  }, [user, handleSignout, authorized]);
 
   const onSubmit = useCallback(async event => {
     event.preventDefault();
@@ -81,7 +51,7 @@ function EventCreate() {
           name: name.value,
           description: description.value === '' ? 'Target start time is 4PM GMT.' : description.value,
           platform: platform.value,
-          time: `${time.value}T:16:00:00Z`,
+          time: `${time.value}T16:00:00Z`,
         }),
       });
 
@@ -123,7 +93,7 @@ function EventCreate() {
                     <Input {...time} type="date" required placeholder="UTC start time (2020-06-31T00:00:00Z)" />
                   </HalvedGrid>
                   <SubmitGrid>
-                  <Button label="Submit" />
+                  <Button label="Create" />
                   {user &&
                     <Comment>Signed in as {user.username}#{user.discriminator}. <Anchor secondary href={`https://discord.com/api/oauth2/authorize?client_id=${config.clientID}&redirect_uri=${encodeURI(config.redirect)}&response_type=code&scope=identify`} onClick={handleSignout}>Not you?</Anchor></Comment>
                   }

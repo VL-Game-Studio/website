@@ -41,7 +41,11 @@ function Auth(props) {
         const userData = await response2.json();
         dispatch({ type: 'setUser', value: userData });
 
-        return props.history.push(redirect || '/');
+        if (redirect && redirect.includes('http')) window.open(redirect);
+
+        return redirect && redirect.includes('http')
+          ? props.history.push('/')
+          : props.history.push(redirect || '/');
       } catch (error) {
         console.error(error.message);
         alert(error.message);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { memo } from 'react';
 import styled, { css } from 'styled-components/macro';
 import { Title2, Paragraph } from 'components/Type';
 import { Link } from 'components/Link';
@@ -7,6 +7,7 @@ import Icon from 'components/Icon';
 import Hero from 'pages/Hero';
 import { useAppContext } from 'hooks';
 import { media } from 'utils/style';
+import config from 'config';
 
 function EventsPanel({
   alternate,
@@ -17,34 +18,7 @@ function EventsPanel({
   ...rest
 }) {
   const { user } = useAppContext();
-  const [authorized, setAuthorized] = useState();
-  const [working, setWorking] = useState();
-
-  useEffect(() => {
-    async function checkPerms() {
-      if (working) return;
-
-      try {
-        setWorking(true);
-
-        const response = await fetch(`/functions/authorized/organized-play/${user.id}`, {
-          method: 'GET',
-          mode: 'cors',
-        });
-        if (response.status !== 200) return false;
-
-        const data = await response.json();
-
-        setWorking(false);
-        return setAuthorized(!!data);
-      } catch (error) {
-        setWorking(false);
-        return console.error(error.message);
-      }
-    }
-
-    if (user?.id) checkPerms();
-  }, [working, user]);
+  const authorized = config?.admins?.includes(user?.id);
 
   return (
     <EventsHero
