@@ -1,9 +1,24 @@
 import { database } from 'firebase-admin'
-import { IPlayer } from '../types'
+import { IEvent, IPlayer } from '../types'
+
+interface ISignup {
+  id: string
+  player: string
+  username?: string
+  name?: string
+  mainboard: string[]
+  sideboard?: string[]
+}
+
+interface IResult {
+  id: string
+  playerID: string
+  result: string
+}
 
 const events = {
   async fetchAll() {
-    const allEvents = await database()
+    const allEvents: IEvent[] = await database()
       .ref('/events')
       .once('value')
       .then(snap => snap.val())
@@ -11,19 +26,18 @@ const events = {
     return allEvents
   },
   async fetch(id: string) {
-    const eventItem = await database()
+    const eventItem: IEvent = await database()
       .ref(`/events/${id}`)
       .once('value')
       .then(snap => snap.val())
 
     return eventItem
   },
-  async create({ time, name, platform, ...rest }) {
-    const date = new Date(time)
-    time = JSON.stringify(date.getTime())
-    const id = time
+  async create({ time, name, platform, ...rest }: IEvent) {
+    time = new Date(time).getTime()
+    const id = JSON.stringify(time)
 
-    const eventExists = await database()
+    const eventExists: IEvent = await database()
       .ref(`/events/${id}`)
       .once('value')
       .then(snap => snap.val())
@@ -40,15 +54,15 @@ const events = {
         ...rest,
       })
 
-    const eventItem = await database()
+    const eventItem: IEvent = await database()
       .ref(`/events/${id}`)
       .once('value')
       .then(snap => snap.val())
 
     return eventItem
   },
-  async signup({ id: eventID, player: playerID, username, name, mainboard, sideboard = [] }) {
-    const activeEvent = await database()
+  async signup({ id: eventID, player: playerID, username, name, mainboard, sideboard = [] }: ISignup) {
+    const activeEvent: IEvent = await database()
       .ref(`/events/${eventID}`)
       .once('value')
       .then(snap => snap.val())
@@ -67,7 +81,7 @@ const events = {
         },
       })
 
-    const playerReceipt = await database()
+    const playerReceipt: IPlayer = await database()
       .ref(`/events/${eventID}/players/${playerID}`)
       .once('value')
       .then(snap => snap.val())
@@ -75,7 +89,7 @@ const events = {
     return playerReceipt
   },
   async pairings(id: string) {
-    const activeEvent = await database()
+    const activeEvent: IEvent = await database()
       .ref(`/events/${id}`)
       .once('value')
       .then(snap => snap.val())
@@ -182,8 +196,8 @@ const events = {
 
     return pairings
   },
-  async report({ id, playerID, result }) {
-    const player = await database()
+  async report({ id, playerID, result }: IResult) {
+    const player: IPlayer = await database()
       .ref(`/events/${id}/players/${playerID}`)
       .once('value')
       .then(snap => snap.val())
@@ -218,7 +232,7 @@ const events = {
         opponent: playerID,
       })
 
-    const activeEvent = await database()
+    const activeEvent: IEvent = await database()
       .ref(`/events/${id}`)
       .once('value')
       .then(snap => snap.val())
@@ -226,7 +240,7 @@ const events = {
     return activeEvent
   },
   async fire(id: string, channel: string) {
-    const eventExists = await database()
+    const eventExists: IEvent = await database()
       .ref(`/events/${id}`)
       .once('value')
       .then(snap => snap.val())
@@ -253,7 +267,7 @@ const events = {
 
     await database().ref(`/events/${id}`).update({ channel, rounds, fired: true })
 
-    const activeEvent = await database()
+    const activeEvent: IEvent = await database()
       .ref(`/events/${id}`)
       .once('value')
       .then(snap => snap.val())
@@ -261,7 +275,7 @@ const events = {
     return activeEvent
   },
   async drop({ id, playerID }) {
-    const playerExists = await database()
+    const playerExists: IPlayer = await database()
       .ref(`/events/${id}/players/${playerID}`)
       .once('value')
       .then(snap => snap.val())
@@ -269,7 +283,7 @@ const events = {
 
     await database().ref(`/events/${id}/players/${playerID}`).update({ dropped: true })
 
-    const player = await database()
+    const player: IPlayer = await database()
       .ref(`/events/${id}/players/${playerID}`)
       .once('value')
       .then(snap => snap.val())
@@ -277,7 +291,7 @@ const events = {
     return player
   },
   async update({ id, ...props }) {
-    const activeEvent = await database()
+    const activeEvent: IEvent = await database()
       .ref(`/events/${id}`)
       .once('value')
       .then(snap => snap.val())
@@ -285,7 +299,7 @@ const events = {
 
     await database().ref(`/events/${id}`).update(props)
 
-    const eventReceipt = await database()
+    const eventReceipt: IEvent = await database()
       .ref(`/events/${id}`)
       .once('value')
       .then(snap => snap.val())
@@ -293,7 +307,7 @@ const events = {
     return eventReceipt
   },
   async delete(id: string) {
-    const eventItem = await database()
+    const eventItem: IEvent = await database()
       .ref(`/events/${id}`)
       .once('value')
       .then(snap => snap.val())

@@ -25,10 +25,11 @@ export interface IPlayer {
 export interface IEvent {
   id: string
   name: string
+  closed?: boolean
   description: string
   platform: string
   date: Date
-  time: string
+  time: number | string
   rounds?: number
   concluded?: boolean
   fired?: boolean

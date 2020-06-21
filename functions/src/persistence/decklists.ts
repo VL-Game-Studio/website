@@ -1,8 +1,9 @@
 import { database } from 'firebase-admin'
+import { IDecklist } from '../types'
 
 const decklists = {
   async fetchAll() {
-    const allDecklists = await database()
+    const allDecklists: IDecklist[] = await database()
       .ref('/decklists')
       .once('value')
       .then(snap => snap.val())
@@ -10,24 +11,24 @@ const decklists = {
     return allDecklists
   },
   async fetch(id: string) {
-    const decklist = await database()
+    const decklist: IDecklist = await database()
       .ref(`/decklists/${id}`)
       .once('value')
       .then(snap => snap.val())
 
     return decklist
   },
-  async update({ id, ...rest }) {
+  async update({ id, ...rest }: IDecklist) {
     await database().ref(`/decklists/${id}`).update(rest)
 
-    const decklist = await database()
+    const decklist: IDecklist = await database()
       .ref(`/decklists/${id}`)
       .once('value')
       .then(snap => snap.val())
 
     return decklist
   },
-  async create({ author, mainboard, sideboard, ...rest }) {
+  async create({ author, mainboard, sideboard, ...rest }: IDecklist) {
     const id = await database()
       .ref('/decklists')
       .push({ author, mainboard, sideboard, ...rest })
@@ -35,7 +36,7 @@ const decklists = {
 
     await database().ref(`/decklists/${id}`).update({ id })
 
-    const decklist = await database()
+    const decklist: IDecklist = await database()
       .ref(`/decklists/${id}`)
       .once('value')
       .then(snap => snap.val())
@@ -43,7 +44,7 @@ const decklists = {
     return decklist
   },
   async delete(id: string) {
-    const decklist = await database()
+    const decklist: IDecklist = await database()
       .ref(`/decklists/${id}`)
       .once('value')
       .then(snap => snap.val())

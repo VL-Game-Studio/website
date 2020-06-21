@@ -13,7 +13,7 @@ router.get('/', async (_: null, res: Response) => {
       const quantities = []
       const cards = []
 
-      ;[...mainboard, ...sideboard].forEach(str => {
+      mainboard.concat(sideboard).forEach((str: string) => {
         const [quantity, card] = str.split(/ (.*)/)
 
         quantities.push(parseInt(quantity))

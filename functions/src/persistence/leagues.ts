@@ -3,7 +3,7 @@ import { IPlayer } from '../types'
 
 const leagues = {
   async fetchAll() {
-    const allLeagues = await database()
+    const allLeagues: IPlayer[] = await database()
       .ref('/leagues')
       .once('value')
       .then(snap => snap.val())
@@ -11,15 +11,15 @@ const leagues = {
     return allLeagues
   },
   async fetch(id: String) {
-    const league = await database()
+    const league: IPlayer = await database()
       .ref(`/leagues/${id}`)
       .once('value')
       .then(snap => snap.val())
 
     return league
   },
-  async create({ id, platforms, ...props }) {
-    const leagueExists = await database()
+  async create({ id, platforms, ...props }: IPlayer) {
+    const leagueExists: IPlayer = await database()
       .ref(`/leagues/${id}`)
       .once('value')
       .then(snap => snap.val())
@@ -158,7 +158,7 @@ const leagues = {
     return opponent.id
   },
   async cancelPair(playerID: string) {
-    const opponents = await database()
+    const opponents: IPlayer['opponents'] = await database()
       .ref(`/leagues/${playerID}`)
       .once('value')
       .then(snap => snap.val())
@@ -169,7 +169,7 @@ const leagues = {
     await database().ref(`/leagues/${playerID}`)
       .update({ opponents })
 
-    const player = await database()
+    const player: IPlayer = await database()
       .ref(`/leagues/${playerID}`)
       .once('value')
       .then(snap => snap.val())
@@ -177,7 +177,7 @@ const leagues = {
     return player
   },
   async report({ id: playerID, result }) {
-    const player = await database()
+    const player: IPlayer = await database()
       .ref(`/leagues/${playerID}`)
       .once('value')
       .then(snap => snap.val())
@@ -201,7 +201,7 @@ const leagues = {
       await database().ref(`/leagues/${playerID}`).remove()
     }
 
-    const opponent = await database()
+    const opponent: IPlayer = await database()
       .ref(`/leagues/${opponentID}`)
       .once('value')
       .then(snap => snap.val())
@@ -220,7 +220,7 @@ const leagues = {
       await database().ref(`/leagues/${opponentID}`).remove()
     }
 
-    const playerReceipt = await database()
+    const playerReceipt: IPlayer = await database()
       .ref(`/leagues/${playerID}`)
       .once('value')
       .then(snap => snap.val())
@@ -228,7 +228,7 @@ const leagues = {
     return playerReceipt
   },
   async delete(id: String) {
-    const league = await database()
+    const league: IPlayer = await database()
       .ref(`/leagues/${id}`)
       .once('value')
       .then(snap => snap.val())
