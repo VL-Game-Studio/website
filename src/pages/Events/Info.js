@@ -15,32 +15,53 @@ import { reflow } from 'utils/transition';
 import prerender from 'utils/prerender';
 import config from 'config';
 
+function correctDate(time)  {
+  let date = new Date(time);
+  date = new Date(date.getTime() + Math.abs(date.getTimezoneOffset() * 60000));
+
+  return date;
+}
+
+function hasFired(time) {
+  if (!time) return false;
+
+  return new Date() >= new Date(time);
+}
+
 function Info(props) {
   const { match: { params: { eventID } } } = props;
   const { events, user, dispatch } = useAppContext();
   const activeEvent = events?.length > 0 && events.filter(({ id }) => id === eventID)[0];
-  const otherEvents = events?.length > 0 && events.filter(({ id, fired }) => !fired && id !== eventID);
+  const otherEvents = events?.length > 0 && events.filter(({ id, time }) => !hasFired(time) && id !== eventID);
   const isPlaying = activeEvent?.players && activeEvent?.players[user?.id];
+  const fired = new Date() >= new Date(activeEvent?.time);
   const cta = useRef();
   const [visible, setVisible] = useState();
   const { width } = useWindowSize();
   const isMobile = width <= media.mobile;
   useScrollRestore();
 
+  if (activeEvent?.time) console.log(new Date() >= new Date(activeEvent.time));
+
   const handleRedirect = () => {
     dispatch({ type: 'setRedirect', value: `/events/signup/${eventID}` });
   };
 
   const buttonProps = user
-    ? {
-      label: isPlaying ? 'Update' : 'Signup',
-      to: `/events/signup/${eventID}`
-    }
+    ? fired
+      ? {
+          label: 'Play',
+          to: `/events/play/${eventID}`
+        }
+      : {
+          label: isPlaying ? 'Update' : 'Signup',
+          to: `/events/signup/${eventID}`
+        }
     : {
-      label: 'Signup',
-      onClick: handleRedirect,
-      href: config.authURL
-    };
+        label: 'Signup',
+        onClick: handleRedirect,
+        href: config.authURL
+      };
 
   useEffect(() => {
     const sectionObserver = new IntersectionObserver((entries, observer) => {
@@ -60,13 +81,6 @@ function Info(props) {
       sectionObserver.disconnect();
     };
   }, [visible, activeEvent]);
-
-  const correctDate = (time) => {
-    let date = new Date(time);
-    date = new Date(date.getTime() + Math.abs(date.getTimezoneOffset() * 60000));
-
-    return date;
-  };
 
   return (
     <Fragment>
@@ -89,7 +103,7 @@ function Info(props) {
                     <InfoPanel>
                       <Title2 loading={!activeEvent?.name ? 1 : 0}>{activeEvent.name}</Title2>
                       <Paragraph loading={!activeEvent?.description ? 1 : 0}>{activeEvent.description}</Paragraph>
-                      {(activeEvent?.fired === false && !isMobile) && <Button {...buttonProps} />}
+                      {(!activeEvent?.closed && !isMobile) && <Button {...buttonProps} />}
                     </InfoPanel>
                     <InfoPanel>
                       <div>
@@ -122,7 +136,7 @@ function Info(props) {
                           </Tag>
                         }
                       </div>
-                      {(activeEvent?.fired === false && isMobile) && <Button style={{ marginTop: '50px' }} {...buttonProps} />}
+                      {(!activeEvent?.closed && isMobile) && <Button style={{ marginTop: '50px' }} {...buttonProps} />}
                       {(!activeEvent || otherEvents?.length > 1) &&
                         <RelatedEvents>
                           <h4>Other Events</h4>

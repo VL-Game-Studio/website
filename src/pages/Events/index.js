@@ -11,6 +11,7 @@ import prerender from 'utils/prerender';
 const Create = lazy(() => import('./Create'));
 const Signup = lazy(() => import('./Signup'));
 const Info = lazy(() => import('./Info'));
+const Play = lazy(() => import('./Play'));
 const NotFound = lazy(() => import('pages/NotFound'));
 
 function Events(props) {
@@ -48,6 +49,7 @@ function Events(props) {
         <Route exact path="/events" component={EventsList} />
         <Route path="/events/create" component={Create} />
         <Route path="/events/signup/:eventID" component={Signup} />
+        <Route path="/events/play/:eventID" component={Play} />
         <Route path="/events/:eventID" component={Info} />
         <Route component={NotFound} />
       </Switch>
