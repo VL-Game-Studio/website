@@ -15,7 +15,7 @@ import { reflow } from 'utils/transition';
 import prerender from 'utils/prerender';
 import config from 'config';
 
-function EventInfo(props) {
+function Info(props) {
   const { match: { params: { eventID } } } = props;
   const { events, user, dispatch } = useAppContext();
   const activeEvent = events?.length > 0 && events.filter(({ id }) => id === eventID)[0];
@@ -309,4 +309,4 @@ const RelatedEvents = styled.div`
   }
 `;
 
-export default EventInfo;
+export default Info;

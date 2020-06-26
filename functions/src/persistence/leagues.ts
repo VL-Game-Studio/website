@@ -44,137 +44,26 @@ const leagues = {
 
     return league
   },
-  async pair(playerID: string) {
-    // Fetch players and shortcut if there are not enough players for a match
-    const players: IPlayer[] = await database()
-      .ref('/leagues')
-      .once('value')
-      .then(snap => snap.val())
-      .then(val => Object.values(val))
-    if (players.length < 2) return null
+  async fire(players: IPlayer[]) {
+    if (players.length < 6) return false
 
-    // Calculate players' points
-    players.map(player => {
-      let wins = 0, ties = 0
+    const pairings = players.map(player => {
+      const opponents = players.splice(players.indexOf(player), 1)
 
-      if (player.matches) {
-        Object.values(player.matches).forEach(({ record }) => {
-          if (record && record.includes('-')) {
-            const stats = record.split('-')
-
-            wins += parseInt(stats[0])
-            ties += parseInt(stats[2])
-          }
-        })
-      }
-
-      return (player.points = (wins === 2 ? 3 : wins === 1 ? 1 : 0) + ties)
+      return { player, opponents }
     })
 
-    // Find and check if player exists; set defaults if uninitiated
-    const [player] = players.filter(({ id }) => id === playerID)
-    if (!player) throw new Error('You are not in a league.')
+    pairings.forEach(async pairing => {
+      const { player, opponents } = pairing
 
-    // Set player defaults
-    player.matches = player.matches || []
-    player.opponents = player.opponents || []
+      await database()
+        .ref(`/leagues/${player.id}`)
+        .update({ opponents })
 
-    // Calculate points ceiling
-    const maxDiff = (Object.values(player.matches).length + 1) * 3
+      return pairing
+    })
 
-    // Remove pairing player and inactive players from queue
-    const playerQueue = players.filter(({ id }) => id !== player.id)
-
-    const [opponent1] = playerQueue
-      // Filter to same platforms
-      .filter(
-        ({ platforms = [] }) =>
-          !platforms ||
-          !player.platforms ||
-          (platforms
-            ? Object.values(platforms).some(platform => Object.values(player.platforms).includes(platform))
-            : Object.values(player.platforms).some(platform => Object.values(platforms).includes(platform)))
-      )
-      // Check if opponent has played before
-      .filter(({ opponents = [] }) => !Object.values(opponents).includes(player.id))
-      // Check if opponent isn't already paired or playing and in same round
-      .filter(
-        ({ matches = [], opponents = [] }) =>
-          Object.values(opponents).length === Object.values(matches).length && Object.values(matches).length === Object.values(player.matches).length
-      )
-      // Pair within point ceiling
-      .filter(({ points = 0 }) => Math.abs(points - player.points) <= maxDiff)
-
-    const [opponent2] = playerQueue
-      // Filter to same platforms
-      .filter(
-        ({ platforms = [] }) =>
-          !platforms ||
-          !player.platforms ||
-          (platforms
-            ? Object.values(platforms).some(platform => Object.values(player.platforms).includes(platform))
-            : Object.values(player.platforms).some(platform => Object.values(platforms).includes(platform)))
-      )
-      // Check if opponent has played before
-      .filter(({ opponents = [] }) => !Object.values(opponents).includes(player.id))
-      // Check if opponent isn't already paired or playing and in same round
-      .filter(
-        ({ matches = [], opponents = [] }) =>
-          Object.values(opponents).length === Object.values(matches).length && Object.values(matches).length === Object.values(player.matches).length
-      )
-
-    const [opponent3] = playerQueue
-      .filter(
-        ({ platforms = [] }) =>
-          !platforms ||
-          !player.platforms ||
-          (platforms
-            ? Object.values(platforms).some(platform => Object.values(player.platforms).includes(platform))
-            : Object.values(player.platforms).some(platform => Object.values(platforms).includes(platform)))
-      )
-      // Check if opponent isn't already paired or playing
-      .filter(({ matches = [], opponents = [] }) => Object.values(opponents).length === Object.values(matches).length)
-
-    const [opponent4] = playerQueue
-      // Check if opponent isn't already paired or playing
-      .filter(({ matches = [], opponents = [] }) => Object.values(opponents).length === Object.values(matches).length)
-    const opponent = opponent1 || opponent2 || opponent3 || opponent4
-    if (!opponent) return null
-
-    // Append opponent to player's history
-    await database()
-      .ref(`/leagues/${playerID}`)
-      .update({
-        opponents: player.opponents ? [...player.opponents, opponent.id] : [opponent.id],
-      })
-
-    // Append player to opponent's history
-    await database()
-      .ref(`/leagues/${opponent.id}`)
-      .update({
-        opponents: opponent.opponents ? [...opponent.opponents, player.id] : [player.id],
-      })
-
-    return opponent.id
-  },
-  async cancelPair(playerID: string) {
-    const opponents: IPlayer['opponents'] = await database()
-      .ref(`/leagues/${playerID}`)
-      .once('value')
-      .then(snap => snap.val())
-      .then(({ opponents }) => Object.values(opponents))
-
-    opponents.pop()
-
-    await database().ref(`/leagues/${playerID}`)
-      .update({ opponents })
-
-    const player: IPlayer = await database()
-      .ref(`/leagues/${playerID}`)
-      .once('value')
-      .then(snap => snap.val())
-
-    return player
+    return pairings
   },
   async report({ id: playerID, result }) {
     const player: IPlayer = await database()

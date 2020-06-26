@@ -14,7 +14,7 @@ import config from 'config';
 
 const JoinText = () => <Fragment>Participate in this event by <Anchor as={Link} to="/" onClick={() => window.open('https://discord.gg/mjtTnr8')}>joining our Discord</Anchor>.</Fragment>;
 
-function EventSignup(props) {
+function Signup(props) {
   const { history, match: { params: { eventID } } } = props;
   const { events, user, dispatch } = useAppContext();
   const activeEvent = events?.length > 0 && events?.filter(({ id }) => id === eventID)[0];
@@ -184,4 +184,4 @@ const Comment = styled.p`
   }
 `;
 
-export default EventSignup;
+export default Signup;

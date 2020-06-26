@@ -10,7 +10,7 @@ import { media } from 'utils/style';
 import { useAppContext, useFormInput, useScrollRestore } from 'hooks';
 import config from 'config';
 
-function EventCreate() {
+function Create() {
   const { user, dispatch } = useAppContext();
   const authorized = config?.admins?.includes(user?.id);
   const [submitting, setSubmitting] = useState();
@@ -169,4 +169,4 @@ const Comment = styled.p`
   }
 `;
 
-export default EventCreate;
+export default Create;

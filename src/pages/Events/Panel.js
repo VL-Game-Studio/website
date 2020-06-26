@@ -9,7 +9,7 @@ import { useAppContext } from 'hooks';
 import { media } from 'utils/style';
 import config from 'config';
 
-function EventsPanel({
+function Panel({
   alternate,
   label = 'Active Events',
   title = 'New Tournaments Every Day',
@@ -182,4 +182,4 @@ const TournamentInfo = styled.p`
   margin-top: var(--spaceS);
 `;
 
-export default memo(EventsPanel);
+export default memo(Panel);
