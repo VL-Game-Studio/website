@@ -221,16 +221,17 @@ const events = {
       .ref(`/events/${id}/players/${opponentID}`)
       .once('value')
       .then(snap => snap.val())
+    if (opponent) {
+      const { opponents: oppOpponents = [] } = opponent
 
-    const { opponents: oppOpponents } = opponent
-
-    await database()
-      .ref(`/events/${id}/players/${opponentID}/matches/${oppOpponents.length}`)
-      .set({
-        round: oppOpponents.length,
-        record: `${losses}-${wins}-${ties}`,
-        opponent: playerID,
-      })
+      await database()
+        .ref(`/events/${id}/players/${opponentID}/matches/${oppOpponents.length}`)
+        .set({
+          round: oppOpponents.length,
+          record: `${losses}-${wins}-${ties}`,
+          opponent: playerID,
+        })
+    }
 
     const activeEvent: IEvent = await database()
       .ref(`/events/${id}`)

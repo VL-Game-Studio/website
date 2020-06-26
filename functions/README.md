@@ -76,14 +76,3 @@ Path | Method | Parameters | Description
    /decklists/ | POST | `name (optional)` `author` `mainboard` `sideboard` | Validates mainboard and sideboard and creates decklist object and adds to registry, returning an object.
    /decklists/:id | POST | `name (optional)` `author` `mainboard` `sideboard` | Validates mainboard and sideboard and adds to registry or throws error on infractions, returning an object.
    /decklists/:id | DELETE | *none* | Fetches and deletes a decklist by id, returning an object.
-
-### Leagues Methods
-
-Path | Method | Parameters | Description
---- | --- | --- | ---
-   /leagues/:id | POST | `id` `platforms (optional)` | Creates or updates a league entry with player id, and platforms, returning an object.
-   /leagues/queue/:id | GET | *none* | Initiated league queue, generating and binding a league pairing.
-   /leagues/queue/cancel/:id | GET | *none* | Cancels last league pairing.
-   /leagues/report/:id | POST | `record` | Updates match history and generates performance track from record.
-   /leagues/drop/:id | GET | *none* | Drops a league entry by id, recording matchup data, returning an object.
-   /leagues/:id | DELETE | *none* | Fetches and deletes a league entry by id, returning an object.
