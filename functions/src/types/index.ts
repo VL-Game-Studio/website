@@ -1,3 +1,20 @@
+export interface ILeague extends IPlayer {}
+
+export interface ISignup {
+  id: string
+  player: string
+  username?: string
+  name?: string
+  mainboard: string[]
+  sideboard?: string[]
+}
+
+export interface IResult {
+  id: string
+  playerID: string
+  result: string
+}
+
 export interface IMatch {
   round: number
   record: string
@@ -16,10 +33,9 @@ export interface IPlayer {
   deckID?: string
   opponents?: string[]
   matches?: IMatch[]
-  points?: number
   dropped?: boolean
   platforms?: string[]
-  queueing?: boolean
+  points?: number
 }
 
 export interface IEvent {
@@ -37,10 +53,7 @@ export interface IEvent {
   channel?: string
 }
 
-export interface IDecklist {
+export interface IDecklist extends IDeck {
   id?: string
-  name?: string
   author: string
-  mainboard: string[]
-  sideboard?: string[]
 }

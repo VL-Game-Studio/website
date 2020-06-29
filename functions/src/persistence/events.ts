@@ -1,20 +1,5 @@
 import { database } from 'firebase-admin'
-import { IEvent, IPlayer } from '../types'
-
-interface ISignup {
-  id: string
-  player: string
-  username?: string
-  name?: string
-  mainboard: string[]
-  sideboard?: string[]
-}
-
-interface IResult {
-  id: string
-  playerID: string
-  result: string
-}
+import { IEvent, IPlayer, ISignup, IResult } from '../types'
 
 const events = {
   async fetchAll() {

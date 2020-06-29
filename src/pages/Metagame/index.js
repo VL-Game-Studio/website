@@ -2,18 +2,25 @@ import React, { useState, useRef, useEffect, Fragment } from 'react';
 import { Helmet } from 'react-helmet-async';
 import PageLayout from 'components/PageLayout';
 import Hero from 'pages/Hero';
-import About from 'pages/Home/About';
+import Events from 'pages/Events';
+import Matrix from './Matrix';
 import GetStarted from 'pages/GetStarted';
-import { useScrollRestore } from 'hooks';
+import { useAppContext, useScrollRestore } from 'hooks';
 
-function Format() {
+function Metagame() {
+  const { events } = useAppContext();
+  const eventsData = events && events
+    ?.filter(({ closed }) => closed)
+    .sort((a, b) => parseInt(b?.time) - parseInt(a?.time));
+  if (eventsData) eventsData.length = 5;
   const [visibleSections, setVisibleSections] = useState([]);
-  const about = useRef();
+  const eventsList = useRef();
+  const matrix = useRef();
   const getStarted = useRef();
   useScrollRestore();
 
   useEffect(() => {
-    const revealSections = [about, getStarted];
+    const revealSections = [eventsList, matrix, getStarted];
 
     const sectionObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
@@ -38,20 +45,28 @@ function Format() {
   return (
     <Fragment>
       <Helmet
-        title="Format - Project Modern"
+        title="Metagame - Project Modern"
       />
       <PageLayout>
         <Hero
-          label="Format"
-          title="Format Mission and Metagame"
+          label="Metagame"
+          title="Recent Events and Top Decks"
         />
-        <About
-          id="about"
+        <Events
           alternate
-          sectionRef={about}
-          visible={visibleSections.includes(about.current)}
+          id="events"
+          title="Recent Events"
+          events={eventsData}
+          sectionRef={eventsList}
+          visible={visibleSections.includes(eventsList.current)}
+        />
+        <Matrix
+          id="matrix"
+          sectionRef={matrix}
+          visible={visibleSections.includes(matrix.current)}
         />
         <GetStarted
+          accent
           id="get-started"
           sectionRef={getStarted}
           visible={visibleSections.includes(getStarted.current)}
@@ -61,4 +76,4 @@ function Format() {
   );
 }
 
-export default Format;
+export default Metagame;

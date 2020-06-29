@@ -44,11 +44,11 @@ const leagues = {
 
     return league
   },
-  async fire(players: IPlayer[]) {
+  async pair(players: IPlayer[]) {
     if (players.length < 6) return false
 
     const pairings = players.map(player => {
-      const opponents = players.splice(players.indexOf(player), 1)
+      const opponents = players.filter(opponent => opponent !== player)
 
       return { player, opponents }
     })
@@ -57,7 +57,7 @@ const leagues = {
       const { player, opponents } = pairing
 
       await database()
-        .ref(`/leagues/${player.id}`)
+        .ref(`/leagues/${player}`)
         .update({ opponents })
 
       return pairing
@@ -72,42 +72,35 @@ const leagues = {
       .then(snap => snap.val())
     if (!player) return false
 
-    const { opponents = [], matches = [] } = player
-    const [wins, losses, ties] = result.split('-')
-
-    const opponentID = Object.values(opponents).length > 0 && Object.values(opponents).pop()
-    if (!opponentID) return false
-
-    const playerRound = {
-      round: Object.values(matches).length + 1,
-      record: `${wins}-${losses}-${ties}`,
-      opponent: opponentID,
-    }
-
-    await database().ref(`/leagues/${playerID}/matches/${opponents.length}`).set(playerRound)
-
-    if (Object.values(opponents).length === 5) {
-      await database().ref(`/leagues/${playerID}`).remove()
-    }
-
     const opponent: IPlayer = await database()
-      .ref(`/leagues/${opponentID}`)
+      .ref(`/leagues/${player?.opponents?.pop()}`)
       .once('value')
       .then(snap => snap.val())
+    if (!opponent) return false
 
-    const { opponents: oppOpponents, matches: oppMatches = [] } = opponent
+    const updatePlayer = async (player: IPlayer) => {
+      const { matches = [] } = player
 
-    const opponentRound = {
-      round: Object.values(oppMatches).length + 1,
-      record: `${losses}-${wins}-${ties}`,
-      opponent: playerID,
+      const round = Object.values(matches).length + 1
+      const [wins = 0, losses = 0, ties = 0] = result.split('-')
+
+      const match = {
+        round,
+        record: player === player
+          ? `${wins}-${losses}-${ties}`
+          : `${losses}-${wins}-${ties}`,
+        opponent: player === player
+          ? opponent.id
+          : player.id,
+      }
+
+      await database()
+        .ref(`leagues/${player}/matches/${round}`)
+        .set(match)
     }
 
-    await database().ref(`/leagues/${opponentID}/matches/${oppOpponents.length}`).set(opponentRound)
-
-    if (Object.values(oppOpponents).length === 5) {
-      await database().ref(`/leagues/${opponentID}`).remove()
-    }
+    await updatePlayer(player)
+    await updatePlayer(opponent)
 
     const playerReceipt: IPlayer = await database()
       .ref(`/leagues/${playerID}`)

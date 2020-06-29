@@ -15,7 +15,7 @@ import montserratSemiBold from 'assets/fonts/montserrat-semibold.woff2';
 import montserratBold from 'assets/fonts/montserrat-bold.woff2';
 
 const Home = lazy(() => import('pages/Home'));
-const Format = lazy(() => import('pages/Format'));
+const Metagame = lazy(() => import('pages/Metagame'));
 const Events = lazy(() => import('pages/Events'));
 const Blog = lazy(() => import('pages/Blog'));
 const Auth = lazy(() => import('pages/Auth'));
@@ -141,7 +141,7 @@ function AppRoutes({ menuOpen }) {
                 <Suspense fallback={<Fragment />}>
                   <Switch location={location}>
                     <Route exact path="/" component={Home} />
-                    <Route path="/format" component={Format} />
+                    <Route path="/metagame" component={Metagame} />
                     <Route path="/events" component={Events} />
                     <Route path="/blog" component={Blog} />
                     <Route path="/auth" component={Auth} />

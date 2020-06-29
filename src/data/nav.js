@@ -5,8 +5,8 @@ export const navLinks = [
     label: 'Home'
   },
   {
-    pathname: '/format',
-    label: 'Format'
+    pathname: '/metagame',
+    label: 'Metagame'
   },
   {
     pathname: '/events',
