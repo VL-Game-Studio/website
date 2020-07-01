@@ -29,6 +29,20 @@ router.get('/:id', async (req: Request, res: Response) => {
   }
 })
 
+router.post('/pair', middleware, async (req: Request, res: Response) => {
+  const { players } = req.body
+  if (!players) return res.status(400).json({ error: 'Players is a required field.' })
+
+  try {
+    const pairings = leagues.pair(players)
+
+    return res.status(200).json(pairings)
+  } catch (error) {
+    console.error(`POST /leagues/pair ({ players: ${players} }) >> ${error.stack}`)
+    return res.status(500).json({ error: 'An error occured while pairing league players.' })
+  }
+})
+
 router.post('/:id', middleware, async (req: Request, res: Response) => {
   const { id } = req.params
   const { platforms, ...rest } = req.body
@@ -44,37 +58,23 @@ router.post('/:id', middleware, async (req: Request, res: Response) => {
   }
 })
 
-router.post('/pair', middleware, async (req, res) => {
-  const { players } = req.body
-  if (!players) return res.status(400).json({ error: 'Players is a required field.' })
-
-  try {
-    const pairings = leagues.pair(players)
-
-    return res.status(200).json(pairings)
-  } catch (error) {
-    console.error(`POST /leagues/pair ({ players: ${players} }) >> ${error.stack}`)
-    return res.status(500).json({ error: 'An error occured while pairing league players.' })
-  }
-})
-
-router.post(`/report/:id`, middleware, async (req, res) => {
-  const { id } = req.params
+router.post('/report/:id/:opponentID', middleware, async (req: Request, res: Response) => {
+  const { id, opponentID } = req.params
   const { result } = req.body
   if (!result) return res.status(400).json('Result is a required field.')
   if (!result.includes('-')) return res.status(400).json('Result must match the format: wins-losses-ties.')
 
   try {
-    const match = await leagues.report({ id, result })
+    const match = await leagues.report({ id, opponentID, result })
 
     return res.status(200).json(match)
   } catch (error) {
-    console.error(`POST /leagues/report/${id} ({ result: ${result} }) >> ${error.stack}`)
+    console.error(`POST /leagues/report/${id}/${opponentID} ({ result: ${result} }) >> ${error.stack}`)
     return res.status(500).json({ error: `An error occured while reporting for league: ${id}.` })
   }
 })
 
-router.delete('/:id', middleware, async (req, res) => {
+router.delete('/:id', middleware, async (req: Request, res: Response) => {
   const { id } = req.params
 
   try {
@@ -86,3 +86,5 @@ router.delete('/:id', middleware, async (req, res) => {
     return res.status(500).json({ error: `An error occured while deleting league: ${id}.` })
   }
 })
+
+export default router

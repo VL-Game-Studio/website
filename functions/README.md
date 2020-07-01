@@ -83,5 +83,5 @@ Path | Method | Parameters | Description
 --- | --- | --- | ---
    /leagues/:id | POST | `id` `platforms` | Creates or updates a league entry with player id, and platforms, returning an object.
    /leagues/pair | POST | `players` | Pairs a player queue to produce 5 rounds of pairings.
-   /leagues/report/:id | POST | `record` | Updates match history and generates performance track from record.
+   /leagues/report/:id/:opponentID | POST | `record` | Updates match history and generates performance track from record.
    /leagues/:id | DELETE | *none* | Fetches and deletes a league entry by id, returning an object.

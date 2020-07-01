@@ -44,10 +44,10 @@
   "jest": {
     "testEnvironment": "node",
     "coveragePathIgnorePatterns": [
-      "build"
+      "build", "node_modules"
     ],
     "testPathIgnorePatterns": [
-      "build"
+      "build", "node_modules"
     ],
     "transform": {
       "^.+\\.ts?$": "ts-jest"
