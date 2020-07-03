@@ -41,7 +41,7 @@ function Panel({
               <span>{name}</span>
               <div></div>
             </TournamentName>
-            <TournamentInfo>{description}</TournamentInfo>
+            <TournamentInfo>{description.substring(0, 200)}{description.length > 200 && '...'}</TournamentInfo>
             <Icon icon="plus" />
           </Tournament>
         ))}
@@ -166,7 +166,7 @@ const Tournament = styled(Link)`
   }
 
   @media (max-width: ${media.mobile}px) {
-    height: 100px;
+    height: auto;
 
     svg {
       top: var(--spaceXL);
