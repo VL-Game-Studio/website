@@ -73,7 +73,7 @@ const leagues = {
     const [wins = 0, losses = 0, ties = 0] = result.split('-')
 
     await database()
-      .ref(`leagues/${playerID}/matches/${round}`)
+      .ref(`/leagues/${playerID}/matches/${round}`)
       .set({
         round,
         record: `${wins}-${losses}-${ties}`,
@@ -81,7 +81,7 @@ const leagues = {
       })
 
     await database()
-      .ref(`leagues/${opponentID}/matches/${round}`)
+      .ref(`/leagues/${opponentID}/matches/${round}`)
       .set({
         round,
         record: `${losses}-${wins}-${ties}`,
@@ -93,6 +93,34 @@ const leagues = {
       .once('value')
       .then(snap => snap.val())
 
+    if (round === 5) {
+      const player1: IPlayer = await database()
+        .ref(`/leagues/${playerID}`)
+        .once('value')
+        .then(snap => snap.val())
+
+      await database()
+        .ref(`/results/${playerID}`)
+        .push(player1)
+
+      await database()
+        .ref(`leagues/${playerID}`)
+        .remove();
+
+      const player2: IPlayer = await database()
+        .ref(`/leagues/${opponentID}`)
+        .once('value')
+        .then(snap => snap.val())
+
+      await database()
+        .ref(`/results/${opponentID}`)
+        .push(player2)
+
+      await database()
+        .ref(`/leagues/${opponentID}`)
+        .remove()
+    }
+
     return playerReceipt
   },
   async delete(id: String) {
@@ -102,7 +130,13 @@ const leagues = {
       .then(snap => snap.val())
     if (!league) return false
 
-    await database().ref(`/leagues/${id}`).remove()
+    await database()
+      .ref(`/results/${id}`)
+      .push(league)
+
+    await database()
+      .ref(`/leagues/${id}`)
+      .remove();
 
     return league
   },

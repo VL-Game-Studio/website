@@ -87,9 +87,16 @@ describe('leagues', () => {
       .delete(`/leagues/${id}`)
       .set('secret', config.secret)
 
+    await request(server)
+      .delete(`/results/${id}`)
+
     rest.forEach(async player => {
       await request(server)
         .delete(`/leagues/${player.id}`)
+        .set('secret', config.secret)
+
+      await request(server)
+        .delete(`/results/${player.id}`)
         .set('secret', config.secret)
     })
 
