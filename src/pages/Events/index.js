@@ -62,7 +62,7 @@ function Events(props) {
       titleId={titleId}
       sectionRef={sectionRef}
       visible={visible}
-      events={events && events?.filter(({ fired }) => !fired)}
+      events={events && events?.filter(({ closed }) => !closed)}
       {...rest}
     />
   );
@@ -112,7 +112,7 @@ function EventsList() {
           alternate
           id="events"
           title="Active Events"
-          events={events && events?.filter(({ fired }) => !fired)}
+          events={events && events?.filter(({ closed }) => !closed)}
           sectionRef={eventsList}
           visible={visibleSections.includes(eventsList.current)}
         />

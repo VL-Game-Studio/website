@@ -41,8 +41,6 @@ function Info(props) {
   const isMobile = width <= media.mobile;
   useScrollRestore();
 
-  if (activeEvent?.time) console.log(new Date() >= new Date(activeEvent.time));
-
   const handleRedirect = () => {
     dispatch({ type: 'setRedirect', value: `/events/signup/${eventID}` });
   };
@@ -145,7 +143,7 @@ function Info(props) {
                               <br/><br/><br/>
                             </Paragraph>
                           }
-                          {otherEvents?.map(({ id, name }, index) => index < 4 && (
+                          {otherEvents && otherEvents?.map(({ id, name }, index) => index < 4 && (
                             <Anchor
                               key={id}
                               secondary={1}

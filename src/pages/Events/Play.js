@@ -25,7 +25,7 @@ function Play(props) {
   const ties = useFormInput('');
   const [dropping, setDropping] = useState();
   const [submitting, setSubmitting] = useState();
-  const [complete, setComplete] = useState(activeEvent?.round === player?.opponents?.length);
+  const [complete, setComplete] = useState(activeEvent?.round === player?.matches?.length);
   const previousRound = usePrevious(activeEvent?.round);
   useScrollRestore();
 
