@@ -279,11 +279,19 @@ const Image = styled.img`
   }
 `;
 
+function imageFactory({ src, ...props }) {
+  if (!src.startsWith('http')) {
+    return <Image {...props} src={require(`articles/assets/${src}`)} />;
+  }
+
+  return <Image {...props} src={src} />;
+}
+
 const components = {
   wrapper: ArticleWrapper,
   h2: Title2,
   p: Paragraph,
-  img: props => <Image {...props} />,
+  img: imageFactory,
   a: ({ href, ...props }) => href.startsWith('http')
     ? <Anchor href={href} target="_blank" rel="noreferrer noopener" {...props} />
     : <Anchor as={Link} to={href} {...props} />,
