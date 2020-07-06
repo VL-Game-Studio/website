@@ -53,10 +53,8 @@ const leagues = {
       .ref(`/leagues/${player}`)
       .update({ opponents })
 
-    pairings.forEach(async pairing => {
+    pairings.forEach(pairing => {
       updatePlayer(pairing)
-
-      return pairing
     })
 
     return pairings

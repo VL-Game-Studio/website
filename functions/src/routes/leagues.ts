@@ -34,7 +34,7 @@ router.post('/pair', middleware, async (req: Request, res: Response) => {
   if (!players) return res.status(400).json({ error: 'Players is a required field.' })
 
   try {
-    const pairings = leagues.pair(players)
+    const pairings = await leagues.pair(players)
 
     return res.status(200).json(pairings)
   } catch (error) {
