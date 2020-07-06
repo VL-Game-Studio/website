@@ -135,7 +135,7 @@ const FooterLeft = styled.div`
   }
 
   ${Paragraph} {
-    margin-top: var(--spaceXL);
+    margin-top: var(--spaceM);
   }
 
   h4 {
@@ -144,7 +144,7 @@ const FooterLeft = styled.div`
     font-weight: var(--fontWeightMedium);
     letter-spacing: 0.8px;
     line-height: 2;
-    margin: var(--spaceM) 0 var(--spaceXL);
+    margin: var(--spaceXL) 0;
   }
 `;
 
@@ -168,11 +168,11 @@ const FooterLabel = styled.label`
   font-weight: var(--fontWeightBold);
   letter-spacing: 2.1px;
   line-height: 2;
-  margin: var(--space3XL) 0 var(--spaceXL);
+  margin: var(--space3XL) 0 var(--spaceM);
   text-transform: uppercase;
 
   @media (max-width: ${media.mobile}px) {
-    margin: var(--space2XL) 0 var(--spaceXL);
+    margin: var(--space2XL) 0 var(--spaceM);
   }
 
   :first-of-type {
