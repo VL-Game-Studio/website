@@ -30,7 +30,7 @@ export const socials = [
     label: 'Reddit'
   },
   {
-    href: 'https://twitter.com/ProjectModern1',
+    href: 'https://twitter.com/projmodernmtg',
     icon: 'twitter',
     label: 'Twitter'
   },
