@@ -34,7 +34,6 @@ function Info(props) {
   const activeEvent = events?.length > 0 && events.filter(({ id }) => id === eventID)[0];
   const otherEvents = events?.length > 0 && events.filter(({ id, time }) => !hasFired(time) && id !== eventID);
   const isPlaying = activeEvent?.players && activeEvent?.players[user?.id];
-  const fired = new Date() >= new Date(activeEvent?.time);
   const cta = useRef();
   const [visible, setVisible] = useState();
   const { width } = useWindowSize();
@@ -46,15 +45,10 @@ function Info(props) {
   };
 
   const buttonProps = user
-    ? fired
-      ? {
-          label: 'Play',
-          to: `/events/play/${eventID}`
-        }
-      : {
-          label: isPlaying ? 'Update' : 'Signup',
-          to: `/events/signup/${eventID}`
-        }
+    ? {
+        label: isPlaying ? 'Update' : 'Signup',
+        to: `/events/signup/${eventID}`
+      }
     : {
         label: 'Signup',
         onClick: handleRedirect,
@@ -101,7 +95,7 @@ function Info(props) {
                     <InfoPanel>
                       <Title2 loading={!activeEvent?.name ? 1 : 0}>{activeEvent.name}</Title2>
                       <Paragraph loading={!activeEvent?.description ? 1 : 0}>{activeEvent.description}</Paragraph>
-                      {(!activeEvent?.closed && !isMobile) && <Button {...buttonProps} />}
+                      {(!activeEvent?.fired && !isMobile) && <Button {...buttonProps} />}
                     </InfoPanel>
                     <InfoPanel>
                       <div>
@@ -134,7 +128,7 @@ function Info(props) {
                           </Tag>
                         }
                       </div>
-                      {(!activeEvent?.closed && isMobile) && <Button style={{ marginTop: '50px' }} {...buttonProps} />}
+                      {(!activeEvent?.fired && isMobile) && <Button style={{ marginTop: '50px' }} {...buttonProps} />}
                       {(!activeEvent || otherEvents?.length > 1) &&
                         <RelatedEvents>
                           <h4>Other Events</h4>
@@ -285,6 +279,12 @@ const Tag = styled(Paragraph)`
     font-weight: var(--fontWeightSemiBold);
     margin-right: var(--spaceS);
   }
+
+  ${props => props.loading && css`
+    label {
+      color: transparent;
+    }
+  `}
 `;
 
 const RelatedEvents = styled.div`
