@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { useState, useRef, useEffect, Fragment } from 'react';
 import styled, { keyframes } from 'styled-components/macro';
 import { msToNum, tokens } from 'app/theme';
 import { MDXProvider } from '@mdx-js/react';
@@ -279,26 +279,61 @@ const Image = styled.img`
   }
 `;
 
-function imageFactory({ src, ...props }) {
-  if (!src.startsWith('http')) {
-    return <Image {...props} src={require(`articles/assets/${src}`)} />;
-  }
+const ArticleImage = ({ src, alt, ...rest }) => {
+  const [size, setSize] = useState();
+  const imgRef = useRef();
+  const imgSrc = src.startsWith('http') ? src : require(`articles/assets/${src}`);
 
-  return <Image {...props} src={src} />;
-}
+  useEffect(() => {
+    const { width, height } = imgRef.current;
 
-const components = {
-  wrapper: ArticleWrapper,
-  h2: Title2,
-  p: Paragraph,
-  img: imageFactory,
-  a: ({ href, ...props }) => href.startsWith('http')
-    ? <Anchor href={href} target="_blank" rel="noreferrer noopener" {...props} />
-    : <Anchor as={Link} to={href} {...props} />,
+    if (width && height) {
+      setSize({ width, height });
+    }
+  }, []);
+
+  const handleLoad = event => {
+    const { width, height } = event.target;
+    setSize({ width, height });
+  };
+
+  return (
+    <Image
+      ref={imgRef}
+      src={imgSrc}
+      onLoad={handleLoad}
+      loading="lazy"
+      decoding="async"
+      alt={alt}
+      width={size?.width}
+      height={size?.height}
+      {...rest}
+    />
+  );
 };
 
-function Article({ children }) {
-  return <MDXProvider components={components}>{children}</MDXProvider>;
+function linkFactory({ href, ...props }) {
+  if (!href.startsWith('http')) {
+    return <Anchor as={Link} to={href} {...props} />;
+  }
+
+  return <Anchor href={href} target="_blank" rel="noreferrer noopener" {...props} />;
 }
+
+const Article = ({ slug, content: ArticleContent, ...rest }) => {
+  return (
+    <MDXProvider
+      components={{
+        wrapper: ArticleWrapper,
+        h2: Title2,
+        p: Paragraph,
+        img: ArticleImage,
+        a: linkFactory,
+      }}
+    >
+      <ArticleContent slug={slug} {...rest} />
+    </MDXProvider>
+  );
+};
 
 export default Article;

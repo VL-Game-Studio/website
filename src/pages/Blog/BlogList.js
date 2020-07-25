@@ -7,8 +7,7 @@ import { Label, Title2, Paragraph } from 'components/Type';
 import { media } from 'utils/style';
 import { useScrollRestore } from 'hooks';
 
-function BlogList(props) {
-  const { articles } = props;
+function BlogList({ articles }) {
   useScrollRestore();
 
   return (
@@ -27,7 +26,7 @@ function BlogList(props) {
       {articles?.length > 0 &&
         <ArticlesGrid>
           {articles?.map(({
-            path,
+            slug,
             banner,
             bannerVideo,
             bannerPlaceholder,
@@ -38,7 +37,7 @@ function BlogList(props) {
             ...rest
           }) => (
             <ArticleListItemWrapper>
-              <ArticleContent to={`/blog${path}`}>
+              <ArticleContent to={`/blog/${slug}`}>
                 <ArticleText>
                   <ArticleDate>
                     {new Date(date).toLocaleDateString('default', {

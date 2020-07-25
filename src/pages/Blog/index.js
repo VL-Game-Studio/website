@@ -1,40 +1,45 @@
-import React, { Suspense, Fragment } from 'react';
+import React, { createContext, useState, useEffect, Suspense } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import PageLayout from 'components/PageLayout';
 import Article from './Article';
 import BlogList from './BlogList';
 import NotFound from 'pages/NotFound';
-import GetStarted from 'pages/GetStarted';
-import { useScrollRestore } from 'hooks';
-import articles from 'articles';
+import fetchArticles from 'articles';
 
-function Blog() {
-  useScrollRestore();
+const BlogContext = createContext({});
+
+const Blog = () => {
+  const [articles, setArticles] = useState([]);
+
+  useEffect(() => {
+    const grabArticles = async () => {
+      const articleData = await Promise.all(fetchArticles);
+      setArticles(articleData);
+    };
+
+    grabArticles();
+  }, []);
 
   return (
     <PageLayout>
-      <Article>
-        <Suspense fallback={Fragment}>
+      <BlogContext.Provider value={{ articles }}>
+        <Suspense>
           <Switch>
-            {articles?.map(({ content: Article, path, ...rest }) => (
+            {articles?.map(({ slug, ...rest }) => (
               <Route
-                key={path}
-                path={`/blog${path}`}
-                render={() => <Article {...rest} />}
+                exact
+                key={slug}
+                path={`/blog/${slug}`}
+                render={() => <Article slug={slug} {...rest} />}
               />
             ))}
-            <Route
-              exact
-              path="/blog"
-              render={() => <BlogList articles={articles} />}
-            />
+            <Route exact render={() => <BlogList articles={articles} />} path="/blog" />
             <Route component={NotFound} />
           </Switch>
         </Suspense>
-      </Article>
-      <GetStarted />
+      </BlogContext.Provider>
     </PageLayout>
   );
-}
+};
 
 export default Blog;
