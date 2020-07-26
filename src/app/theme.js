@@ -1,31 +1,13 @@
-const fontStack = [
-  'Montserrat',
-  'Helvetica Neue',
-  'Helvetica',
-  'Arial',
-  'sans-serif',
-];
-
-const monoFontStack = [
-  'SFMono Regular',
-  'Roboto Mono',
-  'Consolas',
-  'Liberation Mono',
-  'Menlo',
-  'Courier',
-  'monospace',
-];
+import { pxToRem } from 'utils/style';
 
 /**
- * Convert pixel values to rem for a11y
+ * Transform theme token objects into CSS custom properties
  */
-export const pxToRem = px => `${px / 16}rem`;
-
-/**
- * Convert ms token values to a raw numbers for ReactTransitionGroup
- * Transition delay props
- */
-export const msToNum = msString => Number(msString.replace('ms', ''));
+export function createThemeProperties(theme) {
+  return Object.keys(theme)
+    .map(key => `--${key}: ${theme[key]};`)
+    .join('\n');
+}
 
 // Full list of tokens
 const baseTokens = {
@@ -47,8 +29,10 @@ const baseTokens = {
   durationM: '400ms',
   durationL: '600ms',
   durationXL: '800ms',
-  fontStack: fontStack.join(', '),
-  monoFontStack: monoFontStack.join(', '),
+  fontStack:
+    'Montserrat, Helvetica Neue, Helvetica, Arial, sans-serif',
+  monoFontStack:
+    'SFMono Regular, Roboto Mono, Consolas, Liberation Mono, Menlo, Courier, monospace',
   fontWeightLight: 300,
   fontWeightRegular: 400,
   fontWeightMedium: 500,
@@ -110,10 +94,3 @@ export const tokens = {
   tablet: tokensTablet,
   mobile: tokensMobile,
 };
-
-/**
- * Transform theme token objects into CSS custom properties
- */
-export function createThemeProperties(theme) {
-  return Object.keys(theme).map(key => `--${key}: ${theme[key]};`);
-}

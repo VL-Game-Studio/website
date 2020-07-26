@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useCallback, Fragment } from 'react';
-import styled from 'styled-components/macro';
 import { Helmet } from 'react-helmet-async';
 import Hero from 'pages/Hero';
 import Button from 'components/Button';
 import Input from 'components/Input';
 import Anchor from 'components/Anchor';
 import PageLayout from 'components/PageLayout';
-import { media } from 'utils/style';
 import { useAppContext, useFormInput, useScrollRestore } from 'hooks';
 import config from 'config';
+import './Create.css';
 
 function Create() {
   const { user, dispatch } = useAppContext();
@@ -81,24 +80,24 @@ function Create() {
               <Hero
                 title2="Create an Event"
               >
-                <Form onSubmit={onSubmit}>
+                <form className="create__form" onSubmit={onSubmit}>
                   <Input {...name} required placeholder="Event Name" />
                   <Input {...description} textarea placeholder="Event Description" />
-                  <FormLabel>Event Details</FormLabel>
-                  <HalvedGrid>
+                  <label className="create__form-label">Event Details</label>
+                  <div className="create__halved-grid">
                     <Input {...platform} list="platforms" required placeholder="Event Platform" />
                     <datalist id="platforms">
                       {['Paper', 'xMage', 'Cockatrice', 'Untap', 'MTGO'].map(platform => <option key={platform} value={platform}>{platform}</option>)}
                     </datalist>
                     <Input {...time} type="date" required placeholder="UTC start time (2020-06-31T00:00:00Z)" />
-                  </HalvedGrid>
-                  <SubmitGrid>
-                  <Button label="Create" />
-                  {user &&
-                    <Comment>Signed in as {user.username}#{user.discriminator}. <Anchor secondary href={`https://discord.com/api/oauth2/authorize?client_id=${config.clientID}&redirect_uri=${encodeURI(config.redirect)}&response_type=code&scope=identify`} onClick={handleSignout}>Not you?</Anchor></Comment>
-                  }
-                </SubmitGrid>
-                </Form>
+                  </div>
+                  <div className="create__submit-grid">
+                    <Button label="Create" />
+                    {user &&
+                      <p className="create_comment">Signed in as {user.username}#{user.discriminator}. <Anchor secondary href={`https://discord.com/api/oauth2/authorize?client_id=${config.clientID}&redirect_uri=${encodeURI(config.redirect)}&response_type=code&scope=identify`} onClick={handleSignout}>Not you?</Anchor></p>
+                    }
+                  </div>
+                </form>
               </Hero>
             }
             {complete &&
@@ -113,60 +112,5 @@ function Create() {
     </Fragment>
   );
 }
-
-const Form = styled.form`
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  margin-top: 100px;
-
-  @media (max-width: ${media.mobile}px) {
-    margin-top: var(--space2XL);
-    width: 100%;
-  }
-`;
-
-const HalvedGrid = styled.div`
-  display: grid;
-  grid-gap: var(--spaceXL);
-  grid-template-columns: 1fr 1fr;
-  width: 100%;
-
-  @media (max-width: ${media.mobile}px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const FormLabel = styled.label`
-  color: ${props => props.theme.colorTitle};
-  font-size: 1.375rem;
-  font-weight: var(--fontWeightMedium);
-  letter-spacing: 0.02em;
-  line-height: 1.6;
-  margin: var(--space2XL) 0 var(--spaceL);
-`;
-
-const SubmitGrid = styled(HalvedGrid)`
-  grid-template-columns: var(--space7XL) auto;
-  margin-top: var(--space2XL);
-
-  @media (max-width: ${media.mobile}px) {
-    margin-top: var(--spaceXL);
-    display: block;
-  }
-`;
-
-const Comment = styled.p`
-  &, a {
-    color: var(--colorTextBody);
-    font-size: var(--fontSizeH3);
-    letter-spacing: 0.05em;
-    line-height: 3;
-
-    @media (max-width: ${media.mobile}px) {
-      margin-top: var(--spaceL);
-    }
-  }
-`;
 
 export default Create;

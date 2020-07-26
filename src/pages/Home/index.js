@@ -100,13 +100,13 @@ function Home(props) {
 
   return (
     <Fragment>
-      <Helmet
-        title="Project Modern - Putting Players First"
-        meta={[{
-          name: "description",
-          content: "Project Modern is a community-backed MTG format that prioritizes players over profits.",
-        }]}
-      />
+      <Helmet>
+        <title>Project Modern - Putting Players First</title>
+        <meta
+          name="description"
+          content="Project Modern is a community-backed MTG format that prioritizes players over profits."
+        />
+      </Helmet>
       <PageLayout dark>
         <Intro
           id="intro"

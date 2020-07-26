@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, Fragment } from 'react';
-import styled, { css } from 'styled-components/macro';
+import classNames from 'classnames';
 import { Helmet } from 'react-helmet-async';
 import { Transition } from 'react-transition-group';
 import { Title2, Paragraph } from 'components/Type';
@@ -9,11 +9,12 @@ import Button from 'components/Button';
 import GetStarted from 'pages/GetStarted';
 import PageLayout from 'components/PageLayout';
 import NotFound from 'pages/NotFound';
-import { AnimFade, media } from 'utils/style';
 import { useScrollRestore, useWindowSize, useAppContext } from 'hooks';
+import { media } from 'utils/style';
 import { reflow } from 'utils/transition';
 import prerender from 'utils/prerender';
 import config from 'config';
+import './Info.css';
 
 function correctDate(time)  {
   let date = new Date(time);
@@ -46,10 +47,12 @@ function Info(props) {
 
   const buttonProps = user
     ? {
+        as: Link,
         label: isPlaying ? 'Update' : 'Signup',
         to: `/events/signup/${eventID}`
       }
     : {
+        as: 'a',
         label: 'Signup',
         onClick: handleRedirect,
         href: config.authURL
@@ -90,47 +93,47 @@ function Info(props) {
               onEnter={reflow}
             >
               {status => (
-                <EventsInfoWrapper>
-                  <EventsInfoHeader status={status}>
-                    <InfoPanel>
+                <section className="info__wrapper">
+                  <header className={classNames('info__header', `info__header--${status}`)}>
+                    <div className="info__panel">
                       <Title2 loading={!activeEvent?.name ? 1 : 0}>{activeEvent.name}</Title2>
                       <Paragraph loading={!activeEvent?.description ? 1 : 0}>{activeEvent.description}</Paragraph>
                       {(!activeEvent?.fired && !isMobile) && <Button {...buttonProps} />}
-                    </InfoPanel>
-                    <InfoPanel>
+                    </div>
+                    <div className="info__panel">
                       <div>
-                        <Tag loading={!activeEvent?.time ? 1 : 0}>
+                        <Paragraph className="info__tag" loading={!activeEvent?.time ? 1 : 0}>
                           <label>Date:</label>
                           {activeEvent?.time && correctDate(activeEvent.time).toLocaleDateString('default', {
                             weekday: 'long',
                             month: 'long',
                             day: 'numeric',
                           })}
-                        </Tag>
-                        <Tag loading={!activeEvent?.time ? 1 : 0}>
+                        </Paragraph>
+                        <Paragraph className="info__tag" loading={!activeEvent?.time ? 1 : 0}>
                           <label>Time:</label>
                           {activeEvent?.time && new Date(activeEvent.time).toLocaleTimeString('default', {
                             hour: '2-digit',
                             minute: '2-digit',
                             timeZoneName: 'short',
                           })}
-                        </Tag>
+                        </Paragraph>
                         {activeEvent?.platform &&
-                          <Tag>
+                          <Paragraph className="info__tag">
                             <label>Platform:</label>
                             {activeEvent.platform}
-                          </Tag>
+                          </Paragraph>
                         }
                         {activeEvent?.players &&
-                          <Tag>
+                          <Paragraph className="info__tag">
                             <label>Players:</label>
                             {Object.values(activeEvent.players).length}
-                          </Tag>
+                          </Paragraph>
                         }
                       </div>
                       {(!activeEvent?.fired && isMobile) && <Button style={{ marginTop: '50px' }} {...buttonProps} />}
                       {(!activeEvent || otherEvents?.length > 1) &&
-                        <RelatedEvents>
+                        <div className="info__related-events">
                           <h4>Other Events</h4>
                           {!activeEvent &&
                             <Paragraph loading={1}>
@@ -147,11 +150,11 @@ function Info(props) {
                               {name}
                             </Anchor>
                           ))}
-                        </RelatedEvents>
+                        </div>
                       }
-                    </InfoPanel>
-                  </EventsInfoHeader>
-                </EventsInfoWrapper>
+                    </div>
+                  </header>
+                </section>
               )}
             </Transition>
             <GetStarted
@@ -165,160 +168,5 @@ function Info(props) {
     </Fragment>
   );
 }
-
-const EventsInfoWrapper = styled.div`
-  align-items: center;
-  display: flex;
-  padding: 0 var(--space2XL);
-
-  @media (max-width: ${media.mobile}px) {
-    padding: 0 var(--spaceL);
-  }
-`;
-
-const EventsInfoHeader = styled.div`
-  display: grid;
-  grid-gap: var(--space3XL);
-  grid-template-columns: 1fr auto;
-  margin: var(--space7XL) auto;
-  max-width: var(--maxWidthXL);
-  opacity: 0;
-  width: 100%;
-
-  @media (max-width: ${media.desktop}px) {
-    max-width: var(--maxWidthL);
-  }
-
-  @media (max-width: ${media.laptop}px) {
-    max-width: var(--maxWidthM);
-  }
-
-  @media (max-width: ${media.tablet}px) {
-    grid-template-columns: 1fr;
-    max-width: var(--maxWidthS);
-  }
-
-  @media (max-width: ${media.mobile}px) {
-    grid-gap: var(--space2XL);
-    margin: var(--space4XL) auto;
-  }
-
-  ${props => props.status === 'entering' && css`
-    animation: ${css`${AnimFade} 0.6s ease 0.2s forwards`};
-  `}
-
-  ${props => props.status === 'entered' && css`
-    opacity: 1;
-  `}
-`;
-
-const InfoPanel = styled.div`
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-
-  :first-of-type {
-    ${Paragraph} {
-      margin-top: var(--spaceXL);
-
-      :first-of-type {
-        margin-top: var(--space2XL);
-      }
-    }
-  }
-
-  .button {
-    left: 0;
-    margin-top: var(--space3XL);
-    position: relative;
-    width: 0;
-  }
-
-  @media (max-width: ${media.tablet}px) {
-    width: 100%;
-    margin-top: var(--space2XL);
-
-    :first-of-type {
-      margin-top: 0;
-    }
-
-    .button {
-      margin-top: var(--space2XL);
-      position: relative;
-    }
-  }
-
-  @media (max-width: ${media.mobile}px) {
-    margin-top: 0;
-  }
-`;
-
-const Tag = styled(Paragraph)`
-  align-items: center;
-  color: var(--colorTextTitle);
-  display: flex;
-  margin-top: var(--spaceM);
-
-  :first-of-type {
-    margin-top: 0;
-  }
-
-  ::before {
-    background-color: rgb(var(--rgbAccent));
-    border-radius: 50%;
-    content: '';
-    display: inline-block;
-    height: var(--spaceXS);
-    margin-right: var(--spaceL);
-    width: var(--spaceXS);
-    align-self: center;
-  }
-
-  label {
-    font-weight: var(--fontWeightSemiBold);
-    margin-right: var(--spaceS);
-  }
-
-  ${props => props.loading && css`
-    label {
-      color: transparent;
-    }
-  `}
-`;
-
-const RelatedEvents = styled.div`
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  justify-self: flex-end;
-  margin-top: var(--space9XL);
-
-  h4 {
-    color: var(--colorTextTitle);
-    font-size: var(--fontSizeH4);
-    font-weight: var(--fontWeightBold);
-    letter-spacing: var(--letterSpacingH4);
-    line-height: var(--lineHeightLabel);
-    margin-bottom: var(--spaceS);
-    text-transform: uppercase;
-  }
-
-  a {
-    margin: var(--spaceS) 0;
-  }
-
-  @media (max-width: ${media.tablet}px) {
-    margin-top: var(--space2XL);
-
-    a {
-      margin-top: var(--spaceM);
-
-      :first-of-type {
-        margin-top: 0;
-      }
-    }
-  }
-`;
 
 export default Info;

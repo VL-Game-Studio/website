@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback, Fragment } from 'react';
-import styled from 'styled-components/macro';
 import { Helmet } from 'react-helmet-async';
 import Hero from 'pages/Hero';
 import Anchor from 'components/Anchor';
@@ -8,9 +7,9 @@ import Button from 'components/Button';
 import Input from 'components/Input';
 import PageLayout from 'components/PageLayout';
 import NotFound from 'pages/NotFound';
-import { media } from 'utils/style';
 import { useAppContext, useFormInput, usePrevious, useScrollRestore, useInterval } from 'hooks';
 import config from 'config';
+import './Play.css';
 
 function Play(props) {
   const { history, match: { params: { eventID } } } = props;
@@ -144,20 +143,22 @@ function Play(props) {
                 title2={`Round ${activeEvent?.round || 0}`}
                 paragraph={`You've been paired versus ${opponent || 'opponent'}.`}
               >
-                <Form onSubmit={onSubmit}>
-                  <FormLabel>Record your match here.</FormLabel>
-                  <ThirdsGrid>
+                <form className="play__form" onSubmit={onSubmit}>
+                  <label className="play__form-label">Record your match here.</label>
+                  <div className="play__grid play__grid--thirds">
                     <Input {...wins} type="number" min="0" max="2" placeholder="Wins" />
                     <Input {...losses} type="number" min="0" max="2" placeholder="Losses" />
                     <Input {...ties} type="number" min="0" max="2" placeholder="Ties" />
-                  </ThirdsGrid>
-                  <SubmitGrid>
+                  </div>
+                  <div className="play__grid play__grid--submit">
                     <Button label={isPlaying ? 'Update' : 'Submit'} />
                     {user &&
-                      <Comment><Anchor secondary={1} as={Link} to={`/events/${eventID}`} onClick={handleDrop}>Drop Event</Anchor></Comment>
+                      <p className="play__comment">
+                        <Anchor secondary={1} as={Link} to={`/events/${eventID}`} onClick={handleDrop}>Drop Event</Anchor>
+                      </p>
                     }
-                  </SubmitGrid>
-                </Form>
+                  </div>
+                </form>
               </Hero>
             </PageLayout>
           }
@@ -183,66 +184,5 @@ function Play(props) {
     </Fragment>
   );
 }
-
-const Form = styled.form`
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  margin-top: 100px;
-
-  @media (max-width: ${media.mobile}px) {
-    margin-top: var(--space2XL);
-    width: 100%;
-  }
-`;
-
-const HalvedGrid = styled.div`
-  display: grid;
-  grid-gap: var(--spaceXL);
-  grid-template-columns: 1fr 1fr;
-  width: 100%;
-
-  @media (max-width: ${media.mobile}px) {
-    grid-template-columns: 1fr;
-    width: 100%;
-  }
-`;
-
-const ThirdsGrid = styled(HalvedGrid)`
-  grid-template-columns: 1fr 1fr 1fr;
-  width: 50%;
-`;
-
-const FormLabel = styled.label`
-  color: ${props => props.theme.colorTitle};
-  font-size: 1.375rem;
-  font-weight: var(--fontWeightMedium);
-  letter-spacing: 0.02em;
-  line-height: 1.6;
-  margin: var(--space2XL) 0 var(--spaceL);
-`;
-
-const SubmitGrid = styled(HalvedGrid)`
-  grid-template-columns: var(--space7XL) auto;
-  margin-top: var(--space2XL);
-
-  @media (max-width: ${media.mobile}px) {
-    margin-top: var(--spaceXL);
-    display: block;
-  }
-`;
-
-const Comment = styled.p`
-  &, a {
-    color: var(--colorTextBody);
-    font-size: var(--fontSizeH3);
-    letter-spacing: 0.05em;
-    line-height: 3;
-
-    @media (max-width: ${media.mobile}px) {
-      margin-top: var(--spaceL);
-    }
-  }
-`;
 
 export default Play;
