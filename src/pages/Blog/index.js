@@ -1,39 +1,39 @@
 import React, { createContext, useState, useEffect, Suspense } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import PageLayout from 'components/PageLayout';
-import Article from './Article';
-import BlogList from './BlogList';
+import Post from './Post';
+import PostList from './PostList';
 import NotFound from 'pages/NotFound';
-import fetchArticles from 'articles';
+import fetchPosts from 'posts';
 
 const BlogContext = createContext({});
 
 const Blog = () => {
-  const [articles, setArticles] = useState([]);
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    const grabArticles = async () => {
-      const articleData = await Promise.all(fetchArticles);
-      setArticles(articleData);
+    const grabPosts = async () => {
+      const postData = await Promise.all(fetchPosts);
+      setPosts(postData);
     };
 
-    grabArticles();
+    grabPosts();
   }, []);
 
   return (
     <PageLayout>
-      <BlogContext.Provider value={{ articles }}>
+      <BlogContext.Provider value={{ posts }}>
         <Suspense>
           <Switch>
-            {articles?.map(({ slug, ...rest }) => (
+            {posts?.map(({ slug, ...rest }) => (
               <Route
                 exact
                 key={slug}
                 path={`/blog/${slug}`}
-                render={() => <Article slug={slug} {...rest} />}
+                render={() => <Post slug={slug} {...rest} />}
               />
             ))}
-            <Route exact render={() => <BlogList articles={articles} />} path="/blog" />
+            <Route exact render={() => <PostList posts={posts} />} path="/blog" />
             <Route component={NotFound} />
           </Switch>
         </Suspense>

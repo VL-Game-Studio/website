@@ -1,25 +1,26 @@
 import React, { lazy, Suspense, useEffect, createContext, useReducer, Fragment } from 'react';
-import styled, { createGlobalStyle, ThemeProvider, css } from 'styled-components/macro';
+import classNames from 'classnames';
 import { BrowserRouter, Switch, Route, useLocation } from 'react-router-dom';
 import { Transition, TransitionGroup, config as transitionConfig } from 'react-transition-group';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { useLocalStorage, usePrefersReducedMotion } from 'hooks';
 import { initialState, reducer } from 'app/reducer';
-import { tokens, createThemeProperties, msToNum } from 'app/theme';
-import { media } from 'utils/style';
+import { tokens, createThemeProperties } from 'app/theme';
+import { media, msToNum } from 'utils/style';
 import { reflow } from 'utils/transition';
 import montserratLight from 'assets/fonts/montserrat-light.woff2';
 import montserratRegular from 'assets/fonts/montserrat-regular.woff2';
 import montserratMedium from 'assets/fonts/montserrat-medium.woff2';
 import montserratSemiBold from 'assets/fonts/montserrat-semibold.woff2';
 import montserratBold from 'assets/fonts/montserrat-bold.woff2';
+import './index.css';
 
 const Home = lazy(() => import('pages/Home'));
 const Metagame = lazy(() => import('pages/Metagame'));
 const Events = lazy(() => import('pages/Events'));
 const Blog = lazy(() => import('pages/Blog'));
 const Auth = lazy(() => import('pages/Auth'));
-//const Decks = lazy(() => import('pages/Decks'));
+// const Decks = lazy(() => import('pages/Decks'));
 const NotFound = lazy(() => import('pages/NotFound'));
 
 export const AppContext = createContext();
@@ -96,13 +97,11 @@ function App() {
 
   return (
     <HelmetProvider>
-      <ThemeProvider theme={tokens}>
-        <AppContext.Provider value={{ ...state, dispatch }}>
-          <BrowserRouter>
-            <AppRoutes menuOpen={menuOpen} />
-          </BrowserRouter>
-        </AppContext.Provider>
-      </ThemeProvider>
+      <AppContext.Provider value={{ ...state, dispatch }}>
+        <BrowserRouter>
+          <AppRoutes menuOpen={menuOpen} />
+        </BrowserRouter>
+      </AppContext.Provider>
     </HelmetProvider>
   );
 }
@@ -121,11 +120,14 @@ function AppRoutes({ menuOpen }) {
         <link rel="preload" href={montserratSemiBold} as="font" crossorigin="" />
         <link rel="preload" href={montserratBold} as="font" crossorigin="" />
         <style>{fontStyles}</style>
+        <style>{globalStyles}</style>
       </Helmet>
-      <GlobalStyles menuOpen={menuOpen} />
-      <SkipToMain href="#MainContent">Skip to main content</SkipToMain>
+      <a className="skip-to-main" href="#MainContent">
+        Skip to main content
+      </a>
       <TransitionGroup
-        component={AppMainContent}
+        component="main"
+        className={classNames('app', { 'app--menuOpen': menuOpen })}
         tabIndex={-1}
         id="MainContent"
         role="main"
@@ -137,7 +139,7 @@ function AppRoutes({ menuOpen }) {
         >
           {status => (
             <TransitionContext.Provider value={{ status }}>
-              <AppPage status={status}>
+              <div className={classNames('app__page', `app__page--${status}`)}>
                 <Suspense fallback={<Fragment />}>
                   <Switch location={location}>
                     <Route exact path="/" component={Home} />
@@ -149,7 +151,7 @@ function AppRoutes({ menuOpen }) {
                     <Route component={NotFound} />
                   </Switch>
                 </Suspense>
-              </AppPage>
+              </div>
             </TransitionContext.Provider>
           )}
         </Transition>
@@ -158,117 +160,27 @@ function AppRoutes({ menuOpen }) {
   );
 }
 
-export const GlobalStyles = createGlobalStyle`
+export const globalStyles = `
   :root {
     ${createThemeProperties(tokens.base)}
+  }
 
-    @media (max-width: ${media.laptop}px) {
+  @media (max-width: ${media.laptop}px) {
+    :root {
       ${createThemeProperties(tokens.laptop)}
     }
+  }
 
-    @media (max-width: ${media.tablet}px) {
+  @media (max-width: ${media.tablet}px) {
+    :root {
       ${createThemeProperties(tokens.tablet)}
     }
+  }
 
-    @media (max-width: ${media.mobile}px) {
+  @media (max-width: ${media.mobile}px) {
+    :root {
       ${createThemeProperties(tokens.mobile)}
     }
-  }
-
-  html,
-  body {
-    box-sizing: border-box;
-    font-family: var(--fontStack);
-    font-weight: var(--fontWeightRegular);
-    background: rgb(var(--rgbBackground));
-    color: var(--colorTextBody);
-    border: 0;
-    margin: 0;
-    width: 100vw;
-    overflow-x: hidden;
-
-    ${props => props.menuOpen && css`
-      overflow: hidden;
-    `}
-  }
-
-  *,
-  *::before,
-  *::after {
-    box-sizing: inherit;
-    margin: 0;
-    padding: 0;
-  }
-
-  ::selection {
-    background: rgb(var(--rgbAccent));
-    color: rgb(var(--rgbWhite));
-  }
-
-  #root *,
-  #root *::before,
-  #root *::after {
-    @media (prefers-reduced-motion: reduce) {
-      animation-delay: 0s;
-      animation-duration: 0s;
-      transition-delay: 0s;
-      transition-duration: 0s;
-    }
-  }
-`;
-
-const AppMainContent = styled.main`
-  background: rgb(var(--rgbBackground));
-  display: grid;
-  grid-template-columns: 100%;
-  outline: none;
-  overflow-x: hidden;
-  position: relative;
-  transition: background var(--durationM) ease;
-  width: 100%;
-`;
-
-const AppPage = styled.div`
-  grid-column: 1;
-  grid-row: 1;
-  opacity: 0;
-  overflow-x: hidden;
-  transition: opacity var(--durationS) ease;
-
-  ${props => (props.status === 'exiting' || props.status === 'entering') && css`
-    opacity: 0;
-  `}
-
-  ${props => props.status === 'entered' && css`
-    opacity: 1;
-    transition-delay: var(--durationXS);
-    transition-duration: var(--durationL);
-  `}
-`;
-
-const SkipToMain = styled.a`
-  background: rgb(var(--rgbPrimary));
-  border: 0;
-  clip: rect(0 0 0 0);
-  color: rgb(var(--rgbBackground));
-  height: 1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px;
-  z-index: 99;
-
-  &:focus {
-    clip: auto;
-    font-weight: var(--fontWeightMedium);
-    height: auto;
-    left: var(--spaceM);
-    line-height: 1;
-    padding: var(--spaceS) var(--spaceM);
-    position: fixed;
-    text-decoration: none;
-    top: var(--spaceM);
-    width: auto;
   }
 `;
 

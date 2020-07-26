@@ -9,13 +9,13 @@ export default {
 };
 
 export const input = () => (
-  <StoryContainer padding={30} gutter={30}>
+  <StoryContainer padding={32} gutter={32}>
     <Input placeholder="Input" />
   </StoryContainer>
 );
 
 export const textarea = () => (
-  <StoryContainer padding={30} gutter={30}>
+  <StoryContainer padding={32} gutter={32}>
     <Input textarea placeholder="TextArea" />
   </StoryContainer>
 );

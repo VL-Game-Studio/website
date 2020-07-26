@@ -15,29 +15,26 @@
     "react-snap": "1.23.0",
     "react-test-renderer": "^16.13.1",
     "rimraf": "^3.0.2",
-    "storybook-addon-styled-component-theme": "^1.3.0",
     "stylelint": "^13.6.1",
-    "stylelint-config-recommended": "^3.0.0",
-    "stylelint-config-styled-components": "^0.1.1",
-    "stylelint-processor-styled-components": "^1.10.0"
+    "stylelint-config-recommended": "^3.0.0"
   },
   "dependencies": {
-    "@mdx-js/react": "^1.6.6",
+    "@mdx-js/react": "^1.6.14",
     "babel-loader": "^8.1.0",
+    "classnames": "^2.2.6",
     "eslint-plugin-promise": "^4.2.1",
     "mdx-loader": "^3.0.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-helmet-async": "^1.0.6",
     "react-router-dom": "5.2.0",
-    "react-transition-group": "^4.4.1",
-    "styled-components": "^5.1.1"
+    "react-transition-group": "^4.4.1"
   },
   "scripts": {
     "start": "set PORT=80 && react-scripts start",
     "build": "react-scripts build",
     "build-snap": "react-scripts build && react-snap",
-    "build-storybook": "build-storybook -o build-storybook && rimraf build-storybook/static/**/*.{jpg,txt,png,mp4,webm,svg}",
+    "build-storybook": "build-storybook -o build-storybook",
     "deploy": "firebase deploy --only hosting:website",
     "deploy-functions": "firebase deploy --only functions",
     "deploy-storybook": "firebase deploy --only hosting:storybook",

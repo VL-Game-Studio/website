@@ -9,25 +9,25 @@ export default {
 };
 
 export const label = () => (
-  <StoryContainer padding={30} gutter={30}>
+  <StoryContainer padding={32} gutter={32}>
     <Label>Label Text</Label>
   </StoryContainer>
 );
 
 export const title = () => (
-  <StoryContainer padding={30} gutter={30}>
+  <StoryContainer padding={32} gutter={32}>
     <Title>Title One</Title>
   </StoryContainer>
 );
 
 export const titleTwo = () => (
-  <StoryContainer padding={30} gutter={30}>
+  <StoryContainer padding={32} gutter={32}>
     <Title2>Title Two</Title2>
   </StoryContainer>
 );
 
 export const paragraph = () => (
-  <StoryContainer padding={30} gutter={30}>
+  <StoryContainer padding={32} gutter={32}>
     <Paragraph>Paragraph Text</Paragraph>
   </StoryContainer>
 );
