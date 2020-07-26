@@ -49,13 +49,24 @@ const Header = ({ dark }) => {
         <Icon icon="logo" />
       </Link>
       <div className="header__nav">
-        <Link
-          className="header__cta"
-          href={user ? '/' : config.authURL}
-          onClick={user ? signOut : onClick}
-        >
-          {user ? 'Sign Out' : 'Sign In'}
-        </Link>
+        {user &&
+          <Link
+            className="header__cta"
+            to="/"
+            onClick={user ? signOut : onClick}
+          >
+            Sign Out
+          </Link>
+        }
+        {!user &&
+          <a
+            className="header__cta"
+            href={config.authURL}
+            onClick={user ? signOut : onClick}
+          >
+            Sign In
+          </a>
+        }
         <NavToggle dark={isDark} menuOpen={menuOpen} />
       </div>
       <Transition
