@@ -21,6 +21,7 @@
   "dependencies": {
     "@mdx-js/react": "^1.6.14",
     "babel-loader": "^8.1.0",
+    "chromatic": "^5.0.0",
     "classnames": "^2.2.6",
     "dotenv": "^8.2.0",
     "eslint-plugin-promise": "^4.2.1",
@@ -43,7 +44,8 @@
     "test": "react-scripts test --env=jsdom --watchAll --verbose",
     "preflight": "react-scripts test --env=jsdom --testTimeout=10000",
     "eject": "react-scripts eject",
-    "storybook": "start-storybook -p 9009 -s public"
+    "storybook": "start-storybook -p 9009 -s public",
+    "chromatic": "npx chromatic --project-token=crhmqt7k0zh"
   },
   "reactSnap": {
     "skipThirdPartyRequests": true,

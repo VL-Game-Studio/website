@@ -42,7 +42,7 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
       - run:
           name: Get Production Build
-          command: yarn build-storybook
+          command: yarn chromatic
 
   functions:
     docker:
