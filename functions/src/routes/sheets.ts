@@ -54,7 +54,7 @@ router.get('/', async (_: null, res: Response) => {
         const playerData = [
           ...index === 0 ? eventData : eventData.map((_: null) => ' '),
           player.id,
-          `${player.deck.mainboard.join(';')}\n${player.deck.sideboard.join(';')}`,
+          `${player.deck.mainboard.join(';')}~;\n${player.deck.sideboard.join(';')}`,
           player.deck?.name || ' ',
           `${wins};${losses};${ties}`,
         ]
