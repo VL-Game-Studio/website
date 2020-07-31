@@ -28,10 +28,10 @@ const decklists = {
 
     return decklist
   },
-  async create({ author, mainboard, sideboard, ...rest }: IDecklist) {
+  async create(deck: IDecklist) {
     const id = await database()
       .ref('/decklists')
-      .push({ author, mainboard, sideboard, ...rest })
+      .push(deck)
       .then(({ key }) => key)
 
     await database().ref(`/decklists/${id}`).update({ id })
