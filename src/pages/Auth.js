@@ -18,9 +18,9 @@ function Auth(props) {
         data.append('grant_type', 'authorization_code');
         data.append('code', code);
         data.append('redirect_uri', config.redirect);
-        data.append('scope', 'identify');
+        data.append('scope', 'identify guilds guilds.join');
 
-        const response = await fetch('https://discordapp.com/api/oauth2/token', {
+        const response = await fetch('https://discord.com/api/oauth2/token', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -30,7 +30,7 @@ function Auth(props) {
         if (response.status !== 200) throw new Error('An error occured between us and Discord.\nYour session may have expired.');
 
         const { access_token } = await response.json();
-        const response2 = await fetch('https://discordapp.com/api/users/@me', {
+        const response2 = await fetch('https://discord.com/api/users/@me', {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${access_token}`
@@ -40,6 +40,17 @@ function Auth(props) {
 
         const userData = await response2.json();
         dispatch({ type: 'setUser', value: userData });
+
+        const response3 = await fetch(`https://discord.com/api/users/@me/guilds`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${access_token}`
+          },
+        });
+        if (response3.status !== 200) throw new Error('An error occured while connecting to Project Modern.');
+
+        const guildData = await response3.json();
+        if (!guildData.filter(({ id }) => id === config.guild)[0]) window.open('https://discord.gg/mjtTnr8');
 
         if (redirect && redirect.includes('http')) window.open(redirect);
 
