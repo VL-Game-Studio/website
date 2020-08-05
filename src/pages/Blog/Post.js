@@ -25,13 +25,13 @@ const PostWrapper = ({
 
   return (
     <Fragment>
-      <Helmet
-        title={`Blog | ${title}`}
-        meta={[{
-          name: "description",
-          content: description,
-        }]}
-      />
+      <Helmet>
+        <title>{`Blog | ${title}`}</title>
+        <meta
+          name="description"
+          content={description}
+        />
+      </Helmet>
       <article className="post" {...rest}>
         <header className="post__header">
           <div className="post__header-text">

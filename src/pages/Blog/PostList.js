@@ -11,13 +11,13 @@ const PostList = ({ posts }) => {
 
   return (
     <Fragment>
-      <Helmet
-        title="Blog - Project Modern"
-        meta={[{
-          name: "description",
-          content: "The official blog of the Project Modern community and format.",
-        }]}
-      />
+      <Helmet>
+        <title>Blog - Project Modern</title>
+        <meta
+          name="description"
+          content="The official blog of the Project Modern community and format."
+        />
+      </Helmet>
       <Hero
         label="Blog"
         title="Recent News and Updates"

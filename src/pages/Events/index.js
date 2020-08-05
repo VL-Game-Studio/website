@@ -103,6 +103,13 @@ function EventsList() {
       <Helmet
         title="Events - Project Modern"
       />
+      <Helmet>
+        <title>Events - Project Modern</title>
+        <meta
+          name="description"
+          content="Our catalog of daily sanctioned Modern tournaments."
+        />
+      </Helmet>
       <PageLayout>
         <Hero
           label="Events"
