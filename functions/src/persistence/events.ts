@@ -1,20 +1,16 @@
-import { database } from 'firebase-admin'
+import { database } from '.'
 import { IEvent, IPlayer, ISignup } from '../types'
 
 const events = {
   async fetchAll() {
-    const allEvents: IEvent[] = await database()
-      .ref('/events')
-      .once('value')
-      .then(snap => snap.val())
+    const allEvents: IEvent[] = await database
+      .fetch('/events')
 
     return allEvents
   },
   async fetch(id: string) {
-    const eventItem: IEvent = await database()
-      .ref(`/events/${id}`)
-      .once('value')
-      .then(snap => snap.val())
+    const eventItem: IEvent = await database
+      .fetch(`/events/${id}`)
 
     return eventItem
   },
@@ -22,15 +18,12 @@ const events = {
     time = new Date(time).getTime()
     const id = JSON.stringify(time)
 
-    const eventExists: IEvent = await database()
-      .ref(`/events/${id}`)
-      .once('value')
-      .then(snap => snap.val())
+    const eventExists: IEvent = await database
+      .fetch(`/events/${id}`)
     if (eventExists) return false
 
-    await database()
-      .ref(`/events/${id}`)
-      .set({
+    const eventItem: IEvent = await database
+      .set(`/events/${id}`, {
         id,
         name,
         time,
@@ -38,11 +31,6 @@ const events = {
         fired: false,
         ...rest,
       })
-
-    const eventItem: IEvent = await database()
-      .ref(`/events/${id}`)
-      .once('value')
-      .then(snap => snap.val())
 
     return eventItem
   },
@@ -54,18 +42,15 @@ const events = {
     mainboard,
     sideboard = []
   }: ISignup) {
-    const activeEvent: IEvent = await database()
-      .ref(`/events/${eventID}`)
-      .once('value')
-      .then(snap => snap.val())
+    const activeEvent: IEvent = await database
+      .fetch(`/events/${eventID}`)
     if (!activeEvent) throw new Error(`Event: ${eventID} does not exist.`)
-    if (activeEvent.fired) throw new Error(`Event: ${eventID} has already fired.`)
+    if (activeEvent?.fired) throw new Error(`Event: ${eventID} has already fired.`)
 
-    await database()
-      .ref(`/events/${eventID}/players/${playerID}`)
-      .set({
+    const playerReceipt: IPlayer = await database
+      .set(`/events/${eventID}/players/${playerID}}`, {
         id: playerID,
-        username: activeEvent.platform === 'PAPER' ? null : username,
+        username: activeEvent?.platform === 'PAPER' ? null : username,
         deck: {
           name,
           mainboard,
@@ -73,37 +58,19 @@ const events = {
         },
       })
 
-    const playerReceipt: IPlayer = await database()
-      .ref(`/events/${eventID}/players/${playerID}`)
-      .once('value')
-      .then(snap => snap.val())
-
     return playerReceipt
   },
-  async update({ id, ...props }) {
-    const activeEvent: IEvent = await database()
-      .ref(`/events/${id}`)
-      .once('value')
-      .then(snap => snap.val())
-    if (!activeEvent) return false
+  async update(props: any) {
+    const { id } = props
 
-    await database().ref(`/events/${id}`).update(props)
+    const eventItem: IEvent = await database
+      .update(`/events/${id}`, props)
 
-    const eventReceipt: IEvent = await database()
-      .ref(`/events/${id}`)
-      .once('value')
-      .then(snap => snap.val())
-
-    return eventReceipt
+    return eventItem
   },
   async delete(id: string) {
-    const eventItem: IEvent = await database()
-      .ref(`/events/${id}`)
-      .once('value')
-      .then(snap => snap.val())
-    if (!eventItem) return false
-
-    await database().ref(`/events/${id}`).remove()
+    const eventItem: IEvent = await database
+      .delete(`/events/${id}`)
 
     return eventItem
   },
