@@ -5,12 +5,12 @@ export const navLinks = [
     label: 'Home'
   },
   {
-    pathname: '/metagame',
-    label: 'Metagame'
-  },
-  {
     pathname: '/events',
     label: 'Events'
+  },
+  {
+    href: 'https://metagame.projectmodern.gg',
+    label: 'Metagame'
   },
   {
     pathname: '/blog',

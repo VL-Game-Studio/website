@@ -81,21 +81,37 @@ const Header = ({ dark }) => {
                 <nav className="header__primary-nav">
                   <label className="header__nav-label">Menu</label>
                   <menu className="header__nav-menu">
-                    {navLinks?.map(({ label, pathname, hash }, index) => (
-                      <NavLink
-                        exact
-                        className="header__nav-item"
-                        isActive={match => isMatch({ match, hash })}
-                        onClick={handleNavClick}
-                        key={label}
-                        to={{ pathname, hash, state: hashKey }}
-                        aria-label={label}
-                      >
-                        <h4>{label}</h4>
-                        <label>{label}</label>
-                        <span>{index + 1 < 10 ? `0${index + 1}` : index + 1}</span>
-                      </NavLink>
-                    ))}
+                    {navLinks?.map(({ label, href, pathname, hash }, index) => href
+                      ? (
+                        <a
+                          className="header__nav-item"
+                          onClick={handleNavClick}
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={label}
+                        >
+                          <h4>{label}</h4>
+                          <label>{label}</label>
+                          <span>{index + 1 < 10 ? `0${index + 1}` : index + 1}</span>
+                        </a>
+                      )
+                      : (
+                        <NavLink
+                          exact
+                          className="header__nav-item"
+                          isActive={match => isMatch({ match, hash })}
+                          onClick={handleNavClick}
+                          key={label}
+                          to={{ pathname, hash, state: hashKey }}
+                          aria-label={label}
+                        >
+                          <h4>{label}</h4>
+                          <label>{label}</label>
+                          <span>{index + 1 < 10 ? `0${index + 1}` : index + 1}</span>
+                        </NavLink>
+                      )
+                    )}
                   </menu>
                 </nav>
                 <div className="header__nav-info">
