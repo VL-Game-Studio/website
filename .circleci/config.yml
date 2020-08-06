@@ -23,7 +23,7 @@ jobs:
           name: Get Production Build
           command: yarn build
 
-  storybook:
+  deploy-website:
     docker:
       - image: circleci/node:12
     working_directory: ~/repo
@@ -42,7 +42,55 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
       - run:
           name: Get Production Build
+          command: yarn build
+      - run:
+          name: Deploy to Firebase
+          command: yarn deploy --token "$FIREBASE_TOKEN"
+
+  storybook:
+    docker:
+      - image: circleci/node:12
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run:
+          name: Install Dependencies
+          command: yarn
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Run Tests
           command: yarn chromatic
+
+  deploy-storybook:
+    docker:
+      - image: circleci/node:12
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run:
+          name: Install Dependencies
+          command: yarn
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Get Production Build
+          command: yarn build-storybook
+      - run:
+          name: Deploy to Firebase
+          command: yarn deploy-storybook --token "$FIREBASE_TOKEN"
 
   functions:
     docker:
@@ -65,10 +113,61 @@ jobs:
           name: Run Tests
           command: npm --prefix ./functions run preflight
 
+  deploy-functions:
+    docker:
+      - image: circleci/node:12
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "./functions/package.json" }}
+            - v1-dependencies-
+            - v2-dependencies-{{ checksum "package.json" }}
+            - v2-dependencies-
+      - run:
+          name: Install Dependencies
+          command: npm --prefix ./functions install
+      - save_cache:
+          paths:
+              - ~/repo/functions/node_modules
+          key: v1-dependencies-{{ checksum "./functions/package.json" }}
+      - run:
+          name: Install CI Dependencies
+          command: yarn
+      - save_cache:
+          paths:
+            - node_modules
+          key: v2-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Run Tests
+          command: yarn deploy-functions --token "$FIREBASE_TOKEN"
+
 workflows:
   version: 2
   test-build:
     jobs:
       - website
+      - deploy-website:
+          requires:
+            - website
+          filters:
+            branches:
+              only:
+                - master
       - storybook
+      - deploy-storybook:
+          requires:
+            - storybook
+          filters:
+            branches:
+              only:
+                - master
       - functions
+      - deploy-functions:
+          requires:
+            - functions
+          filters:
+            branches:
+              only:
+                - master

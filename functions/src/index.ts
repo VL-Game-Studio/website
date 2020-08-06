@@ -8,7 +8,7 @@ import config from './config'
 
 export const server = express()
 
-if (config.environment === 'production' || config.environment === 'test') {
+if (config.environment !== 'production') {
   admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(config.serviceAccount || '{}')),
     databaseURL: config.databaseURL,
