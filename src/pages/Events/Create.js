@@ -17,6 +17,7 @@ const Create = () => {
   const name = useFormInput('');
   const description = useFormInput('');
   const platform = useFormInput('');
+  const date = useFormInput('');
   const time = useFormInput('');
   useScrollRestore();
 
@@ -48,9 +49,9 @@ const Create = () => {
         },
         body: JSON.stringify({
           name: name.value,
-          description: description.value === '' ? 'Target start time is 4PM GMT.' : description.value,
+          description: description.value,
           platform: platform.value,
-          time: `${time.value}T16:00:00Z`,
+          time: `${date.value}T${time.value}:00Z`,
         }),
       });
 
@@ -66,7 +67,7 @@ const Create = () => {
       setSubmitting(false);
       alert(error.message);
     }
-  }, [name.value, description.value, platform.value, time.value, submitting]);
+  }, [name.value, description.value, platform.value, date.value, time.value, submitting]);
 
   return (
     <Fragment>
@@ -81,15 +82,21 @@ const Create = () => {
                 title2="Create an Event"
               >
                 <form className="create__form" onSubmit={onSubmit}>
-                  <Input {...name} required placeholder="Event Name" />
-                  <Input {...description} textarea placeholder="Event Description" />
                   <label className="create__form-label">Event Details</label>
                   <div className="create__halved-grid">
-                    <Input {...platform} list="platforms" required placeholder="Event Platform" />
-                    <datalist id="platforms">
-                      {['Paper', 'xMage', 'Cockatrice', 'Untap', 'MTGO'].map(platform => <option key={platform} value={platform}>{platform}</option>)}
-                    </datalist>
-                    <Input {...time} type="date" required placeholder="UTC start time (2020-06-31T00:00:00Z)" />
+                    <Input {...name} required placeholder="Event Name" />
+                    <Input {...platform} required as="select">
+                      <option>Event Platform</option>
+                      {['MTGO', 'Paper', 'xMage', 'Cockatrice', 'Untap', 'Multi-Platform'].map(platform => (
+                        <option key={platform} value={platform}>{platform}</option>
+                      ))}
+                    </Input>
+                  </div>
+                  <Input {...description} textarea placeholder="Event Description" />
+                  <label className="create__form-label">Event Date and Time (UTC)</label>
+                  <div className="create__halved-grid">
+                    <Input {...date} required type="date" />
+                    <Input {...time} required type="time" />
                   </div>
                   <div className="create__submit-grid">
                     <Button label="Create" />
