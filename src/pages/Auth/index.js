@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { useAppContext } from 'hooks';
 import config from 'config';
 
-function Auth(props) {
+const Auth = (props) => {
   const { search } = useLocation();
   const code = search.includes('code=') && search.split('code=')[1];
   const { user, redirect, dispatch } = useAppContext();
@@ -74,6 +74,6 @@ function Auth(props) {
   if (!code) return <Redirect to="/" />;
 
   return <Helmet title="Redirecting - Project Modern" />;
-}
+};
 
 export default Auth;

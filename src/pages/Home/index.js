@@ -8,7 +8,7 @@ import Events from 'pages/Events';
 import GetStarted from 'pages/GetStarted';
 import { usePrefersReducedMotion, useRouteTransition } from 'hooks';
 
-function Home(props) {
+const Home = () => {
   const { status } = useRouteTransition();
   const { hash, state } = useLocation();
   const initHash = useRef(true);
@@ -130,6 +130,6 @@ function Home(props) {
       </PageLayout>
     </Fragment>
   );
-}
+};
 
 export default Home;

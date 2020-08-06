@@ -12,7 +12,7 @@ import { reflow } from 'utils/transition';
 import { navLinks } from 'data/nav';
 import './index.css';
 
-function Footer() {
+const Footer = () => {
   const { width } = useWindowSize();
   const isMobile = width <= media.mobile;
   const [visible, setVisible] = useState();
@@ -83,6 +83,6 @@ function Footer() {
       </Transition>
     </footer>
   );
-}
+};
 
 export default Footer;

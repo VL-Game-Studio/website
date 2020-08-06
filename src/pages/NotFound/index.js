@@ -4,7 +4,7 @@ import PageLayout from 'components/PageLayout';
 import Hero from 'pages/Hero';
 import { useScrollRestore } from 'hooks';
 
-function NotFound(props) {
+const NotFound = () => {
   useScrollRestore();
 
   return (
@@ -23,6 +23,6 @@ function NotFound(props) {
       </PageLayout>
     </Fragment>
   );
-}
+};
 
 export default NotFound;

@@ -84,6 +84,7 @@ const Header = ({ dark }) => {
                     {navLinks?.map(({ label, href, pathname, hash }, index) => href
                       ? (
                         <a
+                          key={label}
                           className="header__nav-item"
                           onClick={handleNavClick}
                           href={href}
