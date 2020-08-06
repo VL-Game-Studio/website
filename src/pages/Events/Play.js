@@ -32,7 +32,7 @@ const Play = ({
               <div className="play__input">
                 <Input as="select">
                   <option value="">Record (wins-losses-ties)</option>
-                  {['2-0-0', '2-1-0', '1-0-1', '1-1-1', '0-2-0', '1-2-0', '0-1-1'].map(val => (
+                  {['2-0-0', '2-1-0', '1-0-1', '1-1-1', '0-1-0', '0-2-0', '1-2-0', '0-1-1'].map(val => (
                     <option value={val}>{val}</option>
                   ))}
                 </Input>
