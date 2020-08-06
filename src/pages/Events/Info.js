@@ -29,8 +29,9 @@ function hasFired(time) {
   return new Date() >= new Date(time);
 }
 
-function Info(props) {
-  const { match: { params: { eventID } } } = props;
+const Info = ({
+  match: { params: { eventID } }
+}) => {
   const { events, user, dispatch } = useAppContext();
   const activeEvent = events?.length > 0 && events.filter(({ id }) => id === eventID)[0];
   const otherEvents = events?.length > 0 && events.filter(({ id, time }) => !hasFired(time) && id !== eventID);
@@ -167,6 +168,6 @@ function Info(props) {
       }
     </Fragment>
   );
-}
+};
 
 export default Info;

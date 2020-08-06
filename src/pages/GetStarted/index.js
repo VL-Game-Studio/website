@@ -3,8 +3,7 @@ import Hero from 'pages/Hero';
 import { useAppContext } from 'hooks';
 import config from 'config';
 
-function GetStarted(props) {
-  const { accent, ...rest } = props;
+const GetStarted = ({ accent, ...rest }) => {
   const { dispatch } = useAppContext();
   const onClick = () => dispatch({ type: 'setRedirect', value: 'https://discord.gg/mjtTnr8' });
 
@@ -23,6 +22,6 @@ function GetStarted(props) {
       {...rest}
     />
   );
-}
+};
 
 export default memo(GetStarted);

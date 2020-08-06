@@ -11,10 +11,12 @@ import { useAppContext, useFormInput, useScrollRestore } from 'hooks';
 import config from 'config';
 import './Signup.css';
 
-const JoinText = () => <Fragment>Participate in this event by <Anchor as={Link} to="/" onClick={() => window.open('https://discord.gg/mjtTnr8')}>joining our Discord</Anchor>.</Fragment>;
+const JoinText = () => <Fragment>Participate in this event by <Anchor href="https://discord.gg/mjtTnr8" target="_blank">joining our Discord</Anchor>.</Fragment>;
 
-function Signup(props) {
-  const { history, match: { params: { eventID } } } = props;
+const Signup = ({
+  history,
+  match: { params: { eventID } }
+}) => {
   const { events, user, dispatch } = useAppContext();
   const activeEvent = events?.length > 0 && events?.filter(({ id }) => id === eventID)[0];
   const isPlaying = activeEvent?.players && activeEvent?.players[user?.id];
@@ -120,7 +122,11 @@ function Signup(props) {
               <Hero
                 title2="You're signed up!"
                 paragraph={<JoinText />}
-                button={{ as: Link, to: `/events/${eventID}`, label: 'Continue' }}
+                button={{
+                  as: Link,
+                  to: `/events/${eventID}`,
+                  label: 'Continue'
+                }}
               />
             }
           </PageLayout>
@@ -128,6 +134,6 @@ function Signup(props) {
       }
     </Fragment>
   );
-}
+};
 
 export default Signup;

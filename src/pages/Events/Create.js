@@ -9,7 +9,7 @@ import { useAppContext, useFormInput, useScrollRestore } from 'hooks';
 import config from 'config';
 import './Create.css';
 
-function Create() {
+const Create = () => {
   const { user, dispatch } = useAppContext();
   const authorized = config?.admins?.includes(user?.id);
   const [submitting, setSubmitting] = useState();
@@ -111,6 +111,6 @@ function Create() {
       }
     </Fragment>
   );
-}
+};
 
 export default Create;
