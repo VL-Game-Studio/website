@@ -1,10 +1,10 @@
 import request from 'supertest'
 import { server } from '../'
 
-describe('Sheets', () => {
-  it('gets sample sheet', async () => {
+describe('Machine Learning', () => {
+  it('gets ml data', async () => {
     const res = await request(server)
-      .get('/sheets')
+      .get('/ml')
 
     expect(res.statusCode).toEqual(200)
   })

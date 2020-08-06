@@ -51,7 +51,10 @@ describe('events', () => {
   }
 
   it('creates event', async () => {
-    const res = await request(server).post('/events').set('secret', config.secret).send(testEvent)
+    const res = await request(server)
+      .post('/events')
+      .set('secret', config.secret)
+      .send(testEvent)
 
     expect(res.statusCode).toEqual(200)
   })
@@ -59,7 +62,8 @@ describe('events', () => {
   it('fetches all events', async () => {
     const { id } = testEvent
 
-    const res = await request(server).get('/events')
+    const res = await request(server)
+      .get('/events')
 
     expect(res.statusCode).toEqual(200)
     expect(res.body).toHaveProperty(JSON.stringify(id))
@@ -68,7 +72,8 @@ describe('events', () => {
   it('fetches event', async () => {
     const { id } = testEvent
 
-    const res = await request(server).get(`/events/${id}`)
+    const res = await request(server)
+      .get(`/events/${id}`)
 
     expect(res.statusCode).toEqual(200)
   })
@@ -76,7 +81,10 @@ describe('events', () => {
   it('signs up for event', async () => {
     const { id } = testEvent
 
-    const res = await request(server).post(`/events/signup/${id}`).set('secret', config.secret).send(testRegistration)
+    const res = await request(server)
+      .post(`/events/signup/${id}`)
+      .set('secret', config.secret)
+      .send(testRegistration)
 
     expect(res.statusCode).toEqual(200)
   })
@@ -84,7 +92,9 @@ describe('events', () => {
   it('deletes event', async () => {
     const { id } = testEvent
 
-    const res = await request(server).delete(`/events/${id}`).set('secret', config.secret)
+    const res = await request(server)
+      .delete(`/events/${id}`)
+      .set('secret', config.secret)
 
     expect(res.statusCode).toEqual(200)
   })
