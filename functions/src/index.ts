@@ -10,7 +10,7 @@ export const server = express()
 
 if (config.environment === 'production' || config.environment === 'test') {
   admin.initializeApp({
-    credential: admin.credential.cert(JSON.parse(config.serviceAccount)),
+    credential: admin.credential.cert(JSON.parse(config.serviceAccount || '{}')),
     databaseURL: config.databaseURL,
   })
 } else {

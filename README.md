@@ -12,6 +12,17 @@ Be sure to tag your issue [here](https://github.com/Project-Modern/website/issue
 
 If you  are interested in designing or developing with us, you can reach to us through the [Project Modern Discord](https://discord.gg/mjtTnr8) which we check regularly.
 
+## Setup
+
+Make sure to include appropriate environmental variables in `.env`.
+
+```env
+REACT_APP_ADMINS=["ID"]
+REACT_APP_CLIENTID="DISCORD_CLIENTID"
+REACT_APP_GUILD="DISCORD_GUILDID"
+REACT_APP_SECRET="DISCORD_SECRET"
+```
+
 ## Scripts
 
 Make sure you have nodejs and yarn installed. Install dependencies with:
