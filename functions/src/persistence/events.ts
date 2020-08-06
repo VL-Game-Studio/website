@@ -14,19 +14,16 @@ const events = {
 
     return eventItem
   },
-  async create({ time, name, platform, ...rest }: IEvent) {
-    time = new Date(time).getTime()
-    const id = JSON.stringify(time)
-
-    const eventExists: IEvent = await database
-      .fetch(`/events/${id}`)
-    if (eventExists) return false
-
+  async create({
+    time,
+    name,
+    platform,
+    ...rest
+  }: IEvent) {
     const eventItem: IEvent = await database
-      .set(`/events/${id}`, {
-        id,
+      .push('/events', {
         name,
-        time,
+        time: new Date(time).getTime(),
         platform: platform ? platform.toUpperCase() : null,
         fired: false,
         ...rest,
@@ -35,21 +32,21 @@ const events = {
     return eventItem
   },
   async signup({
-    id: eventID,
-    player: playerID,
+    id,
+    player,
     username,
     name,
     mainboard,
     sideboard = []
   }: ISignup) {
     const activeEvent: IEvent = await database
-      .fetch(`/events/${eventID}`)
-    if (!activeEvent) throw new Error(`Event: ${eventID} does not exist.`)
-    if (activeEvent?.fired) throw new Error(`Event: ${eventID} has already fired.`)
+      .fetch(`/events/${id}`)
+    if (!activeEvent) throw new Error(`Event: ${id} does not exist.`)
+    if (activeEvent?.fired) throw new Error(`Event: ${id} has already fired.`)
 
     const playerReceipt: IPlayer = await database
-      .set(`/events/${eventID}/players/${playerID}}`, {
-        id: playerID,
+      .set(`/events/${id}/players/${player}`, {
+        id: player,
         username: activeEvent?.platform === 'PAPER' ? null : username,
         deck: {
           name,
@@ -60,7 +57,7 @@ const events = {
 
     return playerReceipt
   },
-  async update(props: any) {
+  async update(props: IEvent) {
     const { id } = props
 
     const eventItem: IEvent = await database

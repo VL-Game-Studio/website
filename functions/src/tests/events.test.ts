@@ -4,7 +4,7 @@ import config from '../config'
 
 describe('events', () => {
   const testEvent = {
-    id: 1117450800000,
+    id: null,
     name: 'Test Event Name',
     description: 'Test event description.',
     time: 1117450800000,
@@ -57,6 +57,8 @@ describe('events', () => {
       .send(testEvent)
 
     expect(res.statusCode).toEqual(200)
+    expect(res.body.id).toBeDefined()
+    testEvent.id = res.body?.id
   })
 
   it('fetches all events', async () => {
@@ -66,7 +68,7 @@ describe('events', () => {
       .get('/events')
 
     expect(res.statusCode).toEqual(200)
-    expect(res.body).toHaveProperty(JSON.stringify(id))
+    expect(res.body).toHaveProperty(id)
   })
 
   it('fetches event', async () => {

@@ -45,7 +45,7 @@ export interface IEvent {
   description: string
   platform: string
   date: Date
-  time: number | string
+  time: number
   rounds?: number
   concluded?: boolean
   fired?: boolean

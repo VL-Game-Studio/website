@@ -37,7 +37,6 @@ router.post('/', middleware, async (req: Request, res: Response) => {
 
   try {
     const activeEvent = await events.create({ name, time, ...rest })
-    if (!activeEvent) return res.status(403).json({ error: 'An event is already scheduled at that time.' })
 
     return res.status(200).json(activeEvent)
   } catch (error) {
