@@ -42,11 +42,17 @@ const Info = ({
   };
 
   const buttonProps = user
-    ? {
-        as: Link,
-        label: player ? 'Update' : 'Signup',
-        to: `/events/signup/${eventID}`
-      }
+    ? activeEvent?.fired
+      ? {
+          as: Link,
+          label: 'Play',
+          to: `/events/play/${eventID}`
+        }
+      : {
+          as: Link,
+          label: player ? 'Update' : 'Signup',
+          to: `/events/signup/${eventID}`
+        }
     : {
         as: 'a',
         label: 'Signup',
@@ -94,7 +100,7 @@ const Info = ({
                     <div className="info__panel">
                       <Title2 loading={!activeEvent?.name ? 1 : 0}>{activeEvent.name}</Title2>
                       <Paragraph loading={!activeEvent?.description ? 1 : 0}>{activeEvent.description}</Paragraph>
-                      {(!activeEvent?.fired && !isMobile) && <Button {...buttonProps} />}
+                      {(!activeEvent?.closed && !isMobile) && <Button {...buttonProps} />}
                     </div>
                     <div className="info__panel">
                       <div>
@@ -127,7 +133,7 @@ const Info = ({
                           </Paragraph>
                         }
                       </div>
-                      {(!activeEvent?.fired && isMobile) && <Button style={{ marginTop: '50px' }} {...buttonProps} />}
+                      {(!activeEvent?.closed && isMobile) && <Button style={{ marginTop: '50px' }} {...buttonProps} />}
                       {(!activeEvent || otherEvents?.length > 1) &&
                         <div className="info__related-events">
                           <h4>Other Events</h4>

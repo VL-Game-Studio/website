@@ -9,6 +9,7 @@ const Button = ({
   rel,
   target,
   className,
+  disabled,
   dark,
   accent,
   label,
@@ -16,10 +17,12 @@ const Button = ({
   ...rest
 }) => (
   <Component
+    disabled={disabled}
     href={href}
     rel={rel || (target === '_blank' ? 'noopener noreferrer' : null)}
     target={target}
     className={classNames('button', className, {
+      'button--disabled': disabled,
       'button--dark': dark,
       'button--accent': accent
     })}

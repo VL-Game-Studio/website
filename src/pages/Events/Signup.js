@@ -33,7 +33,7 @@ const Signup = ({
   }, [dispatch, eventID]);
 
   useEffect(() => {
-    if (!activeEvent || activeEvent.fired) history.push(`/events/${eventID}`);
+    if (!activeEvent || activeEvent?.fired) history.push(`/events/${eventID}`);
   }, [activeEvent, history, eventID]);
 
   useEffect(() => {

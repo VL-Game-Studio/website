@@ -8,7 +8,7 @@ import config from 'config';
 function hasFired(time) {
   if (!time) return false;
 
-  return new Date() >= new Date(time);
+  return new Date().getTime() >= new Date(time).getTime();
 }
 
 function useEventData(eventID) {
@@ -40,7 +40,10 @@ function useEventData(eventID) {
 
   return {
     events,
-    activeEvent,
+    activeEvent: {
+      ...activeEvent,
+      fired: hasFired(activeEvent?.time)
+    },
     otherEvents,
     player,
     isAuthorized,
