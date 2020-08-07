@@ -5,6 +5,7 @@ import Button from 'components/Button';
 import Input from 'components/Input';
 import Anchor from 'components/Anchor';
 import PageLayout from 'components/PageLayout';
+import { Link } from 'components/Link';
 import { useAppContext, useFormInput, useScrollRestore } from 'hooks';
 import config from 'config';
 import './Create.css';
@@ -110,7 +111,11 @@ const Create = () => {
             {complete &&
               <Hero
                 title2="Event created."
-                button={{ to: '/events', label: 'Back to Events' }}
+                button={{
+                  as: Link,
+                  to: '/events',
+                  label: 'Back to Events'
+                }}
               />
             }
           </PageLayout>
