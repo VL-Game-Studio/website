@@ -69,7 +69,7 @@ router.post('/signup/:id', middleware, async (req: Request, res: Response) => {
     const activeEvent = await events.fetch(id)
     if (!activeEvent) return res.status(404).json({ message: `An event could not be found for: ${id}.` })
 
-    const deck = validateDecklist(mainboard, sideboard)
+    const deck = await validateDecklist(mainboard, sideboard)
     if (typeof deck !== 'object') return res.status(400).json({ error: deck })
     const playerReceipt = await events.signup({ id, player, username, name, ...deck })
 

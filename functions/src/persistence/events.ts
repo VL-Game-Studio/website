@@ -37,7 +37,7 @@ const events = {
     username,
     name,
     mainboard,
-    sideboard = []
+    sideboard,
   }: ISignup) {
     const activeEvent: IEvent = await database
       .fetch(`/events/${id}`)

@@ -57,3 +57,13 @@ export interface IDecklist extends IDeck {
   id?: string
   author: string
 }
+
+export interface ICard {
+  banned: boolean
+  colors: string[]
+  convertedManaCost: number
+  manaCost?: string
+  name: string
+  printings: string[]
+  type: string
+}
