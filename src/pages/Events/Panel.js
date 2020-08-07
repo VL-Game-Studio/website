@@ -5,8 +5,7 @@ import { Link } from 'components/Link';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import Hero from 'pages/Hero';
-import { useAppContext } from 'hooks';
-import config from 'config';
+import { useEventData } from 'hooks';
 import './Panel.css';
 
 const Panel = ({
@@ -17,8 +16,7 @@ const Panel = ({
   events,
   ...rest
 }) => {
-  const { user } = useAppContext();
-  const authorized = config?.admins?.includes(user?.id);
+  const { isAuthorized } = useEventData();
 
   return (
     <Hero
@@ -48,7 +46,7 @@ const Panel = ({
             <Icon icon="plus" />
           </Link>
         ))}
-        {authorized && <Button as={Link} to="/events/create" label="Create Event" />}
+        {isAuthorized && <Button as={Link} to="/events/create" label="Create Event" />}
       </div>
       {!alternate && <Button as={Link} to="/events" label="All Events" />}
     </Hero>

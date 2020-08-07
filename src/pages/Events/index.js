@@ -14,8 +14,12 @@ const Info = lazy(() => import('./Info'));
 const Play = lazy(() => import('./Play'));
 const NotFound = lazy(() => import('pages/NotFound'));
 
-function Events(props) {
-  const { id, sectionRef, visible, ...rest } = props;
+const Events = ({
+  id,
+  sectionRef,
+  visible,
+  ...rest
+}) => {
   const titleId = `${id}-title`;
   const { dispatch, events } = useAppContext();
 
@@ -66,9 +70,9 @@ function Events(props) {
       {...rest}
     />
   );
-}
+};
 
-function EventsList() {
+const EventsList = () => {
   const { events } = useAppContext();
   const [visibleSections, setVisibleSections] = useState([]);
   const eventsList = useRef();
@@ -131,6 +135,6 @@ function EventsList() {
       </PageLayout>
     </Fragment>
   );
-}
+};
 
 export default Events;

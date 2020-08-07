@@ -6,15 +6,14 @@ import Hero from 'pages/Hero';
 import { Label, Title2 } from 'components/Type';
 import Input from 'components/Input';
 import Button from 'components/Button';
-import { useAppContext, useScrollRestore } from 'hooks';
+import { useEventData, useScrollRestore } from 'hooks';
 import './Play.css';
 
 const Play = ({
   history,
   match: { params: { eventID } }
 }) => {
-  const { events } = useAppContext();
-  const activeEvent = events?.length > 0 && events?.filter(({ id }) => id === eventID)[0];
+  const { events, activeEvent } = useEventData(eventID);
   useScrollRestore();
 
   return (
@@ -31,7 +30,7 @@ const Play = ({
               <Title2>Round 1 vs Opponent</Title2>
               <div className="play__input">
                 <Input as="select">
-                  <option value="">Record (wins-losses-ties)</option>
+                  <option>Record (wins-losses-ties)</option>
                   {['2-0-0', '2-1-0', '1-0-1', '1-1-1', '0-1-0', '0-2-0', '1-2-0', '0-1-1'].map(val => (
                     <option value={val}>{val}</option>
                   ))}
