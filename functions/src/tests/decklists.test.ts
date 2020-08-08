@@ -4,8 +4,8 @@ import config from '../config'
 
 describe('Decklists', () => {
   const deck = {
-    mainboard: '60 Island',
-    sideboard: '15 Swamp',
+    mainboard: '1x\tcavern of Souls\n\n1 Wastes \n58 Island',
+    sideboard: '15x Swamp',
   }
 
   const testDecklist = {
@@ -22,6 +22,14 @@ describe('Decklists', () => {
       .send(testDecklist)
 
     expect(res.statusCode).toEqual(201)
+    expect(res.body?.mainboard).toEqual([
+      '1 Cavern of Souls',
+      '1 Wastes',
+      '58 Island',
+    ])
+    expect(res.body?.sideboard).toEqual([
+      '15 Swamp',
+    ])
     testDecklist.id = res.body.id
   })
 

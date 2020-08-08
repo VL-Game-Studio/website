@@ -16,9 +16,7 @@ async function getLegalCards() {
     .fetch('/format')
   if (!format) throw new Error('An error occured while validating card legality.')
 
-  const cards = format.cards.filter(({ banned }) => !banned)
-
-  return cards
+  return format
 }
 
 export default getLegalCards
