@@ -1,9 +1,9 @@
-import getLegalCards from './getLegalCards'
+import getFormatData from './getFormatData'
 import scrapeDecklist from './scrapeDecklist'
 import validateDecklist from './validateDecklist'
 
 export {
-  getLegalCards,
+  getFormatData,
   scrapeDecklist,
   validateDecklist,
 }

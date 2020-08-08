@@ -1,5 +1,6 @@
-import { getLegalCards } from '.'
+import { getFormatData } from '.'
 import basics from '../data/basics'
+import cards from '../data/cards.json'
 
 /**
  * Generates array of cards and applies aggressive regex
@@ -41,7 +42,7 @@ function getSize(cards: string[]) {
  */
 async function checkCardLegality({ mainboard, sideboard }) {
   // Fetch list of legal cards and reduce their names into an array
-  const { cards, banned } = await getLegalCards()
+  const { banned } = await getFormatData()
   const legalCards = cards && [...basics, ...cards?.map(({ name }) => name)]
 
   // Transform cardpool into lowercase pool for strict validation
