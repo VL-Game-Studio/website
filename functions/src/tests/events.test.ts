@@ -7,9 +7,8 @@ describe('events', () => {
     id: null,
     name: 'Test Event Name',
     description: 'Test event description.',
-    time: 1117450800000,
+    time: new Date().getTime(),
     platform: 'MTGO',
-    fired: false,
     players: [
       {
         id: '1',
@@ -57,7 +56,7 @@ describe('events', () => {
       .send(testEvent)
 
     expect(res.statusCode).toEqual(200)
-    expect(res.body.id).toBeDefined()
+    expect(res.body?.id).toBeDefined()
     testEvent.id = res.body?.id
   })
 
@@ -89,6 +88,48 @@ describe('events', () => {
       .send(testRegistration)
 
     expect(res.statusCode).toEqual(200)
+  })
+
+  it('drops player from event', async () => {
+    const { id } = testEvent
+
+    const res = await request(server)
+      .get(`/events/drop/${id}/6`)
+      .set('secret', config.secret)
+
+    expect(res.statusCode).toEqual(200)
+    expect(res.body.dropped).toEqual(true)
+  })
+
+  it('generates pairings', async () => {
+    const { id } = testEvent
+
+    const res = await request(server)
+      .get(`/events/pairings/${id}`)
+      .set('secret', config.secret)
+
+    expect(res.statusCode).toEqual(200)
+    expect(res.body).toEqual([
+      { player1: '1', player2: '2' },
+      { player1: '3', player2: '4' },
+      { player1: '5', player2: 'bye' },
+    ])
+  })
+
+  it('reports match result', async () => {
+    const { id } = testEvent
+    const playerID = 1
+
+    const res = await request(server)
+      .post(`/events/report/${id}/${playerID}`)
+      .set('secret', config.secret)
+      .send({ result: '2-0-0' })
+
+    expect(res.statusCode).toEqual(200)
+
+    const opponentID = res.body.players[playerID].opponents.pop()
+    expect(res.body.players[playerID].matches['1'].record).toEqual('2-0-0')
+    expect(res.body.players[opponentID].matches['1'].record).toEqual('0-2-0')
   })
 
   it('deletes event', async () => {
