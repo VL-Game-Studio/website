@@ -5,18 +5,20 @@ import Button from 'components/Button';
 import Input from 'components/Input';
 import Anchor from 'components/Anchor';
 import PageLayout from 'components/PageLayout';
-import { useAppContext, useEventData, useFormInput, useScrollRestore } from 'hooks';
+import { Link } from 'components/Link';
+import { useAppContext, useFormInput, useScrollRestore } from 'hooks';
 import config from 'config';
 import './Create.css';
 
 const Create = () => {
   const { user, dispatch } = useAppContext();
-  const { isAuthorized } = useEventData();
+  const authorized = config?.admins?.includes(user?.id);
   const [submitting, setSubmitting] = useState();
   const [complete, setComplete] = useState();
   const name = useFormInput('');
   const description = useFormInput('');
   const platform = useFormInput('');
+  const date = useFormInput('');
   const time = useFormInput('');
   useScrollRestore();
 
@@ -26,11 +28,11 @@ const Create = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!user || !isAuthorized) {
+    if (!user || !authorized) {
       handleSignout();
       window.location = config.authURL;
     }
-  }, [user, handleSignout, isAuthorized]);
+  }, [user, handleSignout, authorized]);
 
   const onSubmit = useCallback(async event => {
     event.preventDefault();
@@ -48,9 +50,9 @@ const Create = () => {
         },
         body: JSON.stringify({
           name: name.value,
-          description: description.value === '' ? 'Target start time is 4PM GMT.' : description.value,
+          description: description.value,
           platform: platform.value,
-          time: `${time.value}T16:00:00Z`,
+          time: `${date.value}T${time.value}:00Z`,
         }),
       });
 
@@ -66,11 +68,11 @@ const Create = () => {
       setSubmitting(false);
       alert(error.message);
     }
-  }, [name.value, description.value, platform.value, time.value, submitting]);
+  }, [name.value, description.value, platform.value, date.value, time.value, submitting]);
 
   return (
     <Fragment>
-      {isAuthorized &&
+      {authorized &&
         <Fragment>
           <Helmet
             title="Create Event - Project Modern"
@@ -81,15 +83,21 @@ const Create = () => {
                 title2="Create an Event"
               >
                 <form className="create__form" onSubmit={onSubmit}>
-                  <Input {...name} required placeholder="Event Name" />
-                  <Input {...description} textarea placeholder="Event Description" />
                   <label className="create__form-label">Event Details</label>
                   <div className="create__halved-grid">
-                    <Input {...platform} list="platforms" required placeholder="Event Platform" />
-                    <datalist id="platforms">
-                      {['Paper', 'xMage', 'Cockatrice', 'Untap', 'MTGO'].map(platform => <option key={platform} value={platform}>{platform}</option>)}
-                    </datalist>
-                    <Input {...time} type="date" required placeholder="UTC start time (2020-06-31T00:00:00Z)" />
+                    <Input {...name} required placeholder="Event Name" />
+                    <Input {...platform} required as="select">
+                      <option>Event Platform</option>
+                      {['MTGO', 'Paper', 'xMage', 'Cockatrice', 'Untap', 'Multi-Platform'].map(platform => (
+                        <option key={platform} value={platform}>{platform}</option>
+                      ))}
+                    </Input>
+                  </div>
+                  <Input {...description} textarea placeholder="Event Description" />
+                  <label className="create__form-label">Event Date and Time (UTC)</label>
+                  <div className="create__halved-grid">
+                    <Input {...date} required type="date" />
+                    <Input {...time} required type="time" />
                   </div>
                   <div className="create__submit-grid">
                     <Button label="Create" />
@@ -103,7 +111,11 @@ const Create = () => {
             {complete &&
               <Hero
                 title2="Event created."
-                button={{ to: '/events', label: 'Back to Events' }}
+                button={{
+                  as: Link,
+                  to: '/events',
+                  label: 'Back to Events'
+                }}
               />
             }
           </PageLayout>
