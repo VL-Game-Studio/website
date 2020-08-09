@@ -53,18 +53,20 @@ const Info = ({
         to={`/events/signup/${eventID}`}
         label={player ? 'Update' : 'Signup'}
       />
-      <Paragraph>
-        Not doing so hot?&nbsp;
-        <Anchor
-          secondary
-          as={Link}
-          to="/events"
-          onClick={handleDrop}
-          aria-label="Drop Event"
-        >
-          Drop
-        </Anchor>
-      </Paragraph>
+      {player &&
+        <Paragraph>
+          Not doing so hot?&nbsp;
+          <Anchor
+            secondary
+            as={Link}
+            to="/events"
+            onClick={handleDrop}
+            aria-label="Drop Event"
+          >
+            Drop
+          </Anchor>
+        </Paragraph>
+      }
     </div>
   );
 

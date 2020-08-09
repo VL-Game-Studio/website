@@ -45,7 +45,7 @@ export interface IEvent {
   description: string
   platform: string
   date: Date
-  time: number | string
+  time: number
   rounds?: number
   concluded?: boolean
   fired?: boolean
@@ -56,4 +56,14 @@ export interface IEvent {
 export interface IDecklist extends IDeck {
   id?: string
   author: string
+}
+
+export interface ICard {
+  banned: boolean
+  colors: string[]
+  convertedManaCost: number
+  manaCost?: string
+  name: string
+  printings: string[]
+  type: string
 }

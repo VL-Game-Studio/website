@@ -1,10 +1,10 @@
 import request from 'supertest'
 import { server } from '../'
 
-describe('Sheets', () => {
-  it('gets sample sheet', async () => {
+describe('Format', () => {
+  it('gets format data', async () => {
     const res = await request(server)
-      .get('/sheets')
+      .get('/format')
 
     expect(res.statusCode).toEqual(200)
   })

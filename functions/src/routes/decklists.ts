@@ -36,7 +36,7 @@ router.post('/', middleware, async (req: Request, res: Response) => {
   if (!mainboard) return res.status(400).json({ error: 'Mainboard is a required field.' })
 
   try {
-    const deck = validateDecklist(mainboard, sideboard)
+    const deck = await validateDecklist(mainboard, sideboard)
     if (typeof deck !== 'object') return res.status(400).json({ error: deck })
     const decklist = await decklists.create({ author, ...deck, ...rest })
 
@@ -52,7 +52,7 @@ router.post('/:id', middleware, async (req: Request, res: Response) => {
   const { author, mainboard, sideboard, ...rest } = req.body
 
   try {
-    const deck = validateDecklist(mainboard, sideboard)
+    const deck = await validateDecklist(mainboard, sideboard)
     if (typeof deck !== 'object') return res.status(400).json({ error: deck })
     const decklist = await decklists.update({ id, author, ...deck, ...rest })
 

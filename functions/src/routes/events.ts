@@ -37,7 +37,6 @@ router.post('/', middleware, async (req: Request, res: Response) => {
 
   try {
     const activeEvent = await events.create({ name, time, ...rest })
-    if (!activeEvent) return res.status(403).json({ error: 'An event is already scheduled at that time.' })
 
     return res.status(200).json(activeEvent)
   } catch (error) {
@@ -70,7 +69,7 @@ router.post('/signup/:id', middleware, async (req: Request, res: Response) => {
     const activeEvent = await events.fetch(id)
     if (!activeEvent) return res.status(404).json({ message: `An event could not be found for: ${id}.` })
 
-    const deck = validateDecklist(mainboard, sideboard)
+    const deck = await validateDecklist(mainboard, sideboard)
     if (typeof deck !== 'object') return res.status(400).json({ error: deck })
     const playerReceipt = await events.signup({ id, player, username, name, ...deck })
 
@@ -80,6 +79,57 @@ router.post('/signup/:id', middleware, async (req: Request, res: Response) => {
       `POST /events/${id} ({ player: ${player}, username: ${username}, name: ${name}, mainboard: ${mainboard}, sideboard: ${sideboard} }) >> ${error.stack}`
     )
     return res.status(500).json({ error: `An error occured while signing up for event: ${id}.` })
+  }
+})
+
+router.get('/pairings/:id', middleware, async (req: Request, res: Response) => {
+  const { id } = req.params
+
+  try {
+    const activeEvent = await events.fetch(id)
+    if (!activeEvent) return res.status(404).json({ error: `An event could not be found for: ${id}.` })
+
+    const pairings = await events.pairings(id)
+    if (!pairings) return res.status(409).json({ error: 'There are not enough players to generate pairings.' })
+
+    return res.status(200).json(pairings)
+  } catch (error) {
+    console.error(`POST /events/pairings/${id} >> ${error.stack}`)
+    return res.status(500).json({ error: `An error occured generating pairings for event: ${id}.` })
+  }
+})
+
+router.post('/report/:id/:playerID', middleware, async (req: Request, res: Response) => {
+  const { id, playerID } = req.params
+  const { result } = req.body
+  if (!result) return res.status(400).json({ error: 'Result is a required field.' })
+
+  try {
+    const activeEvent = await events.report({ id, playerID, result })
+    if (!activeEvent) return res.status(400).json({ error: `You are not currently playing in event: ${id}.` })
+
+    return res.status(200).json(activeEvent)
+  } catch (error) {
+    console.error(`POST /events/report/${id}/${playerID} ({ result: ${result} }) >> ${error.stack}`)
+    return res.status(500).json({
+      error: `An error occured while processing event result for player: ${playerID} in event: ${id}.`,
+    })
+  }
+})
+
+router.get('/drop/:id/:playerID', middleware, async (req: Request, res: Response) => {
+  const { id, playerID } = req.params
+
+  try {
+    const activeEvent = await events.drop({ id, playerID })
+    if (!activeEvent) return res.status(400).json({ error: `You are not currently playing in event: ${id}.` })
+
+    return res.status(200).json(activeEvent)
+  } catch (error) {
+    console.error(`GET /events/drop/${id}/${playerID} >> ${error.stack}`)
+    return res.status(500).json({
+      error: `An error occured while dropping player: ${playerID} in event: ${id}.`,
+    })
   }
 })
 
