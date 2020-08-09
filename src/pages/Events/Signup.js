@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, Fragment } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import Hero from 'pages/Hero';
 import Button from 'components/Button';
@@ -7,23 +8,22 @@ import Anchor from 'components/Anchor';
 import { Link } from 'components/Link';
 import PageLayout from 'components/PageLayout';
 import NotFound from 'pages/NotFound';
-import { useAppContext, useFormInput, useScrollRestore } from 'hooks';
+import { useAppContext, useEventData, useFormInput, useScrollRestore } from 'hooks';
 import config from 'config';
 import './Signup.css';
 
 const JoinText = () => <Fragment>Participate in this event by <Anchor href="https://discord.gg/mjtTnr8" target="_blank">joining our Discord</Anchor>.</Fragment>;
 
 const Signup = ({
-  history,
   match: { params: { eventID } }
 }) => {
-  const { events, user, dispatch } = useAppContext();
-  const activeEvent = events?.length > 0 && events?.filter(({ id }) => id === eventID)[0];
-  const isPlaying = activeEvent?.players && activeEvent?.players[user?.id];
-  const username = useFormInput(isPlaying?.username || '');
-  const name = useFormInput(isPlaying?.deck?.name || '');
-  const mainboard = useFormInput(isPlaying?.deck?.mainboard?.join('\n') || '');
-  const sideboard = useFormInput(isPlaying?.deck?.sideboard?.join('\n') || '');
+  const history = useHistory();
+  const { user, dispatch } = useAppContext();
+  const { events, activeEvent, player } = useEventData(eventID);
+  const username = useFormInput(player?.username || '');
+  const name = useFormInput(player?.deck?.name || '');
+  const mainboard = useFormInput(player?.deck?.mainboard?.join('\n') || '');
+  const sideboard = useFormInput(player?.deck?.sideboard?.join('\n') || '');
   const [submitting, setSubmitting] = useState();
   const [complete, setComplete] = useState();
   useScrollRestore();
@@ -34,7 +34,7 @@ const Signup = ({
   }, [dispatch, eventID]);
 
   useEffect(() => {
-    if (!activeEvent || activeEvent.fired) history.push(`/events/${eventID}`);
+    if (!activeEvent || activeEvent?.fired) history.push(`/events/${eventID}`);
   }, [activeEvent, history, eventID]);
 
   useEffect(() => {
@@ -108,7 +108,7 @@ const Signup = ({
                   <Input textarea required {...mainboard} placeholder="Mainboard" />
                   <Input textarea {...sideboard} placeholder="Sideboard" />
                   <div className="signup__grid signup__grid--submit">
-                    <Button label={isPlaying ? 'Update' : 'Submit'} />
+                    <Button label={player ? 'Update' : 'Submit'} />
                     {user &&
                       <p className="signup__comment">
                         Signed in as {user.username}#{user.discriminator}. <Anchor secondary href={`https://discord.com/api/oauth2/authorize?client_id=${config.clientID}&redirect_uri=${encodeURI(config.redirect)}&response_type=code&scope=identify`} onClick={handleSignout}>Not you?</Anchor>

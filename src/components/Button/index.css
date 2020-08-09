@@ -72,3 +72,15 @@
 .button:active svg {
   margin-left: calc(var(--spaceXL) + 4px);
 }
+
+.button--disabled, {
+  cursor: not-allowed;
+}
+
+.button--disabled::before {
+  width: var(--space2XL)!important;
+}
+
+.button--disabled svg {
+  margin-left: calc(var(--spaceL) + 4px)!important;
+}

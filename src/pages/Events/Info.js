@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef, Fragment } from 'react';
+import React, { useState, useEffect, useRef, useCallback, Fragment } from 'react';
 import classNames from 'classnames';
+import { useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Transition } from 'react-transition-group';
 import { Title2, Paragraph } from 'components/Type';
@@ -9,13 +10,16 @@ import Button from 'components/Button';
 import GetStarted from 'pages/GetStarted';
 import PageLayout from 'components/PageLayout';
 import NotFound from 'pages/NotFound';
-import { useScrollRestore, useWindowSize, useAppContext } from 'hooks';
+import { useAppContext, useEventData, useWindowSize, useScrollRestore } from 'hooks';
 import { media } from 'utils/style';
 import { reflow } from 'utils/transition';
 import prerender from 'utils/prerender';
 import config from 'config';
 import './Info.css';
 
+/**
+ * Fixes timezone offset from UTC time to local time
+ */
 function correctDate(time)  {
   let date = new Date(time);
   date = new Date(date.getTime() + Math.abs(date.getTimezoneOffset() * 60000));
@@ -23,21 +27,15 @@ function correctDate(time)  {
   return date;
 }
 
-function hasFired(time) {
-  if (!time) return false;
-
-  return new Date() >= new Date(time);
-}
-
 const Info = ({
   match: { params: { eventID } }
 }) => {
-  const { events, user, dispatch } = useAppContext();
-  const activeEvent = events?.length > 0 && events.filter(({ id }) => id === eventID)[0];
-  const otherEvents = events?.length > 0 && events.filter(({ id, time }) => !hasFired(time) && id !== eventID);
-  const isPlaying = activeEvent?.players && activeEvent?.players[user?.id];
+  const history = useHistory();
+  const { user, dispatch } = useAppContext();
+  const { events, activeEvent, otherEvents, player } = useEventData(eventID);
   const cta = useRef();
   const [visible, setVisible] = useState();
+  const [dropping, setDropping] = useState();
   const { width } = useWindowSize();
   const isMobile = width <= media.mobile;
   useScrollRestore();
@@ -46,18 +44,56 @@ const Info = ({
     dispatch({ type: 'setRedirect', value: `/events/signup/${eventID}` });
   };
 
-  const buttonProps = user
-    ? {
-        as: Link,
-        label: isPlaying ? 'Update' : 'Signup',
-        to: `/events/signup/${eventID}`
+  const Controls = () => !activeEvent?.closed && (
+    <div className="info__grid">
+      <Button
+        as={user ? Link : 'a'}
+        onClick={user ? null : handleRedirect}
+        href={user ? null : config.authURL}
+        to={`/events/signup/${eventID}`}
+        label={player ? 'Update' : 'Signup'}
+      />
+      {player &&
+        <Paragraph>
+          Not doing so hot?&nbsp;
+          <Anchor
+            secondary
+            as={Link}
+            to="/events"
+            onClick={handleDrop}
+            aria-label="Drop Event"
+          >
+            Drop
+          </Anchor>
+        </Paragraph>
       }
-    : {
-        as: 'a',
-        label: 'Signup',
-        onClick: handleRedirect,
-        href: config.authURL
-      };
+    </div>
+  );
+
+  const handleDrop = useCallback(async event => {
+    event.preventDefault();
+    if (dropping) return;
+
+    try {
+      setDropping(true);
+
+      const response = await fetch(`/functions/events/drop/${eventID}/${user?.id}`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'secret': config.secret,
+        },
+      });
+
+      const data = await response.json();
+      if (response.status !== 200) throw new Error(data?.error || response.statusText);
+
+      return history.push('/events');
+    } catch (error) {
+      setDropping(false);
+      alert(error.message);
+    }
+  }, [dropping, eventID, user, history]);
 
   useEffect(() => {
     const sectionObserver = new IntersectionObserver((entries, observer) => {
@@ -99,7 +135,7 @@ const Info = ({
                     <div className="info__panel">
                       <Title2 loading={!activeEvent?.name ? 1 : 0}>{activeEvent.name}</Title2>
                       <Paragraph loading={!activeEvent?.description ? 1 : 0}>{activeEvent.description}</Paragraph>
-                      {(!activeEvent?.fired && !isMobile) && <Button {...buttonProps} />}
+                      {!isMobile && <Controls />}
                     </div>
                     <div className="info__panel">
                       <div>
@@ -132,7 +168,7 @@ const Info = ({
                           </Paragraph>
                         }
                       </div>
-                      {(!activeEvent?.fired && isMobile) && <Button style={{ marginTop: '50px' }} {...buttonProps} />}
+                      {isMobile && <Controls />}
                       {(!activeEvent || otherEvents?.length > 1) &&
                         <div className="info__related-events">
                           <h4>Other Events</h4>
