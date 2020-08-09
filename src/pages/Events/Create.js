@@ -6,13 +6,13 @@ import Input from 'components/Input';
 import Anchor from 'components/Anchor';
 import PageLayout from 'components/PageLayout';
 import { Link } from 'components/Link';
-import { useAppContext, useFormInput, useScrollRestore } from 'hooks';
+import { useAppContext, useEventData, useFormInput, useScrollRestore } from 'hooks';
 import config from 'config';
 import './Create.css';
 
 const Create = () => {
   const { user, dispatch } = useAppContext();
-  const authorized = config?.admins?.includes(user?.id);
+  const { isAuthorized } = useEventData();
   const [submitting, setSubmitting] = useState();
   const [complete, setComplete] = useState();
   const name = useFormInput('');
@@ -28,11 +28,11 @@ const Create = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!user || !authorized) {
+    if (!user || !isAuthorized) {
       handleSignout();
       window.location = config.authURL;
     }
-  }, [user, handleSignout, authorized]);
+  }, [user, handleSignout, isAuthorized]);
 
   const onSubmit = useCallback(async event => {
     event.preventDefault();
@@ -72,7 +72,7 @@ const Create = () => {
 
   return (
     <Fragment>
-      {authorized &&
+      {isAuthorized &&
         <Fragment>
           <Helmet
             title="Create Event - Project Modern"

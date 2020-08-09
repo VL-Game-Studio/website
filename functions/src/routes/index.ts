@@ -1,4 +1,5 @@
 import { Router, Request, Response } from 'express'
+import auth from './auth'
 import decklists from './decklists'
 import events from './events'
 import format from './format'
@@ -7,6 +8,7 @@ import sheets from './sheets'
 
 const router = Router()
 
+router.use('/auth', auth)
 router.use('/decklists', decklists)
 router.use('/events', events)
 router.use('/format', format)

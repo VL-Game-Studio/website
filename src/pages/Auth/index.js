@@ -19,41 +19,31 @@ const Auth = () => {
         data.append('grant_type', 'authorization_code');
         data.append('code', code);
         data.append('redirect_uri', config.redirect);
-        data.append('scope', 'identify guilds guilds.join');
+        data.append('scope', 'identify guilds.join');
 
         const response = await fetch('https://discord.com/api/oauth2/token', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
           },
           body: data,
         });
         if (response.status !== 200) throw new Error('An error occured between us and Discord.\nYour session may have expired.');
 
         const { access_token } = await response.json();
-        const response2 = await fetch('https://discord.com/api/users/@me', {
-          method: 'GET',
+
+        const response2 = await fetch('/functions/auth', {
+          method: 'POST',
           headers: {
-            Authorization: `Bearer ${access_token}`
+            'content-type': 'application/json',
+            secret: config.secret,
           },
+          body: JSON.stringify({ access_token })
         });
-        if (response2.status !== 200) throw new Error('An error occured with authenticating with Discord.');
+        if (response2.status !== 200) throw new Error('An error occured with authenticating with our servers.');
 
         const userData = await response2.json();
         dispatch({ type: 'setUser', value: userData });
-
-        const response3 = await fetch(`https://discord.com/api/users/@me/guilds`, {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${access_token}`
-          },
-        });
-        if (response3.status !== 200) throw new Error('An error occured while connecting to Project Modern.');
-
-        const guildData = await response3.json();
-        if (!guildData.filter(({ id }) => id === config.guild)[0]) window.open('https://discord.gg/mjtTnr8');
-
-        if (redirect && redirect.includes('http')) window.open(redirect);
 
         return redirect && redirect.includes('http')
           ? history.push('/')

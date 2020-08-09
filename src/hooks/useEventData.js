@@ -36,7 +36,7 @@ function useEventData(eventID) {
    * Checks with server to escalate user
    * privileges
    */
-  const isAuthorized = config?.admins?.includes(user?.id);
+  const isAuthorized = user?.roles?.includes(config?.organizedPlay);
 
   return {
     events,

@@ -21,10 +21,10 @@ server.use(helmet())
 server.use(express.json())
 server.use(cors())
 
-if (config.environment === 'production') {
-  server.use('/functions', routes)
-} else {
+if (config.environment === 'test') {
   server.use(routes)
+} else {
+  server.use('/functions', routes)
 }
 
 if (config.environment === 'development') {

@@ -62,6 +62,11 @@ Path | Method | Parameters | Description
 
 Private methods require authorization via Discord secret in headers: `secret`.
 
+### Authentication Methods
+Path | Method | Parameters | Description
+--- | --- | --- | ---
+   /auth/ | POST | `access_token` | Converts a Discord oAuth access token into user info, including permissions
+
 ### Events Methods
 
 Path | Method | Parameters | Description

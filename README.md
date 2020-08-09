@@ -17,7 +17,7 @@ If you  are interested in designing or developing with us, you can reach to us t
 Make sure to include appropriate environmental variables in `.env`.
 
 ```env
-REACT_APP_ADMINS=["ID"]
+REACT_APP_ORGANIZED_PLAY=["ROLE_ID"]
 REACT_APP_CLIENTID="DISCORD_CLIENTID"
 REACT_APP_GUILD="DISCORD_GUILDID"
 REACT_APP_SECRET="DISCORD_SECRET"
