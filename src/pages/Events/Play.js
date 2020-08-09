@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useCallback, useEffect, Fragment } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import NotFound from 'pages/NotFound';
 import PageLayout from 'components/PageLayout';
@@ -26,9 +27,9 @@ const records = [
 ];
 
 const Play = ({
-  history,
   match: { params: { eventID } }
 }) => {
+  const history = useHistory();
   const { user, dispatch } = useAppContext();
   const { player, events, activeEvent } = useEventData(eventID);
   const { round = 0, rounds = 0 } = activeEvent;

@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef, Fragment } from 'react';
+import React, { useState, useEffect, useRef, useCallback, Fragment } from 'react';
 import classNames from 'classnames';
+import { useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Transition } from 'react-transition-group';
 import { Title2, Paragraph } from 'components/Type';
@@ -29,10 +30,12 @@ function correctDate(time)  {
 const Info = ({
   match: { params: { eventID } }
 }) => {
+  const history = useHistory();
   const { user, dispatch } = useAppContext();
   const { events, activeEvent, otherEvents, player } = useEventData(eventID);
   const cta = useRef();
   const [visible, setVisible] = useState();
+  const [dropping, setDropping] = useState();
   const { width } = useWindowSize();
   const isMobile = width <= media.mobile;
   useScrollRestore();
@@ -41,24 +44,54 @@ const Info = ({
     dispatch({ type: 'setRedirect', value: `/events/signup/${eventID}` });
   };
 
-  const buttonProps = user
-    ? activeEvent?.fired
-      ? {
-          as: Link,
-          label: 'Play',
-          to: `/events/play/${eventID}`
-        }
-      : {
-          as: Link,
-          label: player ? 'Update' : 'Signup',
-          to: `/events/signup/${eventID}`
-        }
-    : {
-        as: 'a',
-        label: 'Signup',
-        onClick: handleRedirect,
-        href: config.authURL
-      };
+  const Controls = () => !activeEvent?.closed && (
+    <div className="info__grid">
+      <Button
+        as={user ? Link : 'a'}
+        onClick={user ? null : handleRedirect}
+        href={user ? null : config.authURL}
+        to={`/events/signup/${eventID}`}
+        label={player ? 'Update' : 'Signup'}
+      />
+      <Paragraph>
+        Not doing so hot?&nbsp;
+        <Anchor
+          secondary
+          as={Link}
+          to="/events"
+          onClick={handleDrop}
+          aria-label="Drop Event"
+        >
+          Drop
+        </Anchor>
+      </Paragraph>
+    </div>
+  );
+
+  const handleDrop = useCallback(async event => {
+    event.preventDefault();
+    if (dropping) return;
+
+    try {
+      setDropping(true);
+
+      const response = await fetch(`/functions/events/drop/${eventID}/${user?.id}`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'secret': config.secret,
+        },
+      });
+
+      const data = await response.json();
+      if (response.status !== 200) throw new Error(data?.error || response.statusText);
+
+      return history.push('/events');
+    } catch (error) {
+      setDropping(false);
+      alert(error.message);
+    }
+  }, [dropping, eventID, user, history]);
 
   useEffect(() => {
     const sectionObserver = new IntersectionObserver((entries, observer) => {
@@ -100,7 +133,7 @@ const Info = ({
                     <div className="info__panel">
                       <Title2 loading={!activeEvent?.name ? 1 : 0}>{activeEvent.name}</Title2>
                       <Paragraph loading={!activeEvent?.description ? 1 : 0}>{activeEvent.description}</Paragraph>
-                      {(!activeEvent?.closed && !isMobile) && <Button {...buttonProps} />}
+                      {!isMobile && <Controls />}
                     </div>
                     <div className="info__panel">
                       <div>
@@ -133,7 +166,7 @@ const Info = ({
                           </Paragraph>
                         }
                       </div>
-                      {(!activeEvent?.closed && isMobile) && <Button style={{ marginTop: '50px' }} {...buttonProps} />}
+                      {isMobile && <Controls />}
                       {(!activeEvent || otherEvents?.length > 1) &&
                         <div className="info__related-events">
                           <h4>Other Events</h4>

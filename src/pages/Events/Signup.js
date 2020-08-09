@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, Fragment } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import Hero from 'pages/Hero';
 import Button from 'components/Button';
@@ -14,9 +15,9 @@ import './Signup.css';
 const JoinText = () => <Fragment>Participate in this event by <Anchor href="https://discord.gg/mjtTnr8" target="_blank">joining our Discord</Anchor>.</Fragment>;
 
 const Signup = ({
-  history,
   match: { params: { eventID } }
 }) => {
+  const history = useHistory();
   const { user, dispatch } = useAppContext();
   const { events, activeEvent, player } = useEventData(eventID);
   const username = useFormInput(player?.username || '');

@@ -78,8 +78,21 @@
   margin-top: var(--space2XL);
 }
 
-.info__panel .button {
+.info__grid {
+  display: flex;
+  justify-content: space-between;
   margin-top: var(--space3XL);
+  width: 100%;
+}
+
+.info__grid .paragraph {
+  margin: 0!important;
+}
+
+@media (max-width: 696px) {
+  .info__grid {
+    margin-top: var(--space2XL);
+  }
 }
 
 @media (max-width: 1024px) {
@@ -90,10 +103,6 @@
 
   .info__panel:first-of-type {
     margin-top: 0;
-  }
-
-  .info__panel .button {
-    margin-top: var(--space2XL);
   }
 }
 
