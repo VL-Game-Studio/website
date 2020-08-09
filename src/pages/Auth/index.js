@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { useLocation, Redirect } from 'react-router-dom';
+import { useHistory, useLocation, Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useAppContext } from 'hooks';
 import config from 'config';
 
-const Auth = (props) => {
+const Auth = () => {
+  const history = useHistory();
   const { search } = useLocation();
   const code = search.includes('code=') && search.split('code=')[1];
   const { user, redirect, dispatch } = useAppContext();
@@ -55,12 +56,12 @@ const Auth = (props) => {
         if (redirect && redirect.includes('http')) window.open(redirect);
 
         return redirect && redirect.includes('http')
-          ? props.history.push('/')
-          : props.history.push(redirect || '/');
+          ? history.push('/')
+          : history.push(redirect || '/');
       } catch (error) {
         console.error(error.message);
         alert(error.message);
-        return props.history.push('/');
+        return history.push('/');
       }
     }
 
@@ -69,7 +70,7 @@ const Auth = (props) => {
     return function cleanup() {
       dispatch({ type: 'setRedirect', value: null });
     };
-  }, [code, dispatch, props.history, redirect, user]);
+  }, [code, dispatch, history, redirect, user]);
 
   if (!code) return <Redirect to="/" />;
 
