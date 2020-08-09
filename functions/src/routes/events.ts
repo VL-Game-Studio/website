@@ -101,11 +101,11 @@ router.get('/pairings/:id', middleware, async (req: Request, res: Response) => {
 
 router.post('/report/:id/:playerID', middleware, async (req: Request, res: Response) => {
   const { id, playerID } = req.params
-  const { result } = req.body
+  const { result, round } = req.body
   if (!result) return res.status(400).json({ error: 'Result is a required field.' })
 
   try {
-    const activeEvent = await events.report({ id, playerID, result })
+    const activeEvent = await events.report({ id, playerID, result, round })
     if (!activeEvent) return res.status(400).json({ error: `You are not currently playing in event: ${id}.` })
 
     return res.status(200).json(activeEvent)

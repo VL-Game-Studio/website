@@ -30,7 +30,7 @@ router.post('/', middleware, async (req: Request, res: Response) => {
       : null
 
     if (response2.status !== 200) {
-      const response3 = await fetch(`https://discord.com/api/guilds/${config.guild}/members/${user?.id}`, {
+      await fetch(`https://discord.com/api/guilds/${config.guild}/members/${user?.id}`, {
         method: 'PUT',
         headers: {
           'content-type': 'application/json',
@@ -38,9 +38,6 @@ router.post('/', middleware, async (req: Request, res: Response) => {
         },
         body: JSON.stringify({ access_token })
       })
-
-      const body = await response3.json()
-      console.log(body)
     }
 
     return res.status(200).json({ ...user, roles })

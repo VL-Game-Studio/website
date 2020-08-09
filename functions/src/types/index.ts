@@ -13,6 +13,7 @@ export interface IResult {
   id: string
   playerID: string
   result: string
+  round?: number
 }
 
 export interface IMatch {

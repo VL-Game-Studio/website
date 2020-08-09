@@ -196,7 +196,7 @@ const events = {
 
     return pairings
   },
-  async report({ id, playerID, result }: IResult) {
+  async report({ id, playerID, result, round }: IResult) {
     const player: IPlayer = await database
       .fetch(`/events/${id}/players/${playerID}`)
     if (!player) return false
@@ -208,8 +208,8 @@ const events = {
     if (!opponentID) throw Error('You are not in an active match.')
 
     await database
-      .set(`/events/${id}/players/${playerID}/matches/${opponents.length}`, {
-        round: opponents.length,
+      .set(`/events/${id}/players/${playerID}/matches/${round || opponents.length}`, {
+        round: round || opponents.length,
         record: `${wins}-${losses}-${ties}`,
         opponent: opponentID,
       })
@@ -220,8 +220,8 @@ const events = {
       const { opponents: oppOpponents = [] } = opponent
 
       await database
-        .set(`/events/${id}/players/${opponentID}/matches/${oppOpponents.length}`, {
-          round: oppOpponents.length,
+        .set(`/events/${id}/players/${opponentID}/matches/${round || oppOpponents.length}`, {
+          round: round || oppOpponents.length,
           record: `${losses}-${wins}-${ties}`,
           opponent: playerID,
         })
