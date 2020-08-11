@@ -48,7 +48,7 @@
 
 @media (max-width: 696px) {
   .hero__container {
-    max-width: var(-maxWidthS);
+    max-width: var(--maxWidthS);
   }
 }
 
